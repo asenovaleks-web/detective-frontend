@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Digital Detective</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Mono:wght@400;600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0f0e0c;
+      font-family: 'Courier Prime', monospace;
+      color: #d4c9a8;
+      min-height: 100vh;
+    }
+
+    :root {
+      --ink: #d4c9a8;
+      --paper: #1a1814;
+      --dark: #0f0e0c;
+      --red: #c0392b;
+      --yellow: #d4a017;
+      --green: #2e7d32;
+      --accent: #8b6914;
+      --border: #3a3228;
+    }
+
+    .grain {
+      position: fixed; inset: 0; pointer-events: none; z-index: 999;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      opacity: 0.3;
+    }
+
+    .scanlines {
+      position: fixed; inset: 0; pointer-events: none; z-index: 998;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    }
+
+    .app-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      text-align: center;
+      padding: 40px 0 48px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 48px;
+    }
+    .header::before {
+      content: '★ CONFIDENTIAL ★';
+      display: block;
+      font-size: 10px;
+      letter-spacing: 6px;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .header h1 {
+      font-family: 'Special Elite', cursive;
+      font-size: clamp(32px, 7vw, 58px);
+      color: var(--ink);
+      line-height: 1.1;
+    }
+    .header h1 span { color: var(--yellow); }
+    .header p { margin-top: 12px; font-size: 13px; color: #7a7060; letter-spacing: 2px; text-transform: uppercase; }
+    .badge { display: inline-block; margin-top: 20px; border: 1px solid var(--border); padding: 4px 14px; font-size: 10px; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; }
+
+    .api-notice { background: var(--paper); border: 1px solid var(--border); padding: 16px 20px; margin-bottom: 24px; font-size: 12px; color: #7a7060; line-height: 1.7; }
+    .api-notice strong { color: var(--yellow); }
+    .api-input { width: 100%; margin-top: 10px; background: #131210; border: 1px solid var(--border); outline: none; padding: 10px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink); letter-spacing: 1px; }
+    .api-input:focus { border-color: var(--yellow); }
+
+    .search-section { margin-bottom: 40px; }
+    .search-label { display: block; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
+    .search-row { display: flex; border: 1px solid var(--border); background: var(--paper); transition: border-color 0.2s; }
+    .search-row:focus-within { border-color: var(--yellow); }
+    .search-input { flex: 1; background: transparent; border: none; outline: none; padding: 16px 20px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: var(--ink); }
+    .search-input::placeholder { color: #4a4538; }
+    .search-btn { background: var(--yellow); color: #0f0e0c; border: none; padding: 16px 28px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
+    .search-btn:hover:not(:disabled) { background: #e8b420; }
+    .search-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+    .ticker { border: 1px solid var(--border); background: var(--paper); padding: 16px 20px; margin-bottom: 32px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; min-height: 52px; display: none; }
+    .ticker.visible { display: block; }
+    .ticker-line { display: flex; align-items: center; gap: 10px; color: #7a7060; margin-bottom: 4px; animation: fadeIn 0.3s ease; }
+    .ticker-line.active { color: var(--yellow); }
+    .ticker-line.done { color: #4a7a4a; }
+    .ticker-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+    .blink { animation: blink 1s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+    @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none} }
+
+    .error-box { padding: 16px 20px; border: 1px solid var(--red); color: var(--red); font-size: 13px; margin-bottom: 24px; display: none; }
+    .error-box.visible { display: block; }
+
+    .report { border: 1px solid var(--border); background: var(--paper); animation: fadeIn 0.5s ease; display: none; }
+    .report.visible { display: block; }
+    .report-header { padding: 24px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .report-title { font-family: 'Special Elite', cursive; font-size: 22px; }
+    .report-subtitle { font-size: 11px; letter-spacing: 3px; color: #7a7060; margin-top: 4px; text-transform: uppercase; }
+
+    .verdict-badge { padding: 8px 20px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; border: 2px solid; flex-shrink: 0; }
+    .verdict-red    { color: var(--red);    border-color: var(--red);    background: rgba(192,57,43,0.08); }
+    .verdict-yellow { color: var(--yellow); border-color: var(--yellow); background: rgba(212,160,23,0.08); }
+    .verdict-green  { color: #4caf50;       border-color: #4caf50;       background: rgba(76,175,80,0.08); }
+
+    .score-bar-wrap { padding: 20px 28px; border-bottom: 1px solid var(--border); }
+    .score-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+    .score-bar { height: 6px; background: #2a2620; }
+    .score-fill { height: 100%; transition: width 1s ease; }
+    .score-fill.red    { background: var(--red); }
+    .score-fill.yellow { background: var(--yellow); }
+    .score-fill.green  { background: #4caf50; }
+    .score-num { font-family: 'IBM Plex Mono', monospace; font-size: 28px; font-weight: 600; margin-top: 8px; }
+
+    .verdict-quote { padding: 16px 28px; border-bottom: 1px solid var(--border); font-family: 'Special Elite', cursive; font-size: 17px; color: var(--ink); }
+
+    .findings { padding: 24px 28px; border-bottom: 1px solid var(--border); }
+    .findings-title { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+    .finding-item { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; padding-bottom: 14px; border-bottom: 1px dashed var(--border); }
+    .finding-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .finding-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .finding-text { font-size: 13px; line-height: 1.6; }
+    .finding-tag { display: inline-block; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; padding: 2px 7px; border: 1px solid; margin-right: 6px; vertical-align: middle; opacity: 0.8; }
+    .tag-risk    { color: var(--red);    border-color: var(--red); }
+    .tag-caution { color: var(--yellow); border-color: var(--yellow); }
+    .tag-ok      { color: #4caf50;       border-color: #4caf50; }
+
+    .narrative { padding: 24px 28px; border-bottom: 1px solid var(--border); }
+    .narrative-title { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+    .narrative p { font-size: 14px; line-height: 1.8; color: #b0a590; }
+
+    .data-raw { padding: 20px 28px; }
+    .data-raw-title { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; cursor: pointer; }
+    .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; display: none; }
+    .data-grid.open { display: grid; }
+    .data-cell { background: #131210; border: 1px solid var(--border); padding: 12px; }
+    .data-cell-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: #5a5248; margin-bottom: 4px; }
+    .data-cell-value { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink); }
+
+    .disclaimer { margin-top: 48px; padding: 20px; border: 1px dashed var(--border); font-size: 11px; color: #4a4538; line-height: 1.7; text-align: center; }
+  </style>
+</head>
+<body>
+
+<div class="grain"></div>
+<div class="scanlines"></div>
+
+<div class="app-wrap">
+
+  <header class="header">
+    <h1>The <span>Digital</span><br>Detective</h1>
+    <p>Website · App · Platform Safety Investigator</p>
+    <div class="badge">Est. 2025 — All cases handled with discretion</div>
+  </header>
+
+  <div class="api-notice">
+    <strong>INVESTIGATOR ACCESS</strong> — Enter your Anthropic API key to activate the AI analysis engine.
+    Get one free at <strong>console.anthropic.com</strong>. Your key is never stored.
+    <input class="api-input" type="password" id="apiKey" placeholder="sk-ant-…" />
+  </div>
+
+  <div class="search-section">
+    <label class="search-label">▸ Enter Target — URL, App Name, or Platform</label>
+    <div class="search-row">
+      <input class="search-input" id="target" placeholder="e.g. suspicious-shop.com or TelegramGroup123" />
+      <button class="search-btn" id="investigateBtn" onclick="runInvestigation()">INVESTIGATE</button>
+    </div>
+  </div>
+
+  <div class="ticker" id="ticker"></div>
+  <div class="error-box" id="errorBox"></div>
+
+  <div class="report" id="report">
+    <div class="report-header">
+      <div>
+        <div class="report-title" id="reportTitle"></div>
+        <div class="report-subtitle" id="reportSubtitle"></div>
+      </div>
+      <div class="verdict-badge" id="verdictBadge"></div>
+    </div>
+    <div class="score-bar-wrap">
+      <div class="score-label">RISK LEVEL</div>
+      <div class="score-bar"><div class="score-fill" id="scoreFill"></div></div>
+      <div class="score-num" id="scoreNum"></div>
+    </div>
+    <div class="verdict-quote" id="verdictQuote"></div>
+    <div class="findings" id="findingsSection">
+      <div class="findings-title">▸ Evidence Files</div>
+      <div id="findingsList"></div>
+    </div>
+    <div class="narrative" id="narrativeSection">
+      <div class="narrative-title">▸ Detective's Summary</div>
+      <p id="narrativeText"></p>
+    </div>
+    <div class="data-raw">
+      <div class="data-raw-title" onclick="toggleRaw()">▸ Raw Intelligence Data <span id="rawToggle">[+]</span></div>
+      <div class="data-grid" id="dataGrid"></div>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    This tool aggregates publicly available signals as an informational aid only.<br>
+    It does not constitute legal or financial advice. Always exercise your own judgment.
+  </div>
+
+</div>
+
+<script>
+  const STEPS = [
+    "Resolving domain intelligence…",
+    "Checking SSL certificate…",
+    "Scanning malware & phishing databases…",
+    "Cross-referencing Google Safe Browsing…",
+    "Pulling traffic signals…",
+    "Searching community reports…",
+    "Querying business registries…",
+    "Synthesizing with AI investigator…",
+  ];
+
+  // ── Change this to your Railway URL ──────────────────────────────────────
+  const BACKEND_URL = ""; // e.g. "https://your-app.up.railway.app"
+  // ─────────────────────────────────────────────────────────────────────────
+
+  document.getElementById("target").addEventListener("keydown", e => {
+    if (e.key === "Enter") runInvestigation();
+  });
+
+  async function runInvestigation() {
+    const apiKey = document.getElementById("apiKey").value.trim();
+    const target = document.getElementById("target").value.trim();
+    if (!apiKey || !target) return;
+
+    const btn = document.getElementById("investigateBtn");
+    btn.disabled = true;
+    btn.textContent = "ON CASE…";
+
+    document.getElementById("report").classList.remove("visible");
+    document.getElementById("errorBox").classList.remove("visible");
+
+    const ticker = document.getElementById("ticker");
+    ticker.classList.add("visible");
+    ticker.innerHTML = "";
+
+    try {
+      // Animate steps
+      for (let i = 0; i < STEPS.length; i++) {
+        const line = document.createElement("div");
+        line.className = "ticker-line active";
+        line.innerHTML = `<div class="ticker-dot blink"></div><span style="margin-right:8px;font-weight:600">●</span>${STEPS[i]}`;
+        ticker.appendChild(line);
+        await sleep(500 + Math.random() * 400);
+        line.className = "ticker-line done";
+        line.innerHTML = `<div class="ticker-dot"></div><span style="margin-right:8px;font-weight:600">✓</span>${STEPS[i]}`;
+      }
+
+      // Fetch data
+      let rawData;
+      if (BACKEND_URL) {
+        const res = await fetch(BACKEND_URL + "/investigate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ target })
+        });
+        rawData = await res.json();
+      } else {
+        rawData = getMockData(target);
+      }
+
+      // Claude analysis
+      const result = await analyzeWithClaude(rawData, apiKey);
+      renderReport(target, result);
+
+    } catch (e) {
+      showError("Investigation failed: " + (e.message || "unknown error"));
+    } finally {
+      btn.disabled = false;
+      btn.textContent = "INVESTIGATE";
+    }
+  }
+
+  async function analyzeWithClaude(data, apiKey) {
+    const prompt = `You are a seasoned digital safety investigator. Analyze all signals and produce a structured report.
+
+RAW INTELLIGENCE DATA:
+${JSON.stringify(data, null, 2)}
+
+Respond ONLY with a valid JSON object (no markdown, no preamble):
+{
+  "score": <integer 0-100, where 0=perfectly safe, 100=extremely dangerous>,
+  "verdict": "<RED | YELLOW | GREEN>",
+  "verdict_summary": "<one punchy sentence, max 12 words, detective voice>",
+  "findings": [
+    { "icon": "<single emoji>", "tag": "<RISK|CAUTION|OK>", "text": "<plain-English finding, 1-2 sentences>" }
+  ],
+  "narrative": "<3-4 sentence plain-English detective summary for a non-technical person>",
+  "raw_labels": {
+    "Domain Age": "<value>",
+    "SSL Issuer": "<value>",
+    "Malware Flags": "<value>",
+    "Traffic": "<value>",
+    "Reddit Signals": "<value>",
+    "Business Record": "<value>"
+  }
+}`;
+
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+
+    const json = await res.json();
+    if (json.error) throw new Error(json.error.message);
+    const text = json.content?.[0]?.text || "{}";
+    return JSON.parse(text.replace(/```json|```/g, "").trim());
+  }
+
+  function renderReport(target, r) {
+    const verdictMap = { RED: "🔴 HIGH RISK", YELLOW: "🟡 CAUTION", GREEN: "🟢 LIKELY SAFE" };
+    const verdictClass = { RED: "verdict-red", YELLOW: "verdict-yellow", GREEN: "verdict-green" };
+    const scoreClass = { RED: "red", YELLOW: "yellow", GREEN: "green" };
+    const scoreColor = { RED: "var(--red)", YELLOW: "var(--yellow)", GREEN: "#4caf50" };
+
+    document.getElementById("reportTitle").textContent = "Case File: " + target;
+    document.getElementById("reportSubtitle").textContent = "Intelligence Report · " + new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+
+    const badge = document.getElementById("verdictBadge");
+    badge.textContent = verdictMap[r.verdict] || r.verdict;
+    badge.className = "verdict-badge " + (verdictClass[r.verdict] || "verdict-yellow");
+
+    const fill = document.getElementById("scoreFill");
+    fill.className = "score-fill " + (scoreClass[r.verdict] || "yellow");
+    setTimeout(() => fill.style.width = r.score + "%", 50);
+
+    const scoreNum = document.getElementById("scoreNum");
+    scoreNum.style.color = scoreColor[r.verdict] || "var(--yellow)";
+    scoreNum.innerHTML = r.score + '<span style="font-size:14px;font-weight:400;color:#5a5248">/100</span>';
+
+    document.getElementById("verdictQuote").textContent = '"' + r.verdict_summary + '"';
+
+    const findingsList = document.getElementById("findingsList");
+    findingsList.innerHTML = "";
+    (r.findings || []).forEach(f => {
+      const tagClass = f.tag === "RISK" ? "tag-risk" : f.tag === "OK" ? "tag-ok" : "tag-caution";
+      findingsList.innerHTML += `
+        <div class="finding-item">
+          <div class="finding-icon">${f.icon}</div>
+          <div class="finding-text"><span class="finding-tag ${tagClass}">${f.tag}</span>${f.text}</div>
+        </div>`;
+    });
+
+    document.getElementById("narrativeText").textContent = r.narrative;
+
+    const grid = document.getElementById("dataGrid");
+    grid.innerHTML = "";
+    Object.entries(r.raw_labels || {}).forEach(([k, v]) => {
+      grid.innerHTML += `<div class="data-cell"><div class="data-cell-label">${k}</div><div class="data-cell-value">${v}</div></div>`;
+    });
+
+    document.getElementById("report").classList.add("visible");
+  }
+
+  function toggleRaw() {
+    const grid = document.getElementById("dataGrid");
+    const toggle = document.getElementById("rawToggle");
+    grid.classList.toggle("open");
+    toggle.textContent = grid.classList.contains("open") ? "[−]" : "[+]";
+  }
+
+  function showError(msg) {
+    const box = document.getElementById("errorBox");
+    box.textContent = "⚠ " + msg;
+    box.classList.add("visible");
+  }
+
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  function getMockData(target) {
+    const clean = target.replace(/^https?:\/\//, "").replace(/\/.*/, "");
+    return {
+      target: clean,
+      whois: { domain: clean, created: "2024-11-03", age_days: 109, registrar: "NameCheap, Inc.", privacy_protected: true },
+      ssl: { valid: true, issuer: "Let's Encrypt", self_signed: false },
+      virustotal: { malicious: 2, suspicious: 1, harmless: 68, engines_total: 71 },
+      google_safe_browsing: { flagged: false, threats: [] },
+      traffic: { monthly_visits: 1200, bounce_rate: "87%", avg_visit_duration: "0m 42s" },
+      business: { opencorporates_found: false },
+      reddit_signals: { scam_mentions: 3, sample: "User u/buyer2024: 'Ordered twice, never received.'" },
+      page_signals: { contact_is_gmail: true, no_physical_address: true }
+    };
+  }
+</script>
+</body>
+</html>
