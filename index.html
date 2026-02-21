@@ -159,12 +159,6 @@
     <div class="badge">Est. 2025 — All cases handled with discretion</div>
   </header>
 
-  <div class="api-notice">
-    <strong>INVESTIGATOR ACCESS</strong> — Enter your Anthropic API key to activate the AI analysis engine.
-    Get one free at <strong>console.anthropic.com</strong>. Your key is never stored.
-    <input class="api-input" type="password" id="apiKey" placeholder="sk-ant-…" />
-  </div>
-
   <div class="search-section">
     <label class="search-label">▸ Enter Target — URL, App Name, or Platform</label>
     <div class="search-row">
@@ -224,7 +218,7 @@
   ];
 
   // ── Change this to your Railway URL ──────────────────────────────────────
-  const BACKEND_URL = ""; // detective-app-production.up.railway.app
+  const BACKEND_URL = ""; // e.g. "https://your-app.up.railway.app"
   // ─────────────────────────────────────────────────────────────────────────
 
   document.getElementById("target").addEventListener("keydown", e => {
@@ -232,9 +226,8 @@
   });
 
   async function runInvestigation() {
-    const apiKey = document.getElementById("apiKey").value.trim();
     const target = document.getElementById("target").value.trim();
-    if (!apiKey || !target) return;
+    if (!target) return;
 
     const btn = document.getElementById("investigateBtn");
     btn.disabled = true;
@@ -259,21 +252,20 @@
         line.innerHTML = `<div class="ticker-dot"></div><span style="margin-right:8px;font-weight:600">✓</span>${STEPS[i]}`;
       }
 
-      // Fetch data
-      let rawData;
+      // Call backend — it handles everything including Claude
+      let result;
       if (BACKEND_URL) {
         const res = await fetch(BACKEND_URL + "/investigate", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ target })
         });
-        rawData = await res.json();
+        if (!res.ok) throw new Error("Backend returned " + res.status);
+        result = await res.json();
       } else {
-        rawData = getMockData(target);
+        result = getMockResult(target);
       }
 
-      // Claude analysis
-      const result = await analyzeWithClaude(rawData, apiKey);
       renderReport(target, result);
 
     } catch (e) {
@@ -282,52 +274,6 @@
       btn.disabled = false;
       btn.textContent = "INVESTIGATE";
     }
-  }
-
-  async function analyzeWithClaude(data, apiKey) {
-    const prompt = `You are a seasoned digital safety investigator. Analyze all signals and produce a structured report.
-
-RAW INTELLIGENCE DATA:
-${JSON.stringify(data, null, 2)}
-
-Respond ONLY with a valid JSON object (no markdown, no preamble):
-{
-  "score": <integer 0-100, where 0=perfectly safe, 100=extremely dangerous>,
-  "verdict": "<RED | YELLOW | GREEN>",
-  "verdict_summary": "<one punchy sentence, max 12 words, detective voice>",
-  "findings": [
-    { "icon": "<single emoji>", "tag": "<RISK|CAUTION|OK>", "text": "<plain-English finding, 1-2 sentences>" }
-  ],
-  "narrative": "<3-4 sentence plain-English detective summary for a non-technical person>",
-  "raw_labels": {
-    "Domain Age": "<value>",
-    "SSL Issuer": "<value>",
-    "Malware Flags": "<value>",
-    "Traffic": "<value>",
-    "Reddit Signals": "<value>",
-    "Business Record": "<value>"
-  }
-}`;
-
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": apiKey,
-        "anthropic-version": "2023-06-01",
-        "anthropic-dangerous-direct-browser-access": "true"
-      },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 1000,
-        messages: [{ role: "user", content: prompt }]
-      })
-    });
-
-    const json = await res.json();
-    if (json.error) throw new Error(json.error.message);
-    const text = json.content?.[0]?.text || "{}";
-    return JSON.parse(text.replace(/```json|```/g, "").trim());
   }
 
   function renderReport(target, r) {
@@ -390,18 +336,28 @@ Respond ONLY with a valid JSON object (no markdown, no preamble):
 
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-  function getMockData(target) {
-    const clean = target.replace(/^https?:\/\//, "").replace(/\/.*/, "");
+  function getMockResult(target) {
     return {
-      target: clean,
-      whois: { domain: clean, created: "2024-11-03", age_days: 109, registrar: "NameCheap, Inc.", privacy_protected: true },
-      ssl: { valid: true, issuer: "Let's Encrypt", self_signed: false },
-      virustotal: { malicious: 2, suspicious: 1, harmless: 68, engines_total: 71 },
-      google_safe_browsing: { flagged: false, threats: [] },
-      traffic: { monthly_visits: 1200, bounce_rate: "87%", avg_visit_duration: "0m 42s" },
-      business: { opencorporates_found: false },
-      reddit_signals: { scam_mentions: 3, sample: "User u/buyer2024: 'Ordered twice, never received.'" },
-      page_signals: { contact_is_gmail: true, no_physical_address: true }
+      score: 72,
+      verdict: "RED",
+      verdict_summary: "Too many red flags — proceed with extreme caution.",
+      findings: [
+        { icon: "🚨", tag: "RISK", text: "Domain is only 109 days old. Scam sites almost always use brand new domains." },
+        { icon: "🦠", tag: "RISK", text: "2 malware engines flagged this domain as malicious out of 71 checked." },
+        { icon: "🕵️", tag: "RISK", text: "3 Reddit posts mention scam or non-delivery complaints about this site." },
+        { icon: "🔒", tag: "CAUTION", text: "Owner identity hidden behind a privacy proxy — cannot verify who runs this." },
+        { icon: "📋", tag: "CAUTION", text: "No matching business record found. Cannot confirm this is a registered company." },
+      ],
+      narrative: "This is demo data — connect your Railway backend to see real results. In a real investigation, this site showed multiple serious red flags including a very young domain, malware detections, and community scam reports. The owner is hidden behind a privacy proxy making it impossible to verify who is operating it.",
+      raw_labels: {
+        "Domain Age": "109 days",
+        "SSL Issuer": "Let's Encrypt",
+        "Malware Flags": "2 engines flagged",
+        "Traffic": "1,200 visits/month",
+        "Reddit Signals": "3 scam mentions",
+        "Business Record": "Not found"
+      },
+      raw_data: {}
     };
   }
 </script>
