@@ -6,360 +6,371 @@
   <title>The Digital Detective</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Mono:wght@400;600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0f0e0c; font-family: 'Courier Prime', monospace; color: #d4c9a8; min-height: 100vh; }
+    :root { --ink: #d4c9a8; --paper: #1a1814; --dark: #0f0e0c; --red: #c0392b; --yellow: #d4a017; --green: #2e7d32; --accent: #8b6914; --border: #3a3228; }
+    .grain { position: fixed; inset: 0; pointer-events: none; z-index: 999; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); opacity: 0.3; }
+    .scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 998; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); }
+    .app-wrap { max-width: 780px; margin: 0 auto; padding: 40px 24px 80px; position: relative; z-index: 1; }
 
-    body {
-      background: #0f0e0c;
-      font-family: 'Courier Prime', monospace;
-      color: #d4c9a8;
-      min-height: 100vh;
-    }
+    /* Auth Bar */
+    .auth-bar { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin-bottom: 24px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
+    .auth-bar .user-info { color: var(--accent); }
+    .auth-btn { background: none; border: 1px solid var(--border); color: var(--ink); padding: 6px 14px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 12px; transition: all 0.2s; }
+    .auth-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-    :root {
-      --ink: #d4c9a8;
-      --paper: #1a1814;
-      --dark: #0f0e0c;
-      --red: #c0392b;
-      --yellow: #d4a017;
-      --green: #2e7d32;
-      --accent: #8b6914;
-      --border: #3a3228;
-    }
+    /* Header */
+    .header { text-align: center; margin-bottom: 40px; }
+    .header-badge { display: inline-block; border: 1px solid var(--accent); padding: 4px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 3px; color: var(--accent); margin-bottom: 20px; }
+    .header-title { font-family: 'Special Elite', serif; font-size: clamp(32px, 6vw, 52px); color: #f0e6c8; letter-spacing: 2px; text-shadow: 2px 2px 0 rgba(0,0,0,0.5); }
+    .header-sub { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6b6050; margin-top: 8px; letter-spacing: 2px; }
 
-    .grain {
-      position: fixed; inset: 0; pointer-events: none; z-index: 999;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      opacity: 0.3;
-    }
+    /* Free banner */
+    .free-banner { background: rgba(139,105,20,0.1); border: 1px solid var(--accent); padding: 10px 16px; margin-bottom: 24px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--accent); display: flex; justify-content: space-between; align-items: center; }
+    .upgrade-link { color: var(--accent); text-decoration: underline; cursor: pointer; background: none; border: none; font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
 
-    .scanlines {
-      position: fixed; inset: 0; pointer-events: none; z-index: 998;
-      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
-    }
-
-    .app-wrap {
-      max-width: 780px;
-      margin: 0 auto;
-      padding: 40px 24px 80px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .header {
-      text-align: center;
-      padding: 40px 0 48px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 48px;
-    }
-    .header::before {
-      content: '★ CONFIDENTIAL ★';
-      display: block;
-      font-size: 10px;
-      letter-spacing: 6px;
-      color: var(--accent);
-      margin-bottom: 16px;
-    }
-    .header h1 {
-      font-family: 'Special Elite', cursive;
-      font-size: clamp(32px, 7vw, 58px);
-      color: var(--ink);
-      line-height: 1.1;
-    }
-    .header h1 span { color: var(--yellow); }
-    .header p { margin-top: 12px; font-size: 13px; color: #7a7060; letter-spacing: 2px; text-transform: uppercase; }
-    .badge { display: inline-block; margin-top: 20px; border: 1px solid var(--border); padding: 4px 14px; font-size: 10px; letter-spacing: 3px; color: var(--accent); text-transform: uppercase; }
-
-    .api-notice { background: var(--paper); border: 1px solid var(--border); padding: 16px 20px; margin-bottom: 24px; font-size: 12px; color: #7a7060; line-height: 1.7; }
-    .api-notice strong { color: var(--yellow); }
-    .api-input { width: 100%; margin-top: 10px; background: #131210; border: 1px solid var(--border); outline: none; padding: 10px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink); letter-spacing: 1px; }
-    .api-input:focus { border-color: var(--yellow); }
-
-    .search-section { margin-bottom: 40px; }
-    .search-label { display: block; font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); margin-bottom: 10px; }
-    .search-row { display: flex; border: 1px solid var(--border); background: var(--paper); transition: border-color 0.2s; }
-    .search-row:focus-within { border-color: var(--yellow); }
-    .search-input { flex: 1; background: transparent; border: none; outline: none; padding: 16px 20px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: var(--ink); }
-    .search-input::placeholder { color: #4a4538; }
-    .search-btn { background: var(--yellow); color: #0f0e0c; border: none; padding: 16px 28px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; cursor: pointer; transition: background 0.2s; }
-    .search-btn:hover:not(:disabled) { background: #e8b420; }
+    /* Search */
+    .search-block { margin-bottom: 32px; }
+    .search-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #6b6050; margin-bottom: 10px; }
+    .search-row { display: flex; gap: 8px; }
+    .search-input { flex: 1; background: var(--paper); border: 1px solid var(--border); color: var(--ink); padding: 14px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 14px; outline: none; transition: border-color 0.2s; }
+    .search-input:focus { border-color: var(--accent); }
+    .search-input::placeholder { color: #4a4030; }
+    .search-btn { background: var(--accent); border: none; color: #0f0e0c; padding: 14px 28px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; cursor: pointer; letter-spacing: 1px; transition: opacity 0.2s; }
+    .search-btn:hover { opacity: 0.85; }
     .search-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    .ticker { border: 1px solid var(--border); background: var(--paper); padding: 16px 20px; margin-bottom: 32px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; min-height: 52px; display: none; }
-    .ticker.visible { display: block; }
-    .ticker-line { display: flex; align-items: center; gap: 10px; color: #7a7060; margin-bottom: 4px; animation: fadeIn 0.3s ease; }
-    .ticker-line.active { color: var(--yellow); }
-    .ticker-line.done { color: #4a7a4a; }
-    .ticker-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
-    .blink { animation: blink 1s infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-    @keyframes fadeIn { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none} }
+    /* Status */
+    .status-log { background: var(--paper); border: 1px solid var(--border); padding: 16px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6b6050; min-height: 60px; display: none; margin-bottom: 24px; }
+    .status-log.visible { display: block; }
+    .status-line { margin: 2px 0; }
+    .status-line.active { color: var(--accent); }
 
-    .error-box { padding: 16px 20px; border: 1px solid var(--red); color: var(--red); font-size: 13px; margin-bottom: 24px; display: none; }
+    /* Error */
+    .error-box { background: rgba(192,57,43,0.1); border: 1px solid var(--red); padding: 12px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #e74c3c; display: none; margin-bottom: 24px; }
     .error-box.visible { display: block; }
 
-    .report { border: 1px solid var(--border); background: var(--paper); animation: fadeIn 0.5s ease; display: none; }
+    /* Report */
+    .report { display: none; }
     .report.visible { display: block; }
-    .report-header { padding: 24px 28px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-    .report-title { font-family: 'Special Elite', cursive; font-size: 22px; }
-    .report-subtitle { font-size: 11px; letter-spacing: 3px; color: #7a7060; margin-top: 4px; text-transform: uppercase; }
+    .verdict-block { border: 2px solid var(--border); padding: 28px; margin-bottom: 24px; text-align: center; position: relative; overflow: hidden; }
+    .verdict-block::before { content: ''; position: absolute; inset: 0; opacity: 0.04; background: repeating-linear-gradient(45deg, currentColor, currentColor 1px, transparent 1px, transparent 8px); }
+    .verdict-block.GREEN { border-color: var(--green); }
+    .verdict-block.YELLOW { border-color: var(--yellow); }
+    .verdict-block.RED { border-color: var(--red); }
+    .verdict-stamp { font-family: 'Special Elite', serif; font-size: 48px; font-weight: bold; letter-spacing: 6px; margin-bottom: 8px; }
+    .verdict-stamp.GREEN { color: var(--green); }
+    .verdict-stamp.YELLOW { color: var(--yellow); }
+    .verdict-stamp.RED { color: var(--red); }
+    .verdict-score { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #6b6050; margin-bottom: 12px; }
+    .verdict-quote { font-style: italic; font-size: 16px; color: #a09070; }
+    .section-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 3px; color: var(--accent); margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+    .findings-list { margin-bottom: 24px; }
+    .finding-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(58,50,40,0.5); }
+    .finding-icon { font-size: 18px; flex-shrink: 0; width: 28px; }
+    .finding-text { font-size: 14px; line-height: 1.5; color: #b0a080; }
+    .finding-tag { display: inline-block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; padding: 2px 6px; margin-right: 8px; font-weight: 600; vertical-align: middle; }
+    .tag-risk { background: rgba(192,57,43,0.2); color: #e74c3c; }
+    .tag-caution { background: rgba(212,160,23,0.2); color: var(--yellow); }
+    .tag-ok { background: rgba(46,125,50,0.2); color: #4caf50; }
+    .narrative-block { background: var(--paper); border-left: 3px solid var(--accent); padding: 16px 20px; font-size: 14px; line-height: 1.7; color: #a09070; margin-bottom: 24px; font-style: italic; }
+    .raw-toggle { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--accent); cursor: pointer; margin-bottom: 12px; user-select: none; }
+    .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; max-height: 0; overflow: hidden; transition: max-height 0.3s; }
+    .data-grid.open { max-height: 2000px; }
+    .data-cell { background: var(--paper); border: 1px solid var(--border); padding: 10px 12px; }
+    .data-cell-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #6b6050; margin-bottom: 4px; letter-spacing: 1px; }
+    .data-cell-value { font-size: 12px; color: #a09070; }
 
-    .verdict-badge { padding: 8px 20px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; letter-spacing: 3px; text-transform: uppercase; border: 2px solid; flex-shrink: 0; }
-    .verdict-red    { color: var(--red);    border-color: var(--red);    background: rgba(192,57,43,0.08); }
-    .verdict-yellow { color: var(--yellow); border-color: var(--yellow); background: rgba(212,160,23,0.08); }
-    .verdict-green  { color: #4caf50;       border-color: #4caf50;       background: rgba(76,175,80,0.08); }
-
-    .score-bar-wrap { padding: 20px 28px; border-bottom: 1px solid var(--border); }
-    .score-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
-    .score-bar { height: 6px; background: #2a2620; }
-    .score-fill { height: 100%; transition: width 1s ease; }
-    .score-fill.red    { background: var(--red); }
-    .score-fill.yellow { background: var(--yellow); }
-    .score-fill.green  { background: #4caf50; }
-    .score-num { font-family: 'IBM Plex Mono', monospace; font-size: 28px; font-weight: 600; margin-top: 8px; }
-
-    .verdict-quote { padding: 16px 28px; border-bottom: 1px solid var(--border); font-family: 'Special Elite', cursive; font-size: 17px; color: var(--ink); }
-
-    .findings { padding: 24px 28px; border-bottom: 1px solid var(--border); }
-    .findings-title { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
-    .finding-item { display: flex; gap: 12px; margin-bottom: 14px; align-items: flex-start; padding-bottom: 14px; border-bottom: 1px dashed var(--border); }
-    .finding-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-    .finding-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-    .finding-text { font-size: 13px; line-height: 1.6; }
-    .finding-tag { display: inline-block; font-size: 9px; letter-spacing: 2px; text-transform: uppercase; padding: 2px 7px; border: 1px solid; margin-right: 6px; vertical-align: middle; opacity: 0.8; }
-    .tag-risk    { color: var(--red);    border-color: var(--red); }
-    .tag-caution { color: var(--yellow); border-color: var(--yellow); }
-    .tag-ok      { color: #4caf50;       border-color: #4caf50; }
-
-    .narrative { padding: 24px 28px; border-bottom: 1px solid var(--border); }
-    .narrative-title { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
-    .narrative p { font-size: 14px; line-height: 1.8; color: #b0a590; }
-
-    .data-raw { padding: 20px 28px; }
-    .data-raw-title { font-size: 10px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; cursor: pointer; }
-    .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; display: none; }
-    .data-grid.open { display: grid; }
-    .data-cell { background: #131210; border: 1px solid var(--border); padding: 12px; }
-    .data-cell-label { font-size: 9px; letter-spacing: 3px; text-transform: uppercase; color: #5a5248; margin-bottom: 4px; }
-    .data-cell-value { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink); }
-
-    .disclaimer { margin-top: 48px; padding: 20px; border: 1px dashed var(--border); font-size: 11px; color: #4a4538; line-height: 1.7; text-align: center; }
+    /* Auth Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; display: none; align-items: center; justify-content: center; }
+    .modal-overlay.visible { display: flex; }
+    .modal { background: #1a1814; border: 1px solid var(--border); padding: 36px; width: 100%; max-width: 400px; position: relative; }
+    .modal-title { font-family: 'Special Elite', serif; font-size: 22px; color: #f0e6c8; margin-bottom: 8px; }
+    .modal-sub { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: #6b6050; margin-bottom: 24px; }
+    .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: #6b6050; font-size: 18px; cursor: pointer; }
+    .modal-input { width: 100%; background: #0f0e0c; border: 1px solid var(--border); color: var(--ink); padding: 12px 14px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; outline: none; margin-bottom: 12px; display: block; }
+    .modal-input:focus { border-color: var(--accent); }
+    .modal-btn { width: 100%; background: var(--accent); border: none; color: #0f0e0c; padding: 13px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; cursor: pointer; letter-spacing: 1px; margin-bottom: 12px; }
+    .modal-btn:hover { opacity: 0.85; }
+    .modal-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .modal-switch { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6b6050; }
+    .modal-switch span { color: var(--accent); cursor: pointer; text-decoration: underline; }
+    .modal-error { background: rgba(192,57,43,0.1); border: 1px solid var(--red); color: #e74c3c; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; margin-bottom: 12px; display: none; }
+    .modal-error.visible { display: block; }
+    .modal-success { background: rgba(46,125,50,0.1); border: 1px solid var(--green); color: #4caf50; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; margin-bottom: 12px; display: none; }
+    .modal-success.visible { display: block; }
   </style>
 </head>
 <body>
+  <div class="grain"></div>
+  <div class="scanlines"></div>
 
-<div class="grain"></div>
-<div class="scanlines"></div>
-
-<div class="app-wrap">
-
-  <header class="header">
-    <h1>The <span>Digital</span><br>Detective</h1>
-    <p>Website · App · Platform Safety Investigator</p>
-    <div class="badge">Est. 2025 — All cases handled with discretion</div>
-  </header>
-
-  <div class="search-section">
-    <label class="search-label">▸ Enter Target — URL, App Name, or Platform</label>
-    <div class="search-row">
-      <input class="search-input" id="target" placeholder="e.g. suspicious-shop.com or TelegramGroup123" />
-      <button class="search-btn" id="investigateBtn" onclick="runInvestigation()">INVESTIGATE</button>
+  <!-- Auth Modal -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-title" id="modalTitle">Sign In</div>
+      <div class="modal-sub" id="modalSub">ACCESS THE DETECTIVE'S CASE FILES</div>
+      <div class="modal-error" id="modalError"></div>
+      <div class="modal-success" id="modalSuccess"></div>
+      <input class="modal-input" type="email" id="authEmail" placeholder="email address" />
+      <input class="modal-input" type="password" id="authPassword" placeholder="password" onkeydown="if(event.key==='Enter')submitAuth()" />
+      <button class="modal-btn" id="authSubmitBtn" onclick="submitAuth()">SIGN IN</button>
+      <div class="modal-switch" id="modalSwitch">No account? <span onclick="toggleAuthMode()">Sign up for free</span></div>
     </div>
   </div>
 
-  <div class="ticker" id="ticker"></div>
-  <div class="error-box" id="errorBox"></div>
+  <div class="app-wrap">
+    <!-- Auth Bar -->
+    <div class="auth-bar">
+      <span class="user-info" id="userInfo"></span>
+      <button class="auth-btn" id="authBarBtn" onclick="openModal()">SIGN IN</button>
+    </div>
 
-  <div class="report" id="report">
-    <div class="report-header">
-      <div>
-        <div class="report-title" id="reportTitle"></div>
-        <div class="report-subtitle" id="reportSubtitle"></div>
+    <!-- Header -->
+    <div class="header">
+      <div class="header-badge">CASE FILE SYSTEM v4.0</div>
+      <div class="header-title">🕵️ The Digital Detective</div>
+      <div class="header-sub">// 20-SOURCE GLOBAL INTELLIGENCE ENGINE //</div>
+    </div>
+
+    <!-- Free tier banner -->
+    <div class="free-banner" id="freeBanner" style="display:none">
+      <span id="freeBannerText">🔍 FREE TIER — 3 investigations/day</span>
+      <button class="upgrade-link" onclick="openModal()">Upgrade to Pro →</button>
+    </div>
+
+    <!-- Search -->
+    <div class="search-block">
+      <div class="search-label">// ENTER TARGET URL FOR INVESTIGATION</div>
+      <div class="search-row">
+        <input class="search-input" type="text" id="targetInput" placeholder="e.g. suspicioussite.com" onkeydown="if(event.key==='Enter')runInvestigation()" />
+        <button class="search-btn" id="searchBtn" onclick="runInvestigation()">INVESTIGATE</button>
       </div>
-      <div class="verdict-badge" id="verdictBadge"></div>
     </div>
-    <div class="score-bar-wrap">
-      <div class="score-label">RISK LEVEL</div>
-      <div class="score-bar"><div class="score-fill" id="scoreFill"></div></div>
-      <div class="score-num" id="scoreNum"></div>
+
+    <!-- Status Log -->
+    <div class="status-log" id="statusLog">
+      <div class="status-line active" id="statusText">⟳ Initialising investigation...</div>
     </div>
-    <div class="verdict-quote" id="verdictQuote"></div>
-    <div class="findings" id="findingsSection">
-      <div class="findings-title">▸ Evidence Files</div>
-      <div id="findingsList"></div>
-    </div>
-    <div class="narrative" id="narrativeSection">
-      <div class="narrative-title">▸ Detective's Summary</div>
-      <p id="narrativeText"></p>
-    </div>
-    <div class="data-raw">
-      <div class="data-raw-title" onclick="toggleRaw()">▸ Raw Intelligence Data <span id="rawToggle">[+]</span></div>
+
+    <!-- Error -->
+    <div class="error-box" id="errorBox"></div>
+
+    <!-- Report -->
+    <div class="report" id="report">
+      <div class="verdict-block" id="verdictBlock">
+        <div class="verdict-stamp" id="verdictStamp"></div>
+        <div class="verdict-score" id="verdictScore"></div>
+        <div class="verdict-quote" id="verdictQuote"></div>
+      </div>
+      <div class="section-label">// FIELD FINDINGS</div>
+      <div class="findings-list" id="findingsList"></div>
+      <div class="section-label">// DETECTIVE'S NARRATIVE</div>
+      <div class="narrative-block" id="narrativeText"></div>
+      <div class="raw-toggle" onclick="toggleRaw()">[<span id="rawToggle">+</span>] RAW INTELLIGENCE DATA</div>
       <div class="data-grid" id="dataGrid"></div>
     </div>
   </div>
 
-  <div class="disclaimer">
-    This tool aggregates publicly available signals as an informational aid only.<br>
-    It does not constitute legal or financial advice. Always exercise your own judgment.
-  </div>
+  <script>
+    const BACKEND_URL = "https://detective-app-production-7080.up.railway.app";
+    const SUPABASE_URL = "REPLACE_WITH_YOUR_SUPABASE_URL";
+    const SUPABASE_ANON_KEY = "REPLACE_WITH_YOUR_SUPABASE_ANON_KEY";
 
-</div>
+    const { createClient } = supabase;
+    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-<script>
-  const STEPS = [
-    "Resolving domain intelligence…",
-    "Checking SSL certificate…",
-    "Scanning malware & phishing databases…",
-    "Cross-referencing Google Safe Browsing…",
-    "Pulling traffic signals…",
-    "Searching community reports…",
-    "Querying business registries…",
-    "Synthesizing with AI investigator…",
-  ];
+    let currentUser = null;
+    let userToken = null;
+    let authMode = "signin";
 
-  // ── Change this to your Railway URL ──────────────────────────────────────
-const BACKEND_URL = "https://detective-app-production-7080.up.railway.app";
-  // ─────────────────────────────────────────────────────────────────────────
-
-  document.getElementById("target").addEventListener("keydown", e => {
-    if (e.key === "Enter") runInvestigation();
-  });
-
-  async function runInvestigation() {
-    const target = document.getElementById("target").value.trim();
-    if (!target) return;
-
-    const btn = document.getElementById("investigateBtn");
-    btn.disabled = true;
-    btn.textContent = "ON CASE…";
-
-    document.getElementById("report").classList.remove("visible");
-    document.getElementById("errorBox").classList.remove("visible");
-
-    const ticker = document.getElementById("ticker");
-    ticker.classList.add("visible");
-    ticker.innerHTML = "";
-
-    try {
-      // Animate steps
-      for (let i = 0; i < STEPS.length; i++) {
-        const line = document.createElement("div");
-        line.className = "ticker-line active";
-        line.innerHTML = `<div class="ticker-dot blink"></div><span style="margin-right:8px;font-weight:600">●</span>${STEPS[i]}`;
-        ticker.appendChild(line);
-        await sleep(500 + Math.random() * 400);
-        line.className = "ticker-line done";
-        line.innerHTML = `<div class="ticker-dot"></div><span style="margin-right:8px;font-weight:600">✓</span>${STEPS[i]}`;
+    sb.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        currentUser = session.user;
+        userToken = session.access_token;
+      } else {
+        currentUser = null;
+        userToken = null;
       }
+      updateAuthUI();
+    });
 
-      // Call backend — it handles everything including Claude
-      let result;
-      if (BACKEND_URL) {
-        const res = await fetch(BACKEND_URL + "/investigate", {
+    function updateAuthUI() {
+      const userInfo = document.getElementById("userInfo");
+      const authBarBtn = document.getElementById("authBarBtn");
+      const freeBanner = document.getElementById("freeBanner");
+      if (currentUser) {
+        userInfo.textContent = currentUser.email;
+        authBarBtn.textContent = "SIGN OUT";
+        authBarBtn.onclick = signOut;
+        freeBanner.style.display = "flex";
+      } else {
+        userInfo.textContent = "";
+        authBarBtn.textContent = "SIGN IN";
+        authBarBtn.onclick = openModal;
+        freeBanner.style.display = "none";
+      }
+    }
+
+    async function signOut() { await sb.auth.signOut(); }
+
+    function openModal() { document.getElementById("authModal").classList.add("visible"); document.getElementById("authEmail").focus(); }
+    function closeModal() { document.getElementById("authModal").classList.remove("visible"); }
+
+    function toggleAuthMode() {
+      authMode = authMode === "signin" ? "signup" : "signin";
+      const s = authMode === "signin";
+      document.getElementById("modalTitle").textContent = s ? "Sign In" : "Create Account";
+      document.getElementById("modalSub").textContent = s ? "ACCESS THE DETECTIVE'S CASE FILES" : "3 FREE INVESTIGATIONS PER DAY";
+      document.getElementById("authSubmitBtn").textContent = s ? "SIGN IN" : "CREATE ACCOUNT";
+      document.getElementById("modalSwitch").innerHTML = s
+        ? `No account? <span onclick="toggleAuthMode()">Sign up for free</span>`
+        : `Already have an account? <span onclick="toggleAuthMode()">Sign in</span>`;
+      document.getElementById("modalError").classList.remove("visible");
+      document.getElementById("modalSuccess").classList.remove("visible");
+    }
+
+    async function submitAuth() {
+      const email = document.getElementById("authEmail").value.trim();
+      const password = document.getElementById("authPassword").value;
+      const btn = document.getElementById("authSubmitBtn");
+      const errBox = document.getElementById("modalError");
+      const successBox = document.getElementById("modalSuccess");
+
+      if (!email || !password) { errBox.textContent = "Please enter email and password."; errBox.classList.add("visible"); return; }
+
+      btn.disabled = true;
+      btn.textContent = "PLEASE WAIT...";
+      errBox.classList.remove("visible");
+      successBox.classList.remove("visible");
+
+      const result = authMode === "signin"
+        ? await sb.auth.signInWithPassword({ email, password })
+        : await sb.auth.signUp({ email, password });
+
+      btn.disabled = false;
+      btn.textContent = authMode === "signin" ? "SIGN IN" : "CREATE ACCOUNT";
+
+      if (result.error) {
+        errBox.textContent = result.error.message;
+        errBox.classList.add("visible");
+      } else if (authMode === "signup" && !result.data.session) {
+        successBox.textContent = "✓ Account created! Check your email to confirm, then sign in.";
+        successBox.classList.add("visible");
+      } else {
+        closeModal();
+      }
+    }
+
+    async function runInvestigation() {
+      const target = document.getElementById("targetInput").value.trim();
+      if (!target) return;
+
+      document.getElementById("report").classList.remove("visible");
+      document.getElementById("errorBox").classList.remove("visible");
+
+      const statusLog = document.getElementById("statusLog");
+      const statusText = document.getElementById("statusText");
+      statusLog.classList.add("visible");
+
+      const steps = [
+        "⟳ Opening case file...",
+        "⟳ Querying domain registry...",
+        "⟳ Running malware scan across 93 engines...",
+        "⟳ Checking Google Safe Browsing...",
+        "⟳ Verifying SSL certificate live...",
+        "⟳ Searching 20 global registries...",
+        "⟳ Scanning community signals...",
+        "⟳ Checking UN & ICIJ sanctions lists...",
+        "⟳ Running URLScan live page analysis...",
+        "⟳ Checking Wayback Machine history...",
+        "⟳ Consulting AI analyst...",
+        "⟳ Compiling final report..."
+      ];
+
+      let i = 0;
+      const interval = setInterval(() => {
+        if (i < steps.length) { statusText.textContent = steps[i]; i++; }
+      }, 1200);
+
+      document.getElementById("searchBtn").disabled = true;
+
+      try {
+        const body = { target };
+        if (userToken) body.user_token = userToken;
+
+        const res = await fetch(`${BACKEND_URL}/investigate`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ target })
+          body: JSON.stringify(body),
         });
-        if (!res.ok) throw new Error("Backend returned " + res.status);
-        result = await res.json();
-      } else {
-        result = getMockResult(target);
+
+        clearInterval(interval);
+        document.getElementById("searchBtn").disabled = false;
+        statusLog.classList.remove("visible");
+
+        if (res.status === 429) {
+          showError("Free tier limit reached — 3 investigations per day. Sign in and upgrade to Pro for unlimited access.");
+          return;
+        }
+        if (!res.ok) {
+          const err = await res.json();
+          showError(err.detail || "Investigation failed. Please try again.");
+          return;
+        }
+
+        renderReport(await res.json());
+
+      } catch (err) {
+        clearInterval(interval);
+        document.getElementById("searchBtn").disabled = false;
+        statusLog.classList.remove("visible");
+        showError("Could not reach the investigation server. Please try again.");
       }
-
-      renderReport(target, result);
-
-    } catch (e) {
-      showError("Investigation failed: " + (e.message || "unknown error"));
-    } finally {
-      btn.disabled = false;
-      btn.textContent = "INVESTIGATE";
     }
-  }
 
-  function renderReport(target, r) {
-    const verdictMap = { RED: "🔴 HIGH RISK", YELLOW: "🟡 CAUTION", GREEN: "🟢 LIKELY SAFE" };
-    const verdictClass = { RED: "verdict-red", YELLOW: "verdict-yellow", GREEN: "verdict-green" };
-    const scoreClass = { RED: "red", YELLOW: "yellow", GREEN: "green" };
-    const scoreColor = { RED: "var(--red)", YELLOW: "var(--yellow)", GREEN: "#4caf50" };
+    function renderReport(r) {
+      const block = document.getElementById("verdictBlock");
+      const stamp = document.getElementById("verdictStamp");
+      block.className = "verdict-block " + r.verdict;
+      stamp.className = "verdict-stamp " + r.verdict;
+      const labels = { GREEN: "✓ SAFE", YELLOW: "⚠ CAUTION", RED: "✗ DANGER" };
+      stamp.textContent = labels[r.verdict] || r.verdict;
+      document.getElementById("verdictScore").textContent = `RISK SCORE: ${r.score}/100`;
+      document.getElementById("verdictQuote").textContent = '"' + r.verdict_summary + '"';
 
-    document.getElementById("reportTitle").textContent = "Case File: " + target;
-    document.getElementById("reportSubtitle").textContent = "Intelligence Report · " + new Date().toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+      const findingsList = document.getElementById("findingsList");
+      findingsList.innerHTML = "";
+      (r.findings || []).forEach(f => {
+        const tagClass = f.tag === "RISK" ? "tag-risk" : f.tag === "OK" ? "tag-ok" : "tag-caution";
+        findingsList.innerHTML += `<div class="finding-item"><div class="finding-icon">${f.icon}</div><div class="finding-text"><span class="finding-tag ${tagClass}">${f.tag}</span>${f.text}</div></div>`;
+      });
 
-    const badge = document.getElementById("verdictBadge");
-    badge.textContent = verdictMap[r.verdict] || r.verdict;
-    badge.className = "verdict-badge " + (verdictClass[r.verdict] || "verdict-yellow");
+      document.getElementById("narrativeText").textContent = r.narrative;
 
-    const fill = document.getElementById("scoreFill");
-    fill.className = "score-fill " + (scoreClass[r.verdict] || "yellow");
-    setTimeout(() => fill.style.width = r.score + "%", 50);
+      const grid = document.getElementById("dataGrid");
+      grid.innerHTML = "";
+      Object.entries(r.raw_labels || {}).forEach(([k, v]) => {
+        grid.innerHTML += `<div class="data-cell"><div class="data-cell-label">${k}</div><div class="data-cell-value">${v}</div></div>`;
+      });
 
-    const scoreNum = document.getElementById("scoreNum");
-    scoreNum.style.color = scoreColor[r.verdict] || "var(--yellow)";
-    scoreNum.innerHTML = r.score + '<span style="font-size:14px;font-weight:400;color:#5a5248">/100</span>';
+      document.getElementById("report").classList.add("visible");
+      document.getElementById("report").scrollIntoView({ behavior: "smooth" });
+    }
 
-    document.getElementById("verdictQuote").textContent = '"' + r.verdict_summary + '"';
+    function toggleRaw() {
+      const grid = document.getElementById("dataGrid");
+      const toggle = document.getElementById("rawToggle");
+      grid.classList.toggle("open");
+      toggle.textContent = grid.classList.contains("open") ? "−" : "+";
+    }
 
-    const findingsList = document.getElementById("findingsList");
-    findingsList.innerHTML = "";
-    (r.findings || []).forEach(f => {
-      const tagClass = f.tag === "RISK" ? "tag-risk" : f.tag === "OK" ? "tag-ok" : "tag-caution";
-      findingsList.innerHTML += `
-        <div class="finding-item">
-          <div class="finding-icon">${f.icon}</div>
-          <div class="finding-text"><span class="finding-tag ${tagClass}">${f.tag}</span>${f.text}</div>
-        </div>`;
-    });
-
-    document.getElementById("narrativeText").textContent = r.narrative;
-
-    const grid = document.getElementById("dataGrid");
-    grid.innerHTML = "";
-    Object.entries(r.raw_labels || {}).forEach(([k, v]) => {
-      grid.innerHTML += `<div class="data-cell"><div class="data-cell-label">${k}</div><div class="data-cell-value">${v}</div></div>`;
-    });
-
-    document.getElementById("report").classList.add("visible");
-  }
-
-  function toggleRaw() {
-    const grid = document.getElementById("dataGrid");
-    const toggle = document.getElementById("rawToggle");
-    grid.classList.toggle("open");
-    toggle.textContent = grid.classList.contains("open") ? "[−]" : "[+]";
-  }
-
-  function showError(msg) {
-    const box = document.getElementById("errorBox");
-    box.textContent = "⚠ " + msg;
-    box.classList.add("visible");
-  }
-
-  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-  function getMockResult(target) {
-    return {
-      score: 72,
-      verdict: "RED",
-      verdict_summary: "Too many red flags — proceed with extreme caution.",
-      findings: [
-        { icon: "🚨", tag: "RISK", text: "Domain is only 109 days old. Scam sites almost always use brand new domains." },
-        { icon: "🦠", tag: "RISK", text: "2 malware engines flagged this domain as malicious out of 71 checked." },
-        { icon: "🕵️", tag: "RISK", text: "3 Reddit posts mention scam or non-delivery complaints about this site." },
-        { icon: "🔒", tag: "CAUTION", text: "Owner identity hidden behind a privacy proxy — cannot verify who runs this." },
-        { icon: "📋", tag: "CAUTION", text: "No matching business record found. Cannot confirm this is a registered company." },
-      ],
-      narrative: "This is demo data — connect your Railway backend to see real results. In a real investigation, this site showed multiple serious red flags including a very young domain, malware detections, and community scam reports. The owner is hidden behind a privacy proxy making it impossible to verify who is operating it.",
-      raw_labels: {
-        "Domain Age": "109 days",
-        "SSL Issuer": "Let's Encrypt",
-        "Malware Flags": "2 engines flagged",
-        "Traffic": "1,200 visits/month",
-        "Reddit Signals": "3 scam mentions",
-        "Business Record": "Not found"
-      },
-      raw_data: {}
-    };
-  }
-</script>
-</body>
-</html>
+    function showError(msg) {
+      const box = document.getElementById("errorBox");
+      box.textContent = "⚠ " + msg;
+      box.classList.add("visible");
+    }
+  </script>
