@@ -6,7 +6,6 @@
   <title>The Digital Detective</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Mono:wght@400;600&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
-  <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: #0f0e0c; font-family: 'Courier Prime', monospace; color: #d4c9a8; min-height: 100vh; }
@@ -14,24 +13,16 @@
     .grain { position: fixed; inset: 0; pointer-events: none; z-index: 999; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); opacity: 0.3; }
     .scanlines { position: fixed; inset: 0; pointer-events: none; z-index: 998; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px); }
     .app-wrap { max-width: 780px; margin: 0 auto; padding: 40px 24px 80px; position: relative; z-index: 1; }
-
-    /* Auth Bar */
     .auth-bar { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin-bottom: 24px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
     .auth-bar .user-info { color: var(--accent); }
     .auth-btn { background: none; border: 1px solid var(--border); color: var(--ink); padding: 6px 14px; cursor: pointer; font-family: 'IBM Plex Mono', monospace; font-size: 12px; transition: all 0.2s; }
     .auth-btn:hover { border-color: var(--accent); color: var(--accent); }
-
-    /* Header */
     .header { text-align: center; margin-bottom: 40px; }
     .header-badge { display: inline-block; border: 1px solid var(--accent); padding: 4px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 3px; color: var(--accent); margin-bottom: 20px; }
     .header-title { font-family: 'Special Elite', serif; font-size: clamp(32px, 6vw, 52px); color: #f0e6c8; letter-spacing: 2px; text-shadow: 2px 2px 0 rgba(0,0,0,0.5); }
     .header-sub { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6b6050; margin-top: 8px; letter-spacing: 2px; }
-
-    /* Free banner */
     .free-banner { background: rgba(139,105,20,0.1); border: 1px solid var(--accent); padding: 10px 16px; margin-bottom: 24px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--accent); display: flex; justify-content: space-between; align-items: center; }
     .upgrade-link { color: var(--accent); text-decoration: underline; cursor: pointer; background: none; border: none; font-family: 'IBM Plex Mono', monospace; font-size: 12px; }
-
-    /* Search */
     .search-block { margin-bottom: 32px; }
     .search-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 2px; color: #6b6050; margin-bottom: 10px; }
     .search-row { display: flex; gap: 8px; }
@@ -41,18 +32,12 @@
     .search-btn { background: var(--accent); border: none; color: #0f0e0c; padding: 14px 28px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; font-weight: 600; cursor: pointer; letter-spacing: 1px; transition: opacity 0.2s; }
     .search-btn:hover { opacity: 0.85; }
     .search-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-    /* Status */
     .status-log { background: var(--paper); border: 1px solid var(--border); padding: 16px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6b6050; min-height: 60px; display: none; margin-bottom: 24px; }
     .status-log.visible { display: block; }
     .status-line { margin: 2px 0; }
     .status-line.active { color: var(--accent); }
-
-    /* Error */
     .error-box { background: rgba(192,57,43,0.1); border: 1px solid var(--red); padding: 12px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #e74c3c; display: none; margin-bottom: 24px; }
     .error-box.visible { display: block; }
-
-    /* Report */
     .report { display: none; }
     .report.visible { display: block; }
     .verdict-block { border: 2px solid var(--border); padding: 28px; margin-bottom: 24px; text-align: center; position: relative; overflow: hidden; }
@@ -82,8 +67,6 @@
     .data-cell { background: var(--paper); border: 1px solid var(--border); padding: 10px 12px; }
     .data-cell-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #6b6050; margin-bottom: 4px; letter-spacing: 1px; }
     .data-cell-value { font-size: 12px; color: #a09070; }
-
-    /* Auth Modal */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; display: none; align-items: center; justify-content: center; }
     .modal-overlay.visible { display: flex; }
     .modal { background: #1a1814; border: 1px solid var(--border); padding: 36px; width: 100%; max-width: 400px; position: relative; }
@@ -97,24 +80,22 @@
     .modal-btn:disabled { opacity: 0.4; cursor: not-allowed; }
     .modal-switch { text-align: center; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6b6050; }
     .modal-switch span { color: var(--accent); cursor: pointer; text-decoration: underline; }
-    .modal-error { background: rgba(192,57,43,0.1); border: 1px solid var(--red); color: #e74c3c; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; margin-bottom: 12px; display: none; }
-    .modal-error.visible { display: block; }
-    .modal-success { background: rgba(46,125,50,0.1); border: 1px solid var(--green); color: #4caf50; padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; margin-bottom: 12px; display: none; }
-    .modal-success.visible { display: block; }
+    .modal-msg { padding: 10px 12px; font-family: 'IBM Plex Mono', monospace; font-size: 12px; margin-bottom: 12px; display: none; }
+    .modal-msg.error { background: rgba(192,57,43,0.1); border: 1px solid var(--red); color: #e74c3c; }
+    .modal-msg.success { background: rgba(46,125,50,0.1); border: 1px solid var(--green); color: #4caf50; }
+    .modal-msg.visible { display: block; }
   </style>
 </head>
 <body>
   <div class="grain"></div>
   <div class="scanlines"></div>
 
-  <!-- Auth Modal -->
   <div class="modal-overlay" id="authModal">
     <div class="modal">
       <button class="modal-close" onclick="closeModal()">✕</button>
       <div class="modal-title" id="modalTitle">Sign In</div>
       <div class="modal-sub" id="modalSub">ACCESS THE DETECTIVE'S CASE FILES</div>
-      <div class="modal-error" id="modalError"></div>
-      <div class="modal-success" id="modalSuccess"></div>
+      <div class="modal-msg" id="modalMsg"></div>
       <input class="modal-input" type="email" id="authEmail" placeholder="email address" />
       <input class="modal-input" type="password" id="authPassword" placeholder="password" onkeydown="if(event.key==='Enter')submitAuth()" />
       <button class="modal-btn" id="authSubmitBtn" onclick="submitAuth()">SIGN IN</button>
@@ -123,26 +104,19 @@
   </div>
 
   <div class="app-wrap">
-    <!-- Auth Bar -->
     <div class="auth-bar">
       <span class="user-info" id="userInfo"></span>
       <button class="auth-btn" id="authBarBtn" onclick="openModal()">SIGN IN</button>
     </div>
-
-    <!-- Header -->
     <div class="header">
       <div class="header-badge">CASE FILE SYSTEM v4.0</div>
       <div class="header-title">🕵️ The Digital Detective</div>
       <div class="header-sub">// 20-SOURCE GLOBAL INTELLIGENCE ENGINE //</div>
     </div>
-
-    <!-- Free tier banner -->
     <div class="free-banner" id="freeBanner" style="display:none">
-      <span id="freeBannerText">🔍 FREE TIER — 3 investigations/day</span>
+      <span>🔍 FREE TIER — 3 investigations/day</span>
       <button class="upgrade-link" onclick="openModal()">Upgrade to Pro →</button>
     </div>
-
-    <!-- Search -->
     <div class="search-block">
       <div class="search-label">// ENTER TARGET URL FOR INVESTIGATION</div>
       <div class="search-row">
@@ -150,16 +124,10 @@
         <button class="search-btn" id="searchBtn" onclick="runInvestigation()">INVESTIGATE</button>
       </div>
     </div>
-
-    <!-- Status Log -->
     <div class="status-log" id="statusLog">
       <div class="status-line active" id="statusText">⟳ Initialising investigation...</div>
     </div>
-
-    <!-- Error -->
     <div class="error-box" id="errorBox"></div>
-
-    <!-- Report -->
     <div class="report" id="report">
       <div class="verdict-block" id="verdictBlock">
         <div class="verdict-stamp" id="verdictStamp"></div>
@@ -176,95 +144,133 @@
   </div>
 
   <script>
-    const BACKEND_URL = "https://detective-app-production-7080.up.railway.app";
-    const SUPABASE_URL = "https://harhjuykvkfwksccjjxq.supabase.co";
-    const SUPABASE_ANON_KEY = "sb_publishable_gNTIfFSDai7wWPMPIVM-Vg_2rthrcNV";
+    const BACKEND   = "https://detective-app-production-7080.up.railway.app";
+    const SB_URL    = "https://harhjuykvkfwksccjjxq.supabase.co";
+    const SB_KEY    = "sb_publishable_gNTIfFSDai7wWPMPIVM-Vg_2rthrcNV";
 
-    const { createClient } = supabase;
-    const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+    // ── Pure fetch-based Supabase auth (no library needed) ────────────────────
     let currentUser = null;
-    let userToken = null;
-    let authMode = "signin";
+    let userToken   = null;
+    let authMode    = "signin";
 
-    sb.auth.onAuthStateChange((event, session) => {
-      if (session) {
-        currentUser = session.user;
-        userToken = session.access_token;
-      } else {
-        currentUser = null;
-        userToken = null;
-      }
+    async function sbSignIn(email, password) {
+      const r = await fetch(`${SB_URL}/auth/v1/token?grant_type=password`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "apikey": SB_KEY },
+        body: JSON.stringify({ email, password }),
+      });
+      return r.json();
+    }
+
+    async function sbSignUp(email, password) {
+      const r = await fetch(`${SB_URL}/auth/v1/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "apikey": SB_KEY },
+        body: JSON.stringify({ email, password }),
+      });
+      return r.json();
+    }
+
+    async function sbSignOut() {
+      if (!userToken) return;
+      await fetch(`${SB_URL}/auth/v1/logout`, {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${userToken}`, "apikey": SB_KEY },
+      });
+      currentUser = null;
+      userToken = null;
+      localStorage.removeItem("dd_token");
+      localStorage.removeItem("dd_user");
       updateAuthUI();
+    }
+
+    // Restore session from localStorage on page load
+    window.addEventListener("load", () => {
+      const saved = localStorage.getItem("dd_token");
+      const savedUser = localStorage.getItem("dd_user");
+      if (saved && savedUser) {
+        userToken = saved;
+        currentUser = JSON.parse(savedUser);
+        updateAuthUI();
+      }
     });
 
     function updateAuthUI() {
-      const userInfo = document.getElementById("userInfo");
+      const userInfo   = document.getElementById("userInfo");
       const authBarBtn = document.getElementById("authBarBtn");
       const freeBanner = document.getElementById("freeBanner");
       if (currentUser) {
-        userInfo.textContent = currentUser.email;
-        authBarBtn.textContent = "SIGN OUT";
-        authBarBtn.onclick = signOut;
+        userInfo.textContent     = currentUser.email;
+        authBarBtn.textContent   = "SIGN OUT";
+        authBarBtn.onclick       = sbSignOut;
         freeBanner.style.display = "flex";
       } else {
-        userInfo.textContent = "";
-        authBarBtn.textContent = "SIGN IN";
-        authBarBtn.onclick = openModal;
+        userInfo.textContent     = "";
+        authBarBtn.textContent   = "SIGN IN";
+        authBarBtn.onclick       = openModal;
         freeBanner.style.display = "none";
       }
     }
 
-    async function signOut() { await sb.auth.signOut(); }
-
-    function openModal() { document.getElementById("authModal").classList.add("visible"); document.getElementById("authEmail").focus(); }
+    // ── Modal ─────────────────────────────────────────────────────────────────
+    function openModal()  { document.getElementById("authModal").classList.add("visible"); document.getElementById("authEmail").focus(); }
     function closeModal() { document.getElementById("authModal").classList.remove("visible"); }
+
+    function showModalMsg(text, type) {
+      const el = document.getElementById("modalMsg");
+      el.textContent = text;
+      el.className = `modal-msg ${type} visible`;
+    }
 
     function toggleAuthMode() {
       authMode = authMode === "signin" ? "signup" : "signin";
       const s = authMode === "signin";
-      document.getElementById("modalTitle").textContent = s ? "Sign In" : "Create Account";
-      document.getElementById("modalSub").textContent = s ? "ACCESS THE DETECTIVE'S CASE FILES" : "3 FREE INVESTIGATIONS PER DAY";
-      document.getElementById("authSubmitBtn").textContent = s ? "SIGN IN" : "CREATE ACCOUNT";
-      document.getElementById("modalSwitch").innerHTML = s
+      document.getElementById("modalTitle").textContent     = s ? "Sign In" : "Create Account";
+      document.getElementById("modalSub").textContent       = s ? "ACCESS THE DETECTIVE'S CASE FILES" : "3 FREE INVESTIGATIONS PER DAY";
+      document.getElementById("authSubmitBtn").textContent  = s ? "SIGN IN" : "CREATE ACCOUNT";
+      document.getElementById("modalSwitch").innerHTML      = s
         ? `No account? <span onclick="toggleAuthMode()">Sign up for free</span>`
         : `Already have an account? <span onclick="toggleAuthMode()">Sign in</span>`;
-      document.getElementById("modalError").classList.remove("visible");
-      document.getElementById("modalSuccess").classList.remove("visible");
+      document.getElementById("modalMsg").className = "modal-msg";
     }
 
     async function submitAuth() {
-      const email = document.getElementById("authEmail").value.trim();
+      const email    = document.getElementById("authEmail").value.trim();
       const password = document.getElementById("authPassword").value;
-      const btn = document.getElementById("authSubmitBtn");
-      const errBox = document.getElementById("modalError");
-      const successBox = document.getElementById("modalSuccess");
+      const btn      = document.getElementById("authSubmitBtn");
 
-      if (!email || !password) { errBox.textContent = "Please enter email and password."; errBox.classList.add("visible"); return; }
+      if (!email || !password) { showModalMsg("Please enter email and password.", "error"); return; }
 
-      btn.disabled = true;
+      btn.disabled    = true;
       btn.textContent = "PLEASE WAIT...";
-      errBox.classList.remove("visible");
-      successBox.classList.remove("visible");
 
-      const result = authMode === "signin"
-        ? await sb.auth.signInWithPassword({ email, password })
-        : await sb.auth.signUp({ email, password });
+      const data = authMode === "signin"
+        ? await sbSignIn(email, password)
+        : await sbSignUp(email, password);
 
-      btn.disabled = false;
+      btn.disabled    = false;
       btn.textContent = authMode === "signin" ? "SIGN IN" : "CREATE ACCOUNT";
 
-      if (result.error) {
-        errBox.textContent = result.error.message;
-        errBox.classList.add("visible");
-      } else if (authMode === "signup" && !result.data.session) {
-        successBox.textContent = "✓ Account created! Check your email to confirm, then sign in.";
-        successBox.classList.add("visible");
-      } else {
-        closeModal();
+      if (data.error || data.error_description || data.msg === "Email not confirmed") {
+        showModalMsg(data.error_description || data.msg || data.error || "Authentication failed.", "error");
+        return;
       }
+
+      if (authMode === "signup" && !data.access_token) {
+        showModalMsg("✓ Account created! Check your email to confirm, then sign in.", "success");
+        return;
+      }
+
+      // Successful sign in
+      userToken   = data.access_token;
+      currentUser = data.user;
+      localStorage.setItem("dd_token", userToken);
+      localStorage.setItem("dd_user", JSON.stringify(currentUser));
+      updateAuthUI();
+      closeModal();
     }
 
+    // ── Investigation ─────────────────────────────────────────────────────────
     async function runInvestigation() {
       const target = document.getElementById("targetInput").value.trim();
       if (!target) return;
@@ -272,7 +278,7 @@
       document.getElementById("report").classList.remove("visible");
       document.getElementById("errorBox").classList.remove("visible");
 
-      const statusLog = document.getElementById("statusLog");
+      const statusLog  = document.getElementById("statusLog");
       const statusText = document.getElementById("statusText");
       statusLog.classList.add("visible");
 
@@ -283,7 +289,7 @@
         "⟳ Checking Google Safe Browsing...",
         "⟳ Verifying SSL certificate live...",
         "⟳ Searching 20 global registries...",
-        "⟳ Scanning community signals...",
+        "⟳ Scanning Reddit & community signals...",
         "⟳ Checking UN & ICIJ sanctions lists...",
         "⟳ Running URLScan live page analysis...",
         "⟳ Checking Wayback Machine history...",
@@ -292,17 +298,14 @@
       ];
 
       let i = 0;
-      const interval = setInterval(() => {
-        if (i < steps.length) { statusText.textContent = steps[i]; i++; }
-      }, 1200);
-
+      const interval = setInterval(() => { if (i < steps.length) { statusText.textContent = steps[i++]; } }, 1200);
       document.getElementById("searchBtn").disabled = true;
 
       try {
         const body = { target };
         if (userToken) body.user_token = userToken;
 
-        const res = await fetch(`${BACKEND_URL}/investigate`, {
+        const res = await fetch(`${BACKEND}/investigate`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
@@ -313,7 +316,7 @@
         statusLog.classList.remove("visible");
 
         if (res.status === 429) {
-          showError("Free tier limit reached — 3 investigations per day. Sign in and upgrade to Pro for unlimited access.");
+          showError("Free tier limit reached — 3 investigations/day. Sign up and upgrade to Pro for unlimited access.");
           return;
         }
         if (!res.ok) {
@@ -321,7 +324,6 @@
           showError(err.detail || "Investigation failed. Please try again.");
           return;
         }
-
         renderReport(await res.json());
 
       } catch (err) {
@@ -342,11 +344,11 @@
       document.getElementById("verdictScore").textContent = `RISK SCORE: ${r.score}/100`;
       document.getElementById("verdictQuote").textContent = '"' + r.verdict_summary + '"';
 
-      const findingsList = document.getElementById("findingsList");
-      findingsList.innerHTML = "";
+      const list = document.getElementById("findingsList");
+      list.innerHTML = "";
       (r.findings || []).forEach(f => {
-        const tagClass = f.tag === "RISK" ? "tag-risk" : f.tag === "OK" ? "tag-ok" : "tag-caution";
-        findingsList.innerHTML += `<div class="finding-item"><div class="finding-icon">${f.icon}</div><div class="finding-text"><span class="finding-tag ${tagClass}">${f.tag}</span>${f.text}</div></div>`;
+        const tc = f.tag === "RISK" ? "tag-risk" : f.tag === "OK" ? "tag-ok" : "tag-caution";
+        list.innerHTML += `<div class="finding-item"><div class="finding-icon">${f.icon}</div><div class="finding-text"><span class="finding-tag ${tc}">${f.tag}</span>${f.text}</div></div>`;
       });
 
       document.getElementById("narrativeText").textContent = r.narrative;
@@ -363,9 +365,9 @@
 
     function toggleRaw() {
       const grid = document.getElementById("dataGrid");
-      const toggle = document.getElementById("rawToggle");
+      const tog  = document.getElementById("rawToggle");
       grid.classList.toggle("open");
-      toggle.textContent = grid.classList.contains("open") ? "−" : "+";
+      tog.textContent = grid.classList.contains("open") ? "−" : "+";
     }
 
     function showError(msg) {
@@ -374,3 +376,5 @@
       box.classList.add("visible");
     }
   </script>
+</body>
+</html>
