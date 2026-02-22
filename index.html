@@ -147,8 +147,8 @@
 
   <script>
     var BACKEND = "https://detective-app-production-7080.up.railway.app";
-    var SB_URL  = "https://harhjuykvkfwksccjjxq.supabase.co";
-    var SB_KEY  = "sb_publishable_gNTIfFSDai7wWPMPIVM-Vg_2rthrcNV";
+    var SB_URL  = "REPLACE_WITH_YOUR_SUPABASE_URL";
+    var SB_KEY  = "REPLACE_WITH_YOUR_SUPABASE_ANON_KEY";
 
     var currentUser = null;
     var userToken   = null;
@@ -286,6 +286,9 @@
       var btn = document.getElementById("upgradeBtn");
       btn.textContent = "REDIRECTING...";
       btn.disabled    = true;
+      var tokenPreview = userToken ? userToken.substring(0, 20) + "..." : "NULL";
+      console.log("Token being sent:", tokenPreview);
+      console.log("User:", currentUser ? currentUser.email : "NULL");
 
       fetch(BACKEND + "/create-checkout-session", {
         method: "POST",
