@@ -189,10 +189,16 @@
     window.addEventListener("load", function() {
       var saved     = localStorage.getItem("dd_token");
       var savedUser = localStorage.getItem("dd_user");
-      if (saved && savedUser) {
-        userToken   = saved;
-        currentUser = JSON.parse(savedUser);
-        updateAuthUI();
+      if (saved && saved !== "null" && savedUser && savedUser !== "null") {
+        try {
+          userToken   = saved;
+          currentUser = JSON.parse(savedUser);
+          console.log("Session restored for:", currentUser.email);
+          updateAuthUI();
+        } catch(e) {
+          localStorage.removeItem("dd_token");
+          localStorage.removeItem("dd_user");
+        }
       }
       // Handle Stripe return
       var params = new URLSearchParams(window.location.search);
@@ -282,13 +288,15 @@
 
     // ── Stripe upgrade ────────────────────────────────────────────────────────
     function upgradeToPro() {
-      if (!currentUser || !userToken) { openModal(); return; }
+      if (!currentUser || !userToken || userToken === "null") {
+        openModal();
+        return;
+      }
       var btn = document.getElementById("upgradeBtn");
       btn.textContent = "REDIRECTING...";
       btn.disabled    = true;
-      var tokenPreview = userToken ? userToken.substring(0, 20) + "..." : "NULL";
-      console.log("Token being sent:", tokenPreview);
-      console.log("User:", currentUser ? currentUser.email : "NULL");
+      console.log("Sending token:", userToken.substring(0, 30) + "...");
+      console.log("User email:", currentUser.email);
 
       fetch(BACKEND + "/create-checkout-session", {
         method: "POST",
