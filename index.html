@@ -247,6 +247,16 @@
 <body>
 <div class="page">
 
+  <!-- Anon Limit Modal -->
+  <div class="modal-bg" id="anonModal">
+    <div class="modal">
+      <div class="modal-title">Free account required</div>
+      <div class="modal-sub" style="margin-bottom:20px;">You've used your free scan. Create a free account for 3 scans per day — no credit card needed.</div>
+      <button class="modal-submit" onclick="closeAnonModal();openModal('signup')">Create free account</button>
+      <div style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:10px;">Already have an account? <a onclick="closeAnonModal();openModal('signin')" style="color:var(--blue);cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Sign in</a></div>
+    </div>
+  </div>
+
   <!-- Modal -->
   <div class="modal-bg" id="authModal">
     <div class="modal">
@@ -258,6 +268,9 @@
       <input class="modal-input" type="password" id="mPass" placeholder="Password" onkeydown="if(event.key==='Enter')doAuth()" />
       <button class="modal-submit" id="mBtn" onclick="doAuth()">Sign in</button>
       <div class="modal-switch" id="mSwitch">Don't have an account? <a onclick="toggleMode()">Sign up free</a></div>
+      <div style="text-align:center;margin-top:8px;" id="mForgotWrap">
+        <a onclick="toggleMode('forgot')" style="font-size:12px;color:var(--text-faint);cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Forgot password?</a>
+      </div>
     </div>
   </div>
 
@@ -495,7 +508,7 @@ var BACKEND = "https://detective-app-production-7080.up.railway.app";
 var SB_URL  = "https://harhjuykvkfwksccjjxq.supabase.co";
 var SB_KEY  = "REPLACE_WITH_YOUR_SUPABASE_ANON_KEY";
 
-var user=null, token=null, plan="free", mode="signin";
+var user=null, token=null, plan="free", mode="signin", anonScans=parseInt(localStorage.getItem('sg_anon_scans')||'0');
 
 
 
@@ -548,23 +561,62 @@ function updateUI(){
   }
 }
 
-function openModal(){ document.getElementById("authModal").classList.add("open"); setModalMode(mode); document.getElementById("mEmail").focus(); }
+function openModal(m){ if(m) mode=m; document.getElementById("authModal").classList.add("open"); setModalMode(mode); document.getElementById("mEmail").focus(); }
 function closeModal(){ document.getElementById("authModal").classList.remove("open"); }
+function closeAnonModal(){ document.getElementById("anonModal").classList.remove("open"); }
 function setModalMode(m){
-  mode=m; var s=m==="signin";
-  document.getElementById("mTitle").textContent=s?"Sign in":"Create account";
-  document.getElementById("mSub").textContent=s?"Welcome back to Signum":"3 free scans per day, no credit card";
-  document.getElementById("mBtn").textContent=s?"Sign in":"Create account";
-  document.getElementById("mSwitch").innerHTML=s?'Don\'t have an account? <a onclick="toggleMode()">Sign up free</a>':'Already have an account? <a onclick="toggleMode()">Sign in</a>';
+  mode=m;
+  var fw=document.getElementById("mForgotWrap");
+  var pb=document.getElementById("mPass");
+  if(m==="signin"){
+    document.getElementById("mTitle").textContent="Sign in";
+    document.getElementById("mSub").textContent="Welcome back to Signum";
+    document.getElementById("mBtn").textContent="Sign in";
+    document.getElementById("mSwitch").innerHTML='Don\'t have an account? <a onclick="toggleMode()">Sign up free</a>';
+    if(fw) fw.style.display="block";
+    if(pb) pb.style.display="block";
+  } else if(m==="signup"){
+    document.getElementById("mTitle").textContent="Create account";
+    document.getElementById("mSub").textContent="3 free scans per day, no credit card";
+    document.getElementById("mBtn").textContent="Create account";
+    document.getElementById("mSwitch").innerHTML='Already have an account? <a onclick="toggleMode()">Sign in</a>';
+    if(fw) fw.style.display="none";
+    if(pb) pb.style.display="block";
+  } else if(m==="forgot"){
+    document.getElementById("mTitle").textContent="Reset password";
+    document.getElementById("mSub").textContent="We'll send a reset link to your email";
+    document.getElementById("mBtn").textContent="Send reset link";
+    document.getElementById("mSwitch").innerHTML='Remembered it? <a onclick="toggleMode(\'signin\')">Sign in</a>';
+    if(fw) fw.style.display="none";
+    if(pb) pb.style.display="none";
+  }
   document.getElementById("mMsg").className="modal-msg";
 }
-function toggleMode(){ setModalMode(mode==="signin"?"signup":"signin"); }
+function toggleMode(m){ setModalMode(m||(mode==="signin"?"signup":"signin")); }
 
 function doAuth(){
   var e=document.getElementById("mEmail").value.trim();
-  var p=document.getElementById("mPass").value;
   var btn=document.getElementById("mBtn");
-  if(!e||!p){ showModalMsg("Please enter email and password.","error"); return; }
+  if(!e){ showModalMsg("Please enter your email.","error"); return; }
+
+  if(mode==="forgot"){
+    btn.disabled=true; btn.textContent="Sending...";
+    fetch(SB_URL+"/auth/v1/recover",{
+      method:"POST",
+      headers:{"Content-Type":"application/json","apikey":SB_KEY},
+      body:JSON.stringify({email:e})
+    }).then(function(){
+      btn.disabled=false; btn.textContent="Send reset link";
+      showModalMsg("Reset link sent! Check your email.","success");
+    }).catch(function(){
+      btn.disabled=false; btn.textContent="Send reset link";
+      showModalMsg("Could not send reset email. Try again.","error");
+    });
+    return;
+  }
+
+  var p=document.getElementById("mPass").value;
+  if(!p){ showModalMsg("Please enter your password.","error"); return; }
   btn.disabled=true; btn.textContent="...";
   var pr=mode==="signin"?sbIn(e,p):sbUp(e,p);
   pr.then(function(d){
@@ -573,6 +625,8 @@ function doAuth(){
     if(mode==="signup"&&!d.access_token){ showModalMsg("Account created! Check your email to confirm, then sign in.","success"); return; }
     token=d.access_token; user=d.user;
     localStorage.setItem("sg_token",token); localStorage.setItem("sg_user",JSON.stringify(user));
+    // Reset anon scan counter on login
+    anonScans=0; localStorage.setItem("sg_anon_scans","0");
     fetchPlan(user.id); updateUI(); closeModal();
   }).catch(function(){ btn.disabled=false; btn.textContent=mode==="signin"?"Sign in":"Create account"; showModalMsg("Connection error.","error"); });
 }
@@ -594,6 +648,16 @@ function upgradeToPro(){
 function runScan(){
   var url=document.getElementById("urlInput").value.trim();
   if(!url) return;
+
+  // Enforce anon limit — 1 free scan without account
+  if(!user){
+    if(anonScans >= 1){
+      document.getElementById("anonModal").classList.add("open");
+      return;
+    }
+    anonScans++;
+    localStorage.setItem("sg_anon_scans", anonScans);
+  }
   document.getElementById("reportSection").classList.remove("visible");
   document.getElementById("errorMsg").classList.remove("visible");
   document.getElementById("howSection").style.display="none";
