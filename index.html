@@ -45,9 +45,7 @@
     .logo-icon { width: 28px; height: 28px; background: var(--blue); border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 16px rgba(59,130,246,0.4); }
     .logo-icon svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
     .nav-right { display: flex; align-items: center; gap: 8px; }
-    .lang-toggle { display: flex; background: var(--surface2); border-radius: 6px; padding: 2px; border: 1px solid var(--border); }
-    .lang-btn { background: none; border: none; padding: 4px 10px; font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500; cursor: pointer; border-radius: 4px; color: var(--text-muted); transition: all 0.15s; letter-spacing: 0.3px; }
-    .lang-btn.active { background: var(--blue); color: #fff; }
+
     .btn-sm { padding: 7px 16px; border-radius: 7px; font-size: 13px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.15s; border: none; }
     .btn-outline { background: none; border: 1px solid var(--border2) !important; color: var(--text-muted); }
     .btn-outline:hover { border-color: var(--blue) !important; color: var(--blue); }
@@ -152,6 +150,24 @@
     /* Share btn */
     .share-btn { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; background: none; border: 1px solid var(--border2); border-radius: 7px; padding: 7px 14px; font-size: 12px; font-family: 'DM Sans', sans-serif; color: var(--text-muted); cursor: pointer; transition: all 0.15s; font-weight: 500; }
     .share-btn:hover { border-color: var(--blue); color: var(--blue); }
+    .share-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 300; display: none; align-items: flex-end; justify-content: center; padding: 20px; }
+    .share-modal.open { display: flex; }
+    @media(min-width:520px){ .share-modal { align-items: center; } }
+    .share-sheet { background: var(--surface2); border: 1px solid var(--border2); border-radius: 16px; padding: 24px; width: 100%; max-width: 400px; animation: slideUp 0.25s ease; }
+    @keyframes slideUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
+    .share-sheet-title { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .share-sheet-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; font-family: 'DM Mono', monospace; }
+    .share-platforms { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
+    .share-platform { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 14px 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.15s; text-decoration: none; }
+    .share-platform:hover { border-color: var(--blue); background: var(--blue-soft); }
+    .share-platform-icon { font-size: 22px; line-height: 1; }
+    .share-platform-name { font-size: 10px; color: var(--text-muted); font-weight: 500; text-align: center; }
+    .share-copy-row { display: flex; gap: 8px; }
+    .share-copy-input { flex: 1; background: var(--bg2); border: 1px solid var(--border); color: var(--text-muted); padding: 9px 12px; font-size: 12px; font-family: 'DM Mono', monospace; border-radius: 7px; outline: none; }
+    .share-copy-btn { background: var(--blue); color: #fff; border: none; padding: 9px 16px; border-radius: 7px; font-size: 12px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; white-space: nowrap; transition: opacity 0.15s; }
+    .share-copy-btn:hover { opacity: 0.85; }
+    .share-dismiss { width: 100%; background: none; border: 1px solid var(--border); color: var(--text-muted); padding: 10px; border-radius: 8px; font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; margin-top: 10px; transition: all 0.15s; }
+    .share-dismiss:hover { color: var(--text); }
 
     /* Sections */
     .section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; margin-bottom: 10px; }
@@ -254,10 +270,6 @@
       Signum
     </a>
     <div class="nav-right">
-      <div class="lang-toggle">
-        <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
-        <button class="lang-btn" id="btnBG" onclick="setLang('bg')">БГ</button>
-      </div>
       <div id="navAuth">
         <button class="btn-sm btn-blue" onclick="openModal()">Sign in</button>
       </div>
@@ -347,6 +359,9 @@
           <div class="verdict-label" id="verdictLabel">—</div>
           <div class="verdict-summary" id="verdictSummary"></div>
           <button class="share-btn" onclick="shareReport()" id="tShareBtn">↗ Share report</button>
+        <div id="scanCountWrap" style="margin-top:8px;font-size:12px;color:var(--text-faint);font-family:'DM Mono',monospace;display:none;">
+          <span id="scanCountText"></span>
+        </div>
         </div>
       </div>
 
@@ -427,116 +442,66 @@
   </div>
 
 </div>
+
+  <!-- Share Modal -->
+  <div class="share-modal" id="shareModal" onclick="if(event.target===this)closeShare()">
+    <div class="share-sheet">
+      <div class="share-sheet-title" id="tShareTitle">Share security report</div>
+      <div class="share-sheet-sub" id="tShareSub">—</div>
+      <div class="share-platforms">
+        <a class="share-platform" id="shareWhatsApp" href="#" target="_blank" rel="noopener">
+          <span class="share-platform-icon">💬</span>
+          <span class="share-platform-name">WhatsApp</span>
+        </a>
+        <a class="share-platform" id="shareViber" href="#" target="_blank" rel="noopener">
+          <span class="share-platform-icon">📱</span>
+          <span class="share-platform-name">Viber</span>
+        </a>
+        <a class="share-platform" id="shareTwitter" href="#" target="_blank" rel="noopener">
+          <span class="share-platform-icon">🐦</span>
+          <span class="share-platform-name">X / Twitter</span>
+        </a>
+        <a class="share-platform" id="shareFacebook" href="#" target="_blank" rel="noopener">
+          <span class="share-platform-icon">👥</span>
+          <span class="share-platform-name">Facebook</span>
+        </a>
+        <a class="share-platform" id="shareLinkedIn" href="#" target="_blank" rel="noopener">
+          <span class="share-platform-icon">💼</span>
+          <span class="share-platform-name">LinkedIn</span>
+        </a>
+        <a class="share-platform" id="shareTelegram" href="#" target="_blank" rel="noopener">
+          <span class="share-platform-icon">✈️</span>
+          <span class="share-platform-name">Telegram</span>
+        </a>
+        <a class="share-platform" id="shareEmail" href="#" target="_blank" rel="noopener">
+          <span class="share-platform-icon">📧</span>
+          <span class="share-platform-name">Email</span>
+        </a>
+        <a class="share-platform" id="shareReddit" href="#" target="_blank" rel="noopener">
+          <span class="share-platform-icon">🤖</span>
+          <span class="share-platform-name">Reddit</span>
+        </a>
+      </div>
+      <div class="share-copy-row">
+        <input class="share-copy-input" id="shareCopyInput" readonly />
+        <button class="share-copy-btn" id="shareCopyBtn" onclick="copyShareLink()">Copy</button>
+      </div>
+      <button class="share-dismiss" onclick="closeShare()" id="tShareDismiss">Dismiss</button>
+    </div>
+  </div>
+
 <script>
 var BACKEND = "https://detective-app-production-7080.up.railway.app";
 var SB_URL  = "https://harhjuykvkfwksccjjxq.supabase.co";
 var SB_KEY  = "REPLACE_WITH_YOUR_SUPABASE_ANON_KEY";
 
-var user=null, token=null, plan="free", mode="signin", lang="en";
+var user=null, token=null, plan="free", mode="signin";
 
-var I = {
-  en:{
-    badge:"20 intelligence sources · Live analysis",
-    heroTitle:"Check if any website<br/>is <em>safe to trust.</em>",
-    heroSub:"Paste any URL and get an instant risk report powered by 20 global data sources and AI-driven analysis.",
-    scanBtn:"Analyze", placeholder:"Enter a URL, e.g. example.com",
-    hint:"No account required · Results in ~20 seconds",
-    freePlanLabel:"Free plan", freePlanSub:"3 scans per day",
-    proPlanLabel:"Pro plan", proPlanSub:"Unlimited scans",
-    upgradeBtn:"Upgrade to Pro", signInBtn:"Sign in", signOutBtn:"Sign out",
-    h1:"Enter URL", h1s:"Paste any website address into the field above.",
-    h2:"Scan signals", h2s:"We query 20 global intelligence sources simultaneously.",
-    h3:"Get report", h3s:"Receive a clear risk score with full explanation.",
-    findings:"Findings", analysis:"AI Analysis", rawLabel:"Raw intelligence data",
-    shareBtn:"↗ Share report", confLabel:"CONFIDENCE LEVEL",
-    t1:"Encrypted scanning", t2:"Privacy focused", t3:"Real-time analysis", t4:"20 global sources",
-    pricingTitle:"Simple, transparent pricing", pricingSub:"Start free. Upgrade anytime.",
-    freePeriod:"forever", proPeriod:"per month", popular:"MOST POPULAR",
-    pf:["3 scans per day","20 intelligence sources","AI risk analysis","Unlimited scans","Scan history","Priority support"],
-    pp:["Unlimited scans","20 intelligence sources","AI risk analysis","Scan history","Priority support","New sources as added"],
-    freeCta:"Get started free", proCta:"Upgrade to Pro",
-    pricingNote:"Cancel anytime · Billed monthly · Renews automatically",
-    verdicts:{GREEN:"Safe",YELLOW:"Caution",RED:"Danger"},
-    conf:{high:"High Confidence",med:"Medium Confidence",low:"Low Confidence"},
-    status:["Initializing scan...","Querying domain registry...","Running malware scan...","Checking Safe Browsing...","Verifying SSL certificate...","Searching global registries...","Scanning community signals...","Checking sanctions lists...","Running live page analysis...","Consulting AI analyst...","Compiling report..."],
-    limitMsg:"Daily limit reached — upgrade to Pro for unlimited scans.",
-    serverErr:"Could not reach server. Please try again.",
-    upgradeOk:"Welcome to Pro! Unlimited scans unlocked.",
-    mSignInTitle:"Sign in", mSignInSub:"Welcome back to Signum",
-    mSignUpTitle:"Create account", mSignUpSub:"3 free scans per day, no credit card",
-    mSignInSwitch:"Don't have an account? <a onclick=\"toggleMode()\">Sign up free</a>",
-    mSignUpSwitch:"Already have an account? <a onclick=\"toggleMode()\">Sign in</a>",
-    mSignInBtn:"Sign in", mSignUpBtn:"Create account",
-    mSignUpOk:"Account created! Check your email to confirm, then sign in.",
-  },
-  bg:{
-    badge:"20 разузнавателни источника · Анализ в реално време",
-    heroTitle:"Проверете дали даден сайт<br/>е <em>безопасен.</em>",
-    heroSub:"Въведете URL и получете моментален доклад за риска от 20 глобални источника и AI анализ.",
-    scanBtn:"Анализирай", placeholder:"Въведете URL, напр. example.com",
-    hint:"Не се изисква акаунт · Резултат за ~20 секунди",
-    freePlanLabel:"Безплатен план", freePlanSub:"3 проверки на ден",
-    proPlanLabel:"Pro план", proPlanSub:"Неограничени проверки",
-    upgradeBtn:"Надградете до Pro", signInBtn:"Вход", signOutBtn:"Изход",
-    h1:"Въведете URL", h1s:"Поставете адреса на сайта в полето по-горе.",
-    h2:"Сканиране", h2s:"Проверяваме 20 глобални источника едновременно.",
-    h3:"Получете доклад", h3s:"Ясна оценка на риска с пълно обяснение.",
-    findings:"Открития", analysis:"AI Анализ", rawLabel:"Сурови данни",
-    shareBtn:"↗ Сподели доклад", confLabel:"НИВО НА УВЕРЕНОСТ",
-    t1:"Криптирано сканиране", t2:"Фокус върху поверителност", t3:"Анализ в реално време", t4:"20 глобални источника",
-    pricingTitle:"Прозрачни цени", pricingSub:"Започнете безплатно. Надградете кога искате.",
-    freePeriod:"завинаги", proPeriod:"на месец", popular:"НАЙ-ПОПУЛЯРЕН",
-    pf:["3 проверки на ден","20 источника","AI анализ","Неограничени проверки","История","Приоритетна поддръжка"],
-    pp:["Неограничени проверки","20 источника","AI анализ","История","Приоритетна поддръжка","Нови източници"],
-    freeCta:"Започнете безплатно", proCta:"Надградете до Pro",
-    pricingNote:"Анулирайте по всяко време · Месечно таксуване · Автоматично подновяване",
-    verdicts:{GREEN:"Безопасен",YELLOW:"Внимание",RED:"Опасност"},
-    conf:{high:"Висока увереност",med:"Средна увереност",low:"Ниска увереност"},
-    status:["Инициализиране...","Проверка на домейн регистъра...","Сканиране за злонамерен софтуер...","Проверка Safe Browsing...","Верифициране на SSL...","Търсене в глобални регистри...","Сканиране на общността...","Проверка на санкции...","Анализ на живата страница...","Консултиране с AI...","Съставяне на доклад..."],
-    limitMsg:"Достигнат дневен лимит — надградете до Pro за неограничени проверки.",
-    serverErr:"Сървърът не отговаря. Моля опитайте отново.",
-    upgradeOk:"Добре дошли в Pro! Неограничени проверки отключени.",
-    mSignInTitle:"Вход", mSignInSub:"Добре дошли обратно в Signum",
-    mSignUpTitle:"Създайте акаунт", mSignUpSub:"3 безплатни проверки на ден",
-    mSignInSwitch:"Нямате акаунт? <a onclick=\"toggleMode()\">Регистрирайте се</a>",
-    mSignUpSwitch:"Вече имате акаунт? <a onclick=\"toggleMode()\">Влезте</a>",
-    mSignInBtn:"Вход", mSignUpBtn:"Създай акаунт",
-    mSignUpOk:"Акаунтът е създаден! Проверете имейла си, след което влезте.",
-  }
-};
 
-function tr(k){ return I[lang][k]||I.en[k]||k; }
 
-function setLang(l){
-  lang=l; localStorage.setItem("sg_lang",l);
-  document.getElementById("btnEN").className="lang-btn"+(l==="en"?" active":"");
-  document.getElementById("btnBG").className="lang-btn"+(l==="bg"?" active":"");
-  applyLang();
-}
 
-function applyLang(){
-  var pairs={
-    tBadge:"badge",tHeroSub:"heroSub",tHint:"hint",
-    tFreePlanLabel:"freePlanLabel",tFreePlanSub:"freePlanSub",
-    tProPlanLabel:"proPlanLabel",tProPlanSub:"proPlanSub",
-    tH1:"h1",tH1s:"h1s",tH2:"h2",tH2s:"h2s",tH3:"h3",tH3s:"h3s",
-    tFindings:"findings",tAnalysis:"analysis",tRawLabel:"rawLabel",tShareBtn:"shareBtn",tConfLabel:"confLabel",
-    tT1:"t1",tT2:"t2",tT3:"t3",tT4:"t4",
-    tPricingTitle:"pricingTitle",tPricingSub:"pricingSub",
-    tFreePeriod:"freePeriod",tProPeriod:"proPeriod",tPopular:"popular",
-    tFreeCta:"freeCta",tProCta:"proCta",tPricingNote:"pricingNote"
-  };
-  Object.keys(pairs).forEach(function(id){
-    var el=document.getElementById(id); if(el) el.textContent=tr(pairs[id]);
-  });
-  document.getElementById("tHeroTitle").innerHTML=tr("heroTitle");
-  tr("pf").forEach(function(f,i){ var el=document.getElementById("tPF"+(i+1)); if(el) el.textContent=f; });
-  tr("pp").forEach(function(f,i){ var el=document.getElementById("tPP"+(i+1)); if(el) el.textContent=f; });
-  document.getElementById("scanBtn").textContent=tr("scanBtn");
-  document.getElementById("urlInput").placeholder=tr("placeholder");
-  var ub=document.getElementById("upgBtn"); if(ub) ub.textContent=tr("upgradeBtn");
-  updateUI();
-}
+
+
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 function sbIn(e,p){ return fetch(SB_URL+"/auth/v1/token?grant_type=password",{method:"POST",headers:{"Content-Type":"application/json","apikey":SB_KEY},body:JSON.stringify({email:e,password:p})}).then(function(r){return r.json();}); }
@@ -555,8 +520,6 @@ function fetchPlan(uid){
 }
 
 window.addEventListener("load",function(){
-  lang=localStorage.getItem("sg_lang")||"en";
-  setLang(lang);
   var st=localStorage.getItem("sg_token"), su=localStorage.getItem("sg_user");
   if(st&&st!=="null"&&su&&su!=="null"){
     try{ token=st; user=JSON.parse(su); plan=localStorage.getItem("sg_plan")||"free"; fetchPlan(user.id); }
@@ -565,10 +528,10 @@ window.addEventListener("load",function(){
   var p=new URLSearchParams(window.location.search);
   if(p.get("upgrade")==="success"){
     plan="pro"; localStorage.setItem("sg_plan","pro");
-    showMsg("successMsg",tr("upgradeOk"));
+    showMsg("successMsg","Welcome to Pro! Unlimited scans unlocked.");
     window.history.replaceState({},"",location.pathname);
   }
-  updateUI(); applyLang();
+  updateUI();
 });
 
 function updateUI(){
@@ -576,11 +539,11 @@ function updateUI(){
   var fb=document.getElementById("freeBanner");
   var pb=document.getElementById("proBanner");
   if(user){
-    navAuth.innerHTML='<span class="nav-email">'+user.email+'</span>&nbsp;<button class="btn-sm btn-outline" onclick="sbOut()">'+tr("signOutBtn")+'</button>';
+    navAuth.innerHTML='<span class="nav-email">'+user.email+'</span>&nbsp;<button class="btn-sm btn-outline" onclick="sbOut()">Sign out</button>';
     fb.style.display=plan==="pro"?"none":"flex";
     pb.style.display=plan==="pro"?"flex":"none";
   } else {
-    navAuth.innerHTML='<button class="btn-sm btn-blue" onclick="openModal()">'+tr("signInBtn")+'</button>';
+    navAuth.innerHTML='<button class="btn-sm btn-blue" onclick="openModal()">'+"Sign in"+'</button>';
     fb.style.display="none"; pb.style.display="none";
   }
 }
@@ -589,10 +552,10 @@ function openModal(){ document.getElementById("authModal").classList.add("open")
 function closeModal(){ document.getElementById("authModal").classList.remove("open"); }
 function setModalMode(m){
   mode=m; var s=m==="signin";
-  document.getElementById("mTitle").textContent=s?tr("mSignInTitle"):tr("mSignUpTitle");
-  document.getElementById("mSub").textContent=s?tr("mSignInSub"):tr("mSignUpSub");
-  document.getElementById("mBtn").textContent=s?tr("mSignInBtn"):tr("mSignUpBtn");
-  document.getElementById("mSwitch").innerHTML=s?tr("mSignInSwitch"):tr("mSignUpSwitch");
+  document.getElementById("mTitle").textContent=s?"Sign in":"Create account";
+  document.getElementById("mSub").textContent=s?"Welcome back to Signum":"3 free scans per day, no credit card";
+  document.getElementById("mBtn").textContent=s?"Sign in":"Create account";
+  document.getElementById("mSwitch").innerHTML=s?'Don\'t have an account? <a onclick="toggleMode()">Sign up free</a>':'Already have an account? <a onclick="toggleMode()">Sign in</a>';
   document.getElementById("mMsg").className="modal-msg";
 }
 function toggleMode(){ setModalMode(mode==="signin"?"signup":"signin"); }
@@ -605,13 +568,13 @@ function doAuth(){
   btn.disabled=true; btn.textContent="...";
   var pr=mode==="signin"?sbIn(e,p):sbUp(e,p);
   pr.then(function(d){
-    btn.disabled=false; btn.textContent=mode==="signin"?tr("mSignInBtn"):tr("mSignUpBtn");
+    btn.disabled=false; btn.textContent=mode==="signin"?"Sign in":"Create account";
     if(d.error||d.error_description){ showModalMsg(d.error_description||d.error,"error"); return; }
-    if(mode==="signup"&&!d.access_token){ showModalMsg(tr("mSignUpOk"),"success"); return; }
+    if(mode==="signup"&&!d.access_token){ showModalMsg("Account created! Check your email to confirm, then sign in.","success"); return; }
     token=d.access_token; user=d.user;
     localStorage.setItem("sg_token",token); localStorage.setItem("sg_user",JSON.stringify(user));
     fetchPlan(user.id); updateUI(); closeModal();
-  }).catch(function(){ btn.disabled=false; btn.textContent=mode==="signin"?tr("mSignInBtn"):tr("mSignUpBtn"); showModalMsg("Connection error.","error"); });
+  }).catch(function(){ btn.disabled=false; btn.textContent=mode==="signin"?"Sign in":"Create account"; showModalMsg("Connection error.","error"); });
 }
 function showModalMsg(t,type){ var el=document.getElementById("mMsg"); el.textContent=t; el.className="modal-msg "+type+" visible"; }
 
@@ -623,8 +586,8 @@ function upgradeToPro(){
   fetch(BACKEND+"/create-checkout-session",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_token:token,user_email:user.email})})
   .then(function(r){return r.json();}).then(function(d){
     if(d.checkout_url){ window.location.href=d.checkout_url; }
-    else{ alert("Could not start checkout."); if(btn){btn.textContent=tr("upgradeBtn");btn.disabled=false;} }
-  }).catch(function(){ alert("Could not start checkout."); if(btn){btn.textContent=tr("upgradeBtn");btn.disabled=false;} });
+    else{ alert("Could not start checkout."); if(btn){btn.textContent="Upgrade to Pro";btn.disabled=false;} }
+  }).catch(function(){ alert("Could not start checkout."); if(btn){btn.textContent="Upgrade to Pro";btn.disabled=false;} });
 }
 
 // ── Scan ──────────────────────────────────────────────────────────────────────
@@ -636,7 +599,7 @@ function runScan(){
   document.getElementById("howSection").style.display="none";
   var sw=document.getElementById("statusWrap"), st=document.getElementById("statusText");
   sw.classList.add("visible");
-  var steps=tr("status"), i=0;
+  var steps=["Initializing scan...","Querying domain registry...","Running malware scan...","Checking Safe Browsing...","Verifying SSL certificate...","Searching global registries...","Scanning community signals...","Checking sanctions lists...","Running live page analysis...","Consulting AI analyst...","Compiling report..."], i=0;
   var iv=setInterval(function(){ if(i<steps.length) st.textContent=steps[i++]; },1300);
   document.getElementById("scanBtn").disabled=true;
   var body={target:url};
@@ -644,10 +607,10 @@ function runScan(){
   fetch(BACKEND+"/investigate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})
   .then(function(res){
     clearInterval(iv); document.getElementById("scanBtn").disabled=false; sw.classList.remove("visible");
-    if(res.status===429){ showMsg("errorMsg",tr("limitMsg")); return null; }
-    return res.json().then(function(d){ if(!res.ok){ showMsg("errorMsg",d.detail||tr("serverErr")); return null; } return d; });
+    if(res.status===429){ showMsg("errorMsg","Daily limit reached — upgrade to Pro for unlimited scans."); return null; }
+    return res.json().then(function(d){ if(!res.ok){ showMsg("errorMsg",d.detail||"Could not reach server. Please try again."); return null; } return d; });
   }).then(function(d){ if(d) renderReport(d); })
-  .catch(function(){ clearInterval(iv); document.getElementById("scanBtn").disabled=false; sw.classList.remove("visible"); showMsg("errorMsg",tr("serverErr")); });
+  .catch(function(){ clearInterval(iv); document.getElementById("scanBtn").disabled=false; sw.classList.remove("visible"); showMsg("errorMsg","Could not reach server. Please try again."); });
 }
 
 // ── Render ────────────────────────────────────────────────────────────────────
@@ -659,13 +622,16 @@ function renderReport(r){
   arc.style.strokeDashoffset=circ;
   setTimeout(function(){ arc.style.strokeDashoffset=circ-(r.score/100)*circ; },60);
   document.getElementById("scoreNum").textContent=r.score;
-  document.getElementById("verdictLabel").textContent=(tr("verdicts")[r.verdict])||r.verdict;
+  var verdictLabels={"GREEN":"Safe","YELLOW":"Caution","RED":"Danger"};
+  document.getElementById("verdictLabel").textContent=verdictLabels[r.verdict]||r.verdict;
   document.getElementById("verdictSummary").textContent=r.verdict_summary;
 
-  // Confidence level
-  var conf = r.score >= 70 ? "high" : r.score >= 40 ? "med" : "low";
+  // Confidence level — from backend data_confidence field
+  var confMap = {"high":"high","medium":"med","low":"low"};
+  var conf = confMap[r.data_confidence] || "med";
+  var confLabels = {"high":"High Confidence","med":"Medium Confidence","low":"Low Confidence"};
   var confEl = document.getElementById("confBadge");
-  confEl.textContent = tr("conf")[conf];
+  confEl.textContent = confLabels[conf];
   confEl.className = "confidence-badge conf-"+conf;
 
   // Dashboard signals — top 5 findings as clean signals
@@ -693,6 +659,16 @@ function renderReport(r){
     grid.innerHTML+='<div class="data-cell"><div class="data-lbl">'+e[0]+'</div><div class="data-val">'+e[1]+'</div></div>';
   });
 
+  // Scan count social proof
+  var scWrap = document.getElementById("scanCountWrap");
+  var scText = document.getElementById("scanCountText");
+  if(r.scan_count && r.scan_count > 1){
+    scText.textContent = "Scanned " + r.scan_count + " times by Signum users";
+    scWrap.style.display = "block";
+  } else {
+    scWrap.style.display = "none";
+  }
+
   document.getElementById("reportSection").classList.add("visible");
   document.getElementById("reportSection").scrollIntoView({behavior:"smooth"});
 }
@@ -706,9 +682,44 @@ function shareReport(){
   var url=document.getElementById("urlInput").value.trim();
   var score=document.getElementById("scoreNum").textContent;
   var verdict=document.getElementById("verdictLabel").textContent;
-  var text="I checked "+url+" on Signum — Risk score: "+score+"/100 ("+verdict+"). Check any website for free: "+location.origin;
-  if(navigator.share){ navigator.share({title:"Signum Security Report",text:text,url:location.href}); }
-  else{ navigator.clipboard.writeText(text).then(function(){ alert("Copied to clipboard!"); }).catch(function(){ alert(text); }); }
+  var shareText="I checked "+url+" on Signum — Risk score: "+score+"/100 ("+verdict+"). Check any website for free:";
+  var shareUrl=location.origin;
+  var encoded=encodeURIComponent(shareText+" "+shareUrl);
+  var encodedUrl=encodeURIComponent(shareUrl);
+
+  document.getElementById("tShareTitle").textContent = "Share security report";
+  document.getElementById("tShareSub").textContent = url+" — "+score+"/100 "+verdict;
+  document.getElementById("tShareDismiss").textContent = "Dismiss";
+  document.getElementById("shareCopyBtn").textContent = "Copy";
+  document.getElementById("shareCopyInput").value = shareUrl;
+
+  document.getElementById("shareWhatsApp").href = "https://wa.me/?text="+encoded;
+  document.getElementById("shareViber").href = "viber://forward?text="+encoded;
+  document.getElementById("shareTwitter").href = "https://twitter.com/intent/tweet?text="+encodeURIComponent(shareText)+"&url="+encodedUrl;
+  document.getElementById("shareFacebook").href = "https://www.facebook.com/sharer/sharer.php?u="+encodedUrl+"&quote="+encodeURIComponent(shareText);
+  document.getElementById("shareLinkedIn").href = "https://www.linkedin.com/sharing/share-offsite/?url="+encodedUrl;
+  document.getElementById("shareTelegram").href = "https://t.me/share/url?url="+encodedUrl+"&text="+encodeURIComponent(shareText);
+  document.getElementById("shareEmail").href = "mailto:?subject="+encodeURIComponent("Security report: "+url)+"&body="+encoded;
+  document.getElementById("shareReddit").href = "https://reddit.com/submit?url="+encodedUrl+"&title="+encodeURIComponent("Security report: "+url+" — "+score+"/100 "+verdict);
+
+  document.getElementById("shareModal").classList.add("open");
+}
+
+function closeShare(){
+  document.getElementById("shareModal").classList.remove("open");
+}
+
+function copyShareLink(){
+  var input=document.getElementById("shareCopyInput");
+  var btn=document.getElementById("shareCopyBtn");
+  navigator.clipboard.writeText(input.value).then(function(){
+    btn.textContent="Copied!";
+    setTimeout(function(){ btn.textContent="Copy"; },2000);
+  }).catch(function(){
+    input.select(); document.execCommand("copy");
+    btn.textContent="Copied!";
+    setTimeout(function(){ btn.textContent="Copy"; },2000);
+  });
 }
 
 function showMsg(id,txt){ var el=document.getElementById(id); el.textContent=txt; el.classList.add("visible"); }
