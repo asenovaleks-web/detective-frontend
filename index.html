@@ -662,8 +662,9 @@ function renderReport(r){
   // Scan count social proof
   var scWrap = document.getElementById("scanCountWrap");
   var scText = document.getElementById("scanCountText");
-  if(r.scan_count && r.scan_count > 1){
-    scText.textContent = "Scanned " + r.scan_count + " times by Signum users";
+  var scanCount = parseInt(r.scan_count) || 0;
+  if(scanCount > 1){
+    scText.textContent = "🔍 Scanned " + scanCount + " times by Signum users";
     scWrap.style.display = "block";
   } else {
     scWrap.style.display = "none";
