@@ -264,6 +264,18 @@
     </div>
   </div>
 
+  <!-- Password Reset Modal -->
+  <div class="modal-bg" id="resetModal">
+    <div class="modal">
+      <div class="modal-title">Set new password</div>
+      <div class="modal-sub">Enter your new password below.</div>
+      <div class="modal-msg" id="resetMsg"></div>
+      <input class="modal-input" type="password" id="resetPass" placeholder="New password (min 6 characters)" />
+      <input class="modal-input" type="password" id="resetPass2" placeholder="Confirm new password" onkeydown="if(event.key==='Enter')doReset()" />
+      <button class="modal-submit" id="resetBtn" onclick="doReset()">Update password</button>
+    </div>
+  </div>
+
   <!-- Modal -->
   <div class="modal-bg" id="authModal">
     <div class="modal">
@@ -560,6 +572,17 @@ function fetchPlan(uid){
 }
 
 window.addEventListener("load",function(){
+  // Handle password reset flow from email link
+  var hash = window.location.hash;
+  var params = new URLSearchParams(hash.replace('#',''));
+  var accessToken = params.get('access_token');
+  var resetType = params.get('type');
+  if(accessToken && resetType === 'recovery'){
+    token = accessToken;
+    document.getElementById("resetModal").classList.add("open");
+    window.history.replaceState({},"",location.pathname);
+  }
+
   var st=localStorage.getItem("sg_token"), su=localStorage.getItem("sg_user");
   if(st&&st!=="null"&&su&&su!=="null"){
     try{ token=st; user=JSON.parse(su); plan=localStorage.getItem("sg_plan")||"free"; fetchPlan(user.id); }
@@ -812,6 +835,52 @@ function copyShareLink(){
     input.select(); document.execCommand("copy");
     btn.textContent="Copied!";
     setTimeout(function(){ btn.textContent="Copy"; },2000);
+  });
+}
+
+function doReset(){
+  var p1 = document.getElementById("resetPass").value;
+  var p2 = document.getElementById("resetPass2").value;
+  var btn = document.getElementById("resetBtn");
+  var msg = document.getElementById("resetMsg");
+
+  if(!p1 || p1.length < 6){
+    msg.textContent = "Password must be at least 6 characters.";
+    msg.className = "modal-msg error visible"; return;
+  }
+  if(p1 !== p2){
+    msg.textContent = "Passwords do not match.";
+    msg.className = "modal-msg error visible"; return;
+  }
+
+  btn.disabled = true; btn.textContent = "Updating...";
+
+  fetch(SB_URL+"/auth/v1/user",{
+    method:"PUT",
+    headers:{
+      "Content-Type":"application/json",
+      "apikey": SB_KEY,
+      "Authorization": "Bearer "+token
+    },
+    body: JSON.stringify({password: p1})
+  }).then(function(r){ return r.json(); }).then(function(d){
+    btn.disabled = false; btn.textContent = "Update password";
+    if(d.error || d.error_description){
+      msg.textContent = d.error_description || d.error;
+      msg.className = "modal-msg error visible";
+    } else {
+      msg.textContent = "Password updated! You can now sign in.";
+      msg.className = "modal-msg success visible";
+      setTimeout(function(){
+        document.getElementById("resetModal").classList.remove("open");
+        token = null;
+        openModal("signin");
+      }, 2000);
+    }
+  }).catch(function(){
+    btn.disabled = false; btn.textContent = "Update password";
+    msg.textContent = "Something went wrong. Please try again.";
+    msg.className = "modal-msg error visible";
   });
 }
 
