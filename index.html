@@ -276,7 +276,7 @@
   <div class="modal-bg" id="anonModal">
     <div class="modal">
       <div class="modal-title">Free account required</div>
-      <div class="modal-sub" style="margin-bottom:20px;">You've used your free scan. Create a free account for 3 scans per day — no credit card needed.</div>
+      <div class="modal-sub" style="margin-bottom:20px;">You've used your free scan. Create a free account to scan any website — no credit card needed.</div>
       <button class="modal-submit" onclick="closeAnonModal();openModal('signup')">Create free account</button>
       <div style="text-align:center;font-size:13px;color:var(--text-muted);margin-top:10px;">Already have an account? <a onclick="closeAnonModal();openModal('signin')" style="color:var(--blue);cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Sign in</a></div>
     </div>
@@ -353,7 +353,7 @@
   <div class="plan-banner free" id="freeBanner">
     <div>
       <div class="banner-label" id="tFreePlanLabel">Free plan</div>
-      <div class="banner-sub" id="tFreePlanSub">3 scans per day</div>
+      <div class="banner-sub" id="tFreePlanSub">Free forever</div>
     </div>
     <button class="btn-upgrade" id="upgBtn" onclick="upgradeToPro()">Upgrade to Pro</button>
   </div>
@@ -723,7 +723,7 @@ function setModalMode(m){
     var cw=document.getElementById("mConfirmWrap"); if(cw) cw.style.display="none"; if(cw) cw.querySelector("input").value="";
   } else if(m==="signup"){
     document.getElementById("mTitle").textContent="Create account";
-    document.getElementById("mSub").textContent="3 free scans per day, no credit card";
+    document.getElementById("mSub").textContent="Free forever · No credit card needed";
     document.getElementById("mBtn").textContent="Create account";
     document.getElementById("mSwitch").innerHTML='Already have an account? <a onclick="toggleMode()">Sign in</a>';
     if(fw) fw.style.display="none";
