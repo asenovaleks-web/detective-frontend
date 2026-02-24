@@ -194,6 +194,20 @@
     .raw-btn:hover { color: var(--text-muted); }
     .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; max-height: 0; overflow: hidden; transition: max-height 0.35s; }
     .data-grid.open { max-height: 2000px; }
+
+    /* ── Feature Lock ── */
+    .locked-section { position: relative; }
+    .locked-section .section { pointer-events: none; }
+    .locked-section .section > * { filter: blur(4px); user-select: none; }
+    .lock-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; z-index: 10; background: rgba(11,15,26,0.7); border-radius: var(--r); backdrop-filter: blur(2px); padding: 24px; text-align: center; }
+    .lock-icon { font-size: 28px; }
+    .lock-title { font-size: 15px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
+    .lock-sub { font-size: 12px; color: var(--text-muted); line-height: 1.5; max-width: 260px; }
+    .lock-btn { background: var(--blue); color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-size: 13px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: opacity 0.15s; box-shadow: 0 0 20px var(--blue-glow); margin-top: 4px; }
+    .lock-btn:hover { opacity: 0.85; }
+    .lock-features { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+    .lock-feature { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+    .lock-feature::before { content: "✓"; color: var(--green); font-weight: 600; }
     .data-cell { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
     .data-lbl { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text-faint); margin-bottom: 3px; }
     .data-val { font-size: 12px; color: var(--text-muted); }
@@ -249,6 +263,10 @@
     .modal-submit:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
     .modal-switch { text-align: center; font-size: 13px; color: var(--text-muted); }
     .modal-switch a { color: var(--blue); font-weight: 500; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+    .pass-wrap { position: relative; }
+    .pass-wrap .modal-input { padding-right: 44px; width: 100%; }
+    .pass-eye { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-faint); font-size: 16px; padding: 0; line-height: 1; }
+    .pass-eye:hover { color: var(--text-muted); }
   </style>
 </head>
 <body>
@@ -270,8 +288,14 @@
       <div class="modal-title">Set new password</div>
       <div class="modal-sub">Enter your new password below.</div>
       <div class="modal-msg" id="resetMsg"></div>
-      <input class="modal-input" type="password" id="resetPass" placeholder="New password (min 6 characters)" />
-      <input class="modal-input" type="password" id="resetPass2" placeholder="Confirm new password" onkeydown="if(event.key==='Enter')doReset()" />
+      <div class="pass-wrap">
+        <input class="modal-input" type="password" id="resetPass" placeholder="New password (min 6 characters)" />
+        <button class="pass-eye" type="button" onclick="togglePass('resetPass',this)" tabindex="-1">👁</button>
+      </div>
+      <div class="pass-wrap">
+        <input class="modal-input" type="password" id="resetPass2" placeholder="Confirm new password" onkeydown="if(event.key==='Enter')doReset()" />
+        <button class="pass-eye" type="button" onclick="togglePass('resetPass2',this)" tabindex="-1">👁</button>
+      </div>
       <button class="modal-submit" id="resetBtn" onclick="doReset()">Update password</button>
     </div>
   </div>
@@ -284,7 +308,14 @@
       <div class="modal-sub" id="mSub">Welcome back to Signum</div>
       <div class="modal-msg" id="mMsg"></div>
       <input class="modal-input" type="email" id="mEmail" placeholder="Email address" autocomplete="email" />
-      <input class="modal-input" type="password" id="mPass" placeholder="Password" onkeydown="if(event.key==='Enter')doAuth()" />
+      <div class="pass-wrap">
+        <input class="modal-input" type="password" id="mPass" placeholder="Password" onkeydown="if(event.key==='Enter')doAuth()" />
+        <button class="pass-eye" type="button" onclick="togglePass('mPass',this)" tabindex="-1">👁</button>
+      </div>
+      <div class="pass-wrap" id="mConfirmWrap" style="display:none;">
+        <input class="modal-input" type="password" id="mConfirm" placeholder="Confirm password" onkeydown="if(event.key==='Enter')doAuth()" />
+        <button class="pass-eye" type="button" onclick="togglePass('mConfirm',this)" tabindex="-1">👁</button>
+      </div>
       <button class="modal-submit" id="mBtn" onclick="doAuth()">Sign in</button>
       <div class="modal-switch" id="mSwitch">Don't have an account? <a onclick="toggleMode()">Sign up free</a></div>
       <div style="text-align:center;margin-top:8px;" id="mForgotWrap">
@@ -407,21 +438,42 @@
       </div>
     </div>
 
-    <div class="section">
-      <div class="section-header" id="tFindings">Findings</div>
-      <div id="findingsList"></div>
+    <div class="locked-section" id="findingsLock">
+      <div class="section">
+        <div class="section-header" id="tFindings">Findings</div>
+        <div id="findingsList"></div>
+      </div>
+      <div class="lock-overlay" id="findingsOverlay" style="display:none;">
+        <div class="lock-icon">🔒</div>
+        <div class="lock-title">Unlock Full Intelligence Report</div>
+        <div class="lock-sub">See exactly why this site is risky — or safe.</div>
+        <div class="lock-features">
+          <div class="lock-feature">Complete AI threat analysis</div>
+          <div class="lock-feature">20 intelligence source breakdown</div>
+          <div class="lock-feature">Malicious code scanner</div>
+          <div class="lock-feature">Scan history &amp; watchlist</div>
+        </div>
+        <button class="lock-btn" onclick="upgradeToPro()">Upgrade to Pro — €3.99/month</button>
+        <div style="font-size:11px;color:var(--text-faint);margin-top:6px;">Less than a coffee · Cancel anytime</div>
+      </div>
     </div>
 
-    <div class="section">
-      <div class="section-header" id="tAnalysis">AI Analysis</div>
-      <div class="narrative" id="narrativeText"></div>
+    <div class="locked-section" id="analysisLock">
+      <div class="section">
+        <div class="section-header" id="tAnalysis">AI Analysis</div>
+        <div class="narrative" id="narrativeText"></div>
+      </div>
+      <div class="lock-overlay" id="analysisOverlay" style="display:none;"></div>
     </div>
 
-    <div class="section">
-      <button class="raw-btn" onclick="toggleRaw()">
-        <span id="rawArrow">▸</span> <span id="tRawLabel">Raw intelligence data</span>
-      </button>
-      <div class="data-grid" id="dataGrid"></div>
+    <div class="locked-section" id="rawLock">
+      <div class="section">
+        <button class="raw-btn" onclick="toggleRaw()">
+          <span id="rawArrow">▸</span> <span id="tRawLabel">Raw intelligence data</span>
+        </button>
+        <div class="data-grid" id="dataGrid"></div>
+      </div>
+      <div class="lock-overlay" id="rawOverlay" style="display:none;"></div>
     </div>
   </div>
 
@@ -436,41 +488,51 @@
   <!-- Pricing -->
   <div class="pricing">
     <div class="pricing-head">
-      <h2 class="pricing-title" id="tPricingTitle">Simple, transparent pricing</h2>
-      <p class="pricing-sub" id="tPricingSub">Start free. Upgrade anytime.</p>
+      <h2 class="pricing-title">Everything you need to stay safe online</h2>
+      <p class="pricing-sub">Less than a coffee. More than peace of mind.</p>
     </div>
     <div class="pricing-grid">
       <div class="pricing-card">
         <div class="plan-name">Free</div>
-        <div class="plan-price">$0</div>
-        <div class="plan-period" id="tFreePeriod">forever</div>
+        <div class="plan-price">€0</div>
+        <div class="plan-period">forever</div>
         <ul class="plan-features">
-          <li><span class="fi">✓</span><span id="tPF1">3 scans per day</span></li>
-          <li><span class="fi">✓</span><span id="tPF2">20 intelligence sources</span></li>
-          <li><span class="fi">✓</span><span id="tPF3">AI risk analysis</span></li>
-          <li class="muted"><span class="fi">–</span><span id="tPF4">Unlimited scans</span></li>
-          <li class="muted"><span class="fi">–</span><span id="tPF5">Scan history</span></li>
-          <li class="muted"><span class="fi">–</span><span id="tPF6">Priority support</span></li>
+          <li><span class="fi">✓</span>Risk score (0–100)</li>
+          <li><span class="fi">✓</span>Safe / Caution / Danger verdict</li>
+          <li><span class="fi">✓</span>Basic confidence level</li>
+          <li class="muted"><span class="fi">–</span>Full AI threat analysis</li>
+          <li class="muted"><span class="fi">–</span>20 source breakdown</li>
+          <li class="muted"><span class="fi">–</span>Malicious code scanner</li>
+          <li class="muted"><span class="fi">–</span>Scan history</li>
+          <li class="muted"><span class="fi">–</span>Watchlist &amp; alerts</li>
+          <li class="muted"><span class="fi">–</span>Priority support</li>
         </ul>
-        <button class="plan-cta outline" onclick="openModal()" id="tFreeCta">Get started free</button>
+        <button class="plan-cta outline" onclick="openModal()">Get started free</button>
       </div>
       <div class="pricing-card pro">
-        <div class="popular-badge" id="tPopular">MOST POPULAR</div>
+        <div class="popular-badge">MOST POPULAR</div>
         <div class="plan-name">Pro</div>
-        <div class="plan-price">$3.99</div>
-        <div class="plan-period" id="tProPeriod">per month</div>
+        <div class="plan-price">€3.99</div>
+        <div class="plan-period">per month</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px;padding:8px 12px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:6px;">
+          🛡 Full protection for less than a coffee
+        </div>
         <ul class="plan-features">
-          <li><span class="fi">✓</span><span id="tPP1">Unlimited scans</span></li>
-          <li><span class="fi">✓</span><span id="tPP2">20 intelligence sources</span></li>
-          <li><span class="fi">✓</span><span id="tPP3">AI risk analysis</span></li>
-          <li><span class="fi">✓</span><span id="tPP4">Scan history</span></li>
-          <li><span class="fi">✓</span><span id="tPP5">Priority support</span></li>
-          <li><span class="fi">✓</span><span id="tPP6">New sources as added</span></li>
+          <li><span class="fi">✓</span>Everything in Free</li>
+          <li><span class="fi">✓</span>Full AI threat analysis</li>
+          <li><span class="fi">✓</span>20 intelligence source breakdown</li>
+          <li><span class="fi">✓</span>Malicious code scanner</li>
+          <li><span class="fi">✓</span>SSL &amp; infrastructure deep dive</li>
+          <li><span class="fi">✓</span>Business registry checks</li>
+          <li><span class="fi">✓</span>Scan history &amp; dashboard</li>
+          <li><span class="fi">✓</span>Watchlist with real-time alerts</li>
+          <li><span class="fi">✓</span>Weekly threat digest email</li>
+          <li><span class="fi">✓</span>Priority support</li>
         </ul>
-        <button class="plan-cta filled" onclick="upgradeToPro()" id="tProCta">Upgrade to Pro</button>
+        <button class="plan-cta filled" onclick="upgradeToPro()">Upgrade to Pro — €3.99/month</button>
       </div>
     </div>
-    <div class="pricing-note" id="tPricingNote">Cancel anytime · Billed monthly · Renews automatically</div>
+    <div class="pricing-note">Cancel anytime · Billed monthly · No hidden fees</div>
   </div>
 
   <!-- Footer -->
@@ -483,7 +545,7 @@
     </div>
     <div style="font-size:12px;color:var(--text-faint);margin-bottom:10px;">Building the global trust infrastructure of the internet.</div>
     <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
-      <a href="mailto:support@signumaiapp.com" style="font-size:12px;color:var(--text-faint);text-decoration:none;">Contact</a>
+      <a href="/cdn-cgi/l/email-protection#81f2f4f1f1eef3f5c1f2e8e6eff4ece0e8e0f1f1afe2eeec" style="font-size:12px;color:var(--text-faint);text-decoration:none;">Contact</a>
       <span style="color:var(--border2);">·</span>
       <a href="#" style="font-size:12px;color:var(--text-faint);text-decoration:none;">Privacy Policy</a>
       <span style="color:var(--border2);">·</span>
@@ -542,10 +604,10 @@
     </div>
   </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 var BACKEND = "https://detective-app-production-7080.up.railway.app";
 var SB_URL  = "https://harhjuykvkfwksccjjxq.supabase.co";
-var SB_KEY  = "sb_publishable_gNTIfFSDai7wWPMPIVM-Vg_2rthrcNV";
+var SB_KEY  = "REPLACE_WITH_YOUR_SUPABASE_ANON_KEY";
 
 var user=null, token=null, plan="free", mode="signin", anonScans=parseInt(localStorage.getItem('sg_anon_scans')||'0');
 
@@ -613,6 +675,11 @@ function updateUI(){
 
 function openModal(m){ if(m) mode=m; document.getElementById("authModal").classList.add("open"); setModalMode(mode); document.getElementById("mEmail").focus(); }
 function closeModal(){ document.getElementById("authModal").classList.remove("open"); }
+function togglePass(id, btn){
+  var inp = document.getElementById(id);
+  if(inp.type === "password"){ inp.type = "text"; btn.textContent = "🙈"; }
+  else { inp.type = "password"; btn.textContent = "👁"; }
+}
 function closeAnonModal(){ document.getElementById("anonModal").classList.remove("open"); }
 function setModalMode(m){
   mode=m;
@@ -625,6 +692,7 @@ function setModalMode(m){
     document.getElementById("mSwitch").innerHTML='Don\'t have an account? <a onclick="toggleMode()">Sign up free</a>';
     if(fw) fw.style.display="block";
     if(pb) pb.style.display="block";
+    var cw=document.getElementById("mConfirmWrap"); if(cw) cw.style.display="none"; if(cw) cw.querySelector("input").value="";
   } else if(m==="signup"){
     document.getElementById("mTitle").textContent="Create account";
     document.getElementById("mSub").textContent="3 free scans per day, no credit card";
@@ -632,6 +700,7 @@ function setModalMode(m){
     document.getElementById("mSwitch").innerHTML='Already have an account? <a onclick="toggleMode()">Sign in</a>';
     if(fw) fw.style.display="none";
     if(pb) pb.style.display="block";
+    var cw=document.getElementById("mConfirmWrap"); if(cw) cw.style.display="block";
   } else if(m==="forgot"){
     document.getElementById("mTitle").textContent="Reset password";
     document.getElementById("mSub").textContent="We'll send a reset link to your email";
@@ -668,12 +737,18 @@ function doAuth(){
 
   var p=document.getElementById("mPass").value;
   if(!p){ showModalMsg("Please enter your password.","error"); return; }
+  if(mode==="signup"){
+    var p2=document.getElementById("mConfirm").value;
+    if(!p2){ showModalMsg("Please confirm your password.","error"); return; }
+    if(p!==p2){ showModalMsg("Passwords do not match.","error"); return; }
+    if(p.length<6){ showModalMsg("Password must be at least 6 characters.","error"); return; }
+  }
   btn.disabled=true; btn.textContent="...";
   var pr=mode==="signin"?sbIn(e,p):sbUp(e,p);
   pr.then(function(d){
     btn.disabled=false; btn.textContent=mode==="signin"?"Sign in":"Create account";
     if(d.error||d.error_description){ showModalMsg(d.error_description||d.error,"error"); return; }
-    if(mode==="signup"&&!d.access_token){ showModalMsg("Account created! Check your email to confirm, then sign in.","success"); return; }
+    if(mode==="signup"&&!d.access_token){ showModalMsg("Account created! You can now sign in.","success"); setTimeout(function(){ toggleMode("signin"); },1500); return; }
     token=d.access_token; user=d.user;
     localStorage.setItem("sg_token",token); localStorage.setItem("sg_user",JSON.stringify(user));
     // Reset anon scan counter on login
@@ -772,6 +847,21 @@ function renderReport(r){
   grid.innerHTML="";
   Object.entries(r.raw_labels||{}).forEach(function(e){
     grid.innerHTML+='<div class="data-cell"><div class="data-lbl">'+e[0]+'</div><div class="data-val">'+e[1]+'</div></div>';
+  });
+
+  // Feature locking for free users
+  var isPro = (plan === "pro");
+  var lockIds = ["findingsOverlay", "analysisOverlay", "rawOverlay"];
+  lockIds.forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.style.display = isPro ? "none" : "flex";
+  });
+  // Blur locked sections
+  var lockSections = document.querySelectorAll(".locked-section .section");
+  lockSections.forEach(function(s){
+    s.style.filter = isPro ? "none" : "blur(4px)";
+    s.style.pointerEvents = isPro ? "auto" : "none";
+    s.style.userSelect = isPro ? "auto" : "none";
   });
 
   // Scan count social proof
@@ -884,7 +974,19 @@ function doReset(){
   });
 }
 
-function showMsg(id,txt){ var el=document.getElementById(id); el.textContent=txt; el.classList.add("visible"); }
 </script>
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/699dd6b3c0b0e71c389107cd/default';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
 </body>
 </html>
