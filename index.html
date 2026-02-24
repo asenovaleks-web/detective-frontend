@@ -618,6 +618,30 @@ var user=null, token=null, plan="free", mode="signin", anonScans=parseInt(localS
 
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
+function sbRefresh(){
+  var rt = localStorage.getItem("sg_refresh");
+  if(!rt) return;
+  fetch(SB_URL+"/auth/v1/token?grant_type=refresh_token",{
+    method:"POST",
+    headers:{"Content-Type":"application/json","apikey":SB_KEY},
+    body:JSON.stringify({refresh_token:rt})
+  }).then(function(r){return r.json();}).then(function(d){
+    if(d.access_token){
+      token=d.access_token; user=d.user;
+      localStorage.setItem("sg_token",token);
+      localStorage.setItem("sg_user",JSON.stringify(d.user));
+      if(d.refresh_token) localStorage.setItem("sg_refresh",d.refresh_token);
+      fetchPlan(d.user.id); updateUI();
+    } else {
+      // Refresh failed — log out silently
+      token=null; user=null; plan="free";
+      localStorage.removeItem("sg_token"); localStorage.removeItem("sg_user");
+      localStorage.removeItem("sg_refresh"); localStorage.removeItem("sg_plan");
+      updateUI();
+    }
+  }).catch(function(){});
+}
+
 function sbIn(e,p){ return fetch(SB_URL+"/auth/v1/token?grant_type=password",{method:"POST",headers:{"Content-Type":"application/json","apikey":SB_KEY},body:JSON.stringify({email:e,password:p})}).then(function(r){return r.json();}); }
 function sbUp(e,p){ return fetch(SB_URL+"/auth/v1/signup",{method:"POST",headers:{"Content-Type":"application/json","apikey":SB_KEY},body:JSON.stringify({email:e,password:p})}).then(function(r){return r.json();}); }
 function sbOut(){
@@ -645,8 +669,12 @@ window.addEventListener("load",function(){
     window.history.replaceState({},"",location.pathname);
   }
 
-  var st=localStorage.getItem("sg_token"), su=localStorage.getItem("sg_user");
-  if(st&&st!=="null"&&su&&su!=="null"){
+  var st=localStorage.getItem("sg_token"), su=localStorage.getItem("sg_user"), sr=localStorage.getItem("sg_refresh");
+  if(sr && sr!=="null"){
+    // Always try to refresh token on page load for persistent login
+    try{ user=JSON.parse(su); token=st; plan=localStorage.getItem("sg_plan")||"free"; updateUI(); } catch(e){}
+    sbRefresh();
+  } else if(st&&st!=="null"&&su&&su!=="null"){
     try{ token=st; user=JSON.parse(su); plan=localStorage.getItem("sg_plan")||"free"; fetchPlan(user.id); }
     catch(e){ localStorage.clear(); }
   }
@@ -750,7 +778,9 @@ function doAuth(){
     if(d.error||d.error_description){ showModalMsg(d.error_description||d.error,"error"); return; }
     if(mode==="signup"&&!d.access_token){ showModalMsg("Account created! You can now sign in.","success"); setTimeout(function(){ toggleMode("signin"); },1500); return; }
     token=d.access_token; user=d.user;
-    localStorage.setItem("sg_token",token); localStorage.setItem("sg_user",JSON.stringify(user));
+    localStorage.setItem("sg_token",token);
+    localStorage.setItem("sg_user",JSON.stringify(user));
+    if(d.refresh_token) localStorage.setItem("sg_refresh",d.refresh_token);
     // Reset anon scan counter on login
     anonScans=0; localStorage.setItem("sg_anon_scans","0");
     fetchPlan(user.id); updateUI(); closeModal();
