@@ -8,6 +8,13 @@
   <meta property="og:title" content="Signum — Website Trust Intelligence" />
   <meta property="og:description" content="Check any website for scams, fraud and safety risks. Free, instant, AI-powered." />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://signumaiapp.com" />
+  <meta property="og:image" content="https://signumaiapp.com/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Signum — Website Trust Intelligence" />
+  <meta name="twitter:description" content="Check any website for scams, fraud and safety risks. Free, instant, AI-powered." />
+  <link rel="canonical" href="https://signumaiapp.com" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%233b82f6'/><polyline points='6,22 12,14 18,18 26,8' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
@@ -454,6 +461,26 @@
     <div class="pricing-note" id="tPricingNote">Cancel anytime · Billed monthly · Renews automatically</div>
   </div>
 
+  <!-- Footer -->
+  <footer style="margin-top:64px;padding:24px 0 32px;border-top:1px solid var(--border);text-align:center;">
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;">
+      <div style="width:20px;height:20px;background:var(--blue);border-radius:5px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(59,130,246,0.4);">
+        <svg viewBox="0 0 15 15" width="10" height="10" style="stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;"><polyline points="2,11 5,7 8,9 13,3"/></svg>
+      </div>
+      <span style="font-size:14px;font-weight:600;color:var(--text-muted);">Signum</span>
+    </div>
+    <div style="font-size:12px;color:var(--text-faint);margin-bottom:10px;">Building the global trust infrastructure of the internet.</div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
+      <a href="mailto:support@signumaiapp.com" style="font-size:12px;color:var(--text-faint);text-decoration:none;">Contact</a>
+      <span style="color:var(--border2);">·</span>
+      <a href="#" style="font-size:12px;color:var(--text-faint);text-decoration:none;">Privacy Policy</a>
+      <span style="color:var(--border2);">·</span>
+      <a href="#" style="font-size:12px;color:var(--text-faint);text-decoration:none;">Terms of Service</a>
+      <span style="color:var(--border2);">·</span>
+      <span style="font-size:12px;color:var(--text-faint);">© 2025 Signum. All rights reserved.</span>
+    </div>
+  </footer>
+
 </div>
 
   <!-- Share Modal -->
@@ -601,13 +628,14 @@ function doAuth(){
 
   if(mode==="forgot"){
     btn.disabled=true; btn.textContent="Sending...";
-    fetch(SB_URL+"/auth/v1/recover",{
+    fetch("https://detective-app-production-7080.up.railway.app/send-reset",{
       method:"POST",
-      headers:{"Content-Type":"application/json","apikey":SB_KEY},
+      headers:{"Content-Type":"application/json"},
       body:JSON.stringify({email:e})
-    }).then(function(){
+    }).then(function(r){ return r.json(); }).then(function(d){
       btn.disabled=false; btn.textContent="Send reset link";
-      showModalMsg("Reset link sent! Check your email.","success");
+      if(d.ok){ showModalMsg("Reset link sent! Check your inbox.","success"); }
+      else { showModalMsg("Could not send reset email. Try again.","error"); }
     }).catch(function(){
       btn.disabled=false; btn.textContent="Send reset link";
       showModalMsg("Could not send reset email. Try again.","error");
@@ -628,7 +656,7 @@ function doAuth(){
     // Reset anon scan counter on login
     anonScans=0; localStorage.setItem("sg_anon_scans","0");
     fetchPlan(user.id); updateUI(); closeModal();
-  }).catch(function(){ btn.disabled=false; btn.textContent=mode==="signin"?"Sign in":"Create account"; showModalMsg("Connection error.","error"); });
+  }).catch(function(){ btn.disabled=false; btn.textContent=mode==="signin"?"Sign in":"Create account"; showModalMsg("Invalid email or password. Please try again.","error"); });
 }
 function showModalMsg(t,type){ var el=document.getElementById("mMsg"); el.textContent=t; el.className="modal-msg "+type+" visible"; }
 
