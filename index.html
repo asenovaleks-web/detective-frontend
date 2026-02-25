@@ -190,10 +190,16 @@
     .f-tag.OK      { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
     .f-text { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
     .narrative { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
-    .raw-btn { background: none; border: none; font-size: 12px; font-family: 'DM Mono', monospace; color: var(--text-faint); cursor: pointer; display: flex; align-items: center; gap: 6px; padding: 0; margin-bottom: 10px; }
-    .raw-btn:hover { color: var(--text-muted); }
-    .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; max-height: 0; overflow: hidden; transition: max-height 0.35s; }
-    .data-grid.open { max-height: 2000px; }
+    .ai-analysis-wrap { position: relative; }
+    .ai-label { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-family: 'DM Mono', monospace; font-weight: 600; letter-spacing: 0.8px; color: #818cf8; background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2); padding: 3px 10px; border-radius: 100px; margin-bottom: 14px; }
+    .ai-label-dot { width: 5px; height: 5px; background: #818cf8; border-radius: 50%; animation: blink 2.5s ease-in-out infinite; }
+    .narrative-text { font-size: 14px; color: var(--text); line-height: 1.8; border-left: 2px solid rgba(99,102,241,0.4); padding-left: 16px; }
+    .raw-btn { background: var(--surface2); border: 1px solid var(--border); font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text-muted); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 6px; margin-bottom: 14px; transition: all 0.15s; font-weight: 500; }
+    .raw-btn:hover { border-color: var(--blue); color: var(--text); }
+    .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .data-grid.open { max-height: 3000px; }
+    .raw-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+    .raw-count { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text-faint); }
 
     /* ── Feature Lock ── */
     .locked-section { position: relative; }
@@ -208,9 +214,13 @@
     .lock-features { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
     .lock-feature { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
     .lock-feature::before { content: "✓"; color: var(--green); font-weight: 600; }
-    .data-cell { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
-    .data-lbl { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text-faint); margin-bottom: 3px; }
-    .data-val { font-size: 12px; color: var(--text-muted); }
+    .data-cell { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; transition: border-color 0.15s; }
+    .data-cell:hover { border-color: var(--border2); }
+    .data-lbl { font-size: 9px; font-family: 'DM Mono', monospace; color: var(--text-faint); margin-bottom: 4px; letter-spacing: 0.5px; text-transform: uppercase; }
+    .data-val { font-size: 12px; color: var(--text); font-weight: 500; }
+    .data-val.clear { color: var(--green); }
+    .data-val.risk  { color: var(--red); }
+    .data-val.warn  { color: var(--yellow); }
 
     /* ── TRUST STRIP ── */
     .trust-strip { display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; margin: 44px 0; padding: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); }
@@ -301,6 +311,30 @@
     .history-verdict.RED { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
     .history-date { font-size: 11px; color: var(--text-faint); font-family: 'DM Mono', monospace; white-space: nowrap; }
     .history-empty { text-align: center; color: var(--text-faint); font-size: 14px; padding: 32px 0; }
+
+    /* ── Watchlist ── */
+    .watchlist-modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .watchlist-modal-bg.open { display: flex; }
+    .watchlist-modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; width: 100%; max-width: 560px; max-height: 80vh; overflow-y: auto; }
+    @media (max-width: 600px) {
+      .watchlist-modal-bg { align-items: flex-end; padding: 0; }
+      .watchlist-modal { border-radius: 20px 20px 0 0; max-height: 75vh; padding: 24px 16px 32px; width: 100%; max-width: 100%; }
+    }
+    .watchlist-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 8px; gap: 10px; cursor: pointer; transition: border-color 0.15s; }
+    .watchlist-item:hover { border-color: var(--border2); }
+    .watchlist-domain { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .watchlist-score { font-size: 13px; font-weight: 600; font-family: 'DM Mono', monospace; }
+    .watchlist-verdict { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; letter-spacing: 0.3px; }
+    .watchlist-verdict.GREEN { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+    .watchlist-verdict.YELLOW { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+    .watchlist-verdict.RED { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+    .watchlist-remove { background: none; border: none; color: var(--text-faint); cursor: pointer; font-size: 16px; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; transition: color 0.15s; }
+    .watchlist-remove:hover { color: var(--red); }
+    .watchlist-date { font-size: 10px; color: var(--text-faint); font-family: 'DM Mono', monospace; white-space: nowrap; }
+    .btn-watchlist { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; background: none; border: 1px solid var(--border2); border-radius: 7px; padding: 7px 14px; font-size: 12px; font-family: 'DM Sans', sans-serif; color: var(--text-muted); cursor: pointer; transition: all 0.15s; font-weight: 500; }
+    .btn-watchlist:hover { border-color: var(--blue); color: var(--blue); }
+    .btn-watchlist.watching { border-color: var(--green); color: var(--green); }
+    .btn-watchlist.watching:hover { border-color: var(--red); color: var(--red); }
 
     /* ── Change Password Modal ── */
     .chpass-modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
@@ -415,6 +449,19 @@
     </div>
   </div>
 
+  <!-- Watchlist Modal -->
+  <div class="watchlist-modal-bg" id="watchlistModal" onclick="if(event.target===this)closeWatchlist()">
+    <div class="watchlist-modal">
+      <div class="history-drag-handle"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <div class="history-modal-title">🔔 Watchlist</div>
+        <button onclick="closeWatchlist()" style="background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:18px;">✕</button>
+      </div>
+      <div class="history-modal-sub" id="watchlistSubtitle">Domains you're monitoring</div>
+      <div id="watchlistList"><div class="history-empty">Loading...</div></div>
+    </div>
+  </div>
+
   <!-- Change Password Modal -->
   <div class="chpass-modal-bg" id="chpassModal" onclick="if(event.target===this)closeChpass()">
     <div class="modal">
@@ -515,6 +562,7 @@
           <div class="verdict-label" id="verdictLabel">—</div>
           <div class="verdict-summary" id="verdictSummary"></div>
           <button class="share-btn" onclick="shareReport()" id="tShareBtn">↗ Share report</button>
+          <button class="btn-watchlist" id="watchlistBtn" onclick="toggleWatchlistDomain()" style="display:none;">🔔 Add to watchlist</button>
         <div id="scanCountWrap" style="margin-top:8px;font-size:12px;color:var(--text-faint);font-family:'DM Mono',monospace;display:none;">
           <span id="scanCountText"></span>
         </div>
@@ -554,16 +602,22 @@
     <div class="locked-section" id="analysisLock">
       <div class="section">
         <div class="section-header" id="tAnalysis">AI Analysis</div>
-        <div class="narrative" id="narrativeText"></div>
+        <div class="ai-analysis-wrap">
+          <div class="ai-label"><span class="ai-label-dot"></span>CLAUDE INTELLIGENCE</div>
+          <div class="narrative-text" id="narrativeText"></div>
+        </div>
       </div>
       <div class="lock-overlay" id="analysisOverlay" style="display:none;"></div>
     </div>
 
     <div class="locked-section" id="rawLock">
       <div class="section">
-        <button class="raw-btn" onclick="toggleRaw()">
-          <span id="rawArrow">▸</span> <span id="tRawLabel">Raw intelligence data</span>
-        </button>
+        <div class="raw-header">
+          <button class="raw-btn" onclick="toggleRaw()">
+            <span id="rawArrow">▸</span> <span id="tRawLabel">Raw intelligence data</span>
+          </button>
+          <span class="raw-count" id="rawCount"></span>
+        </div>
         <div class="data-grid" id="dataGrid"></div>
       </div>
       <div class="lock-overlay" id="rawOverlay" style="display:none;"></div>
@@ -824,6 +878,7 @@ function updateUI(){
         '<button class="user-btn" onclick="toggleDropdown()">'+user.email+proBadge+'</button>'+
         '<div class="user-dropdown" id="userDropdown">'+
           '<div class="user-dropdown-item" onclick="openHistory()">📋 Scan history</div>'+
+          '<div class="user-dropdown-item" onclick="openWatchlist()">🔔 Watchlist</div>'+
           '<div class="user-dropdown-item" onclick="openChpass()">🔑 Change password</div>'+
           (plan!=="pro"?'<div class="user-dropdown-item" onclick="upgradeToPro();closeDropdown()">⭐ Upgrade to Pro</div>':'')+
           '<div class="user-dropdown-sep"></div>'+
@@ -1100,8 +1155,17 @@ function renderReport(r){
 
   var grid=document.getElementById("dataGrid");
   grid.innerHTML="";
-  Object.entries(r.raw_labels||{}).forEach(function(e){
-    grid.innerHTML+='<div class="data-cell"><div class="data-lbl">'+e[0]+'</div><div class="data-val">'+e[1]+'</div></div>';
+  var rawEntries=Object.entries(r.raw_labels||{});
+  var rawCount=document.getElementById("rawCount");
+  if(rawCount) rawCount.textContent=rawEntries.length+" sources";
+  rawEntries.forEach(function(e){
+    var val=String(e[1]);
+    var cls="data-val";
+    var lo=val.toLowerCase();
+    if(lo==="clear"||lo==="none"||lo==="0"||lo.includes("no threat")||lo.includes("safe")||lo.includes("found")){cls="data-val clear";}
+    else if(lo.includes("flag")||lo.includes("malicious")||lo.includes("danger")||lo.includes("risk")||parseInt(val)>2){cls="data-val risk";}
+    else if(lo.includes("caution")||lo.includes("warning")||lo.includes("suspicious")){cls="data-val warn";}
+    grid.innerHTML+='<div class="data-cell"><div class="data-lbl">'+e[0]+'</div><div class="'+cls+'">'+val+'</div></div>';
   });
 
   // Feature locking — also called from fetchPlan to handle async race condition
@@ -1127,6 +1191,16 @@ function renderReport(r){
     scWrap.style.display = "none";
   }
 
+  // Show watchlist btn for logged-in users
+  var wBtn = document.getElementById("watchlistBtn");
+  if(wBtn){
+    if(user && plan==="pro"){
+      wBtn.style.display = "inline-flex";
+      checkWatchlistStatus(r.target);
+    } else {
+      wBtn.style.display = "none";
+    }
+  }
   document.getElementById("reportSection").classList.add("visible");
   document.getElementById("reportSection").scrollIntoView({behavior:"smooth"});
 }
@@ -1224,6 +1298,105 @@ function doReset(){
     msg.textContent = "Something went wrong. Please try again.";
     msg.className = "modal-msg error visible";
   });
+}
+// ── Watchlist ──────────────────────────────────────────────────────────────
+var currentWatchlistDomain = null;
+var isWatching = false;
+
+function openWatchlist(){
+  closeDropdown();
+  document.getElementById("watchlistModal").classList.add("open");
+  loadWatchlist();
+}
+function closeWatchlist(){
+  document.getElementById("watchlistModal").classList.remove("open");
+}
+
+function loadWatchlist(){
+  var list=document.getElementById("watchlistList");
+  var sub=document.getElementById("watchlistSubtitle");
+  if(!token){list.innerHTML='<div class="history-empty">Sign in to use Watchlist.</div>';return;}
+  list.innerHTML='<div class="history-empty">Loading...</div>';
+  fetch(SB_URL+"/rest/v1/watchlist?user_id=eq."+user.id+"&order=created_at.desc",{
+    headers:{"apikey":SB_KEY,"Authorization":"Bearer "+token}
+  }).then(function(r){return r.json();}).then(function(data){
+    if(!data||!data.length){
+      list.innerHTML='<div class="history-empty">No domains yet. Add domains from scan results.</div>';
+      sub.textContent="Domains you're monitoring";
+      return;
+    }
+    sub.textContent="Monitoring "+data.length+" domain"+(data.length!==1?"s":"");
+    list.innerHTML=data.map(function(w){
+      var sc=w.last_verdict==="GREEN"?"var(--green)":w.last_verdict==="RED"?"var(--red)":"var(--yellow)";
+      var score=w.last_score!==null?w.last_score:"—";
+      var verdict=w.last_verdict||"—";
+      var d=new Date(w.last_checked);
+      var ds=d.toLocaleDateString("en-GB",{day:"2-digit",month:"short"});
+      return '<div class="watchlist-item" onclick="scanFromWatchlist(\'"+w.domain+"\')">'+
+        '<div class="watchlist-domain">'+w.domain+'</div>'+
+        (w.last_verdict?'<div class="watchlist-score" style="color:'+sc+'">'+score+'</div>'+
+        '<div class="watchlist-verdict '+verdict+'">'+verdict+'</div>':'<div style="font-size:11px;color:var(--text-faint);">Not scanned yet</div>')+
+        '<div class="watchlist-date">'+ds+'</div>'+
+        '<button class="watchlist-remove" onclick="event.stopPropagation();removeFromWatchlist(\'"+w.id+"\'%2Cthis)" title="Remove">✕</button>'+
+      '</div>';
+    }).join("");
+  }).catch(function(){
+    list.innerHTML='<div class="history-empty">Could not load watchlist.</div>';
+  });
+}
+
+function checkWatchlistStatus(domain){
+  if(!token||!user)return;
+  var clean=domain.replace(/^https?:\/\//,"").replace(/^www\./,"").split("/")[0];
+  currentWatchlistDomain=clean;
+  fetch(SB_URL+"/rest/v1/watchlist?user_id=eq."+user.id+"&domain=eq."+clean,{
+    headers:{"apikey":SB_KEY,"Authorization":"Bearer "+token}
+  }).then(function(r){return r.json();}).then(function(data){
+    isWatching=data&&data.length>0;
+    updateWatchlistBtn();
+  }).catch(function(){});
+}
+
+function updateWatchlistBtn(){
+  var btn=document.getElementById("watchlistBtn");
+  if(!btn)return;
+  if(isWatching){btn.textContent="🔔 Watching — click to remove";btn.className="btn-watchlist watching";}
+  else{btn.textContent="🔔 Add to watchlist";btn.className="btn-watchlist";}
+}
+
+function toggleWatchlistDomain(){
+  if(!user||!token){openModal();return;}
+  if(!currentWatchlistDomain)return;
+  if(isWatching){
+    fetch(SB_URL+"/rest/v1/watchlist?user_id=eq."+user.id+"&domain=eq."+currentWatchlistDomain,{
+      method:"DELETE",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+token}
+    }).then(function(){isWatching=false;updateWatchlistBtn();});
+  } else {
+    var score=parseInt(document.getElementById("scoreNum").textContent)||null;
+    var vLabel=document.getElementById("verdictLabel").textContent;
+    var vMap={"Safe":"GREEN","Caution":"YELLOW","Danger":"RED"};
+    fetch(SB_URL+"/rest/v1/watchlist",{
+      method:"POST",
+      headers:{"apikey":SB_KEY,"Authorization":"Bearer "+token,"Content-Type":"application/json","Prefer":"return=minimal"},
+      body:JSON.stringify({user_id:user.id,domain:currentWatchlistDomain,last_score:score,last_verdict:vMap[vLabel]||null,last_checked:new Date().toISOString()})
+    }).then(function(){isWatching=true;updateWatchlistBtn();});
+  }
+}
+
+function removeFromWatchlist(id,btn){
+  btn.textContent="...";
+  fetch(SB_URL+"/rest/v1/watchlist?id=eq."+id,{
+    method:"DELETE",headers:{"apikey":SB_KEY,"Authorization":"Bearer "+token}
+  }).then(function(){
+    loadWatchlist();
+    if(currentWatchlistDomain){isWatching=false;updateWatchlistBtn();}
+  });
+}
+
+function scanFromWatchlist(domain){
+  closeWatchlist();
+  document.getElementById("urlInput").value=domain;
+  runScan();
 }
 
 </script>
