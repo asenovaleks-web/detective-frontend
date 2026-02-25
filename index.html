@@ -300,6 +300,21 @@
     .chpass-modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
     .chpass-modal-bg.open { display: flex; }
     .pass-eye:hover { color: var(--text-muted); }
+
+    /* ── Mobile Nav ── */
+    @media (max-width: 600px) {
+      .user-btn { max-width: 120px; font-size: 11px; }
+      .user-dropdown { right: 0; min-width: 160px; }
+      .history-modal { padding: 20px 16px; margin: 10px; max-height: 85vh; }
+      .history-item { flex-wrap: wrap; gap: 6px; }
+      .history-date { width: 100%; }
+      .lock-overlay { padding: 16px; }
+      .lock-features { display: none; }
+      .verdict-top { flex-direction: column; align-items: center; text-align: center; }
+      .verdict-meta { min-width: unset; width: 100%; }
+      .pricing-grid { grid-template-columns: 1fr; }
+      .share-platforms { grid-template-columns: repeat(3, 1fr); }
+    }
   </style>
 </head>
 <body>
@@ -784,7 +799,7 @@ function loadHistory(){
     headers:{"apikey":SB_KEY,"Authorization":"Bearer "+token}
   }).then(function(r){return r.json();}).then(function(data){
     if(!data||!data.length){
-      list.innerHTML='<div class="history-empty">No scans yet. Start by checking a website above.</div>';
+      list.innerHTML='<div class="history-empty">No scans yet. Start by scanning a website.</div>';
       sub.textContent="Your recent domain scans";
       return;
     }
