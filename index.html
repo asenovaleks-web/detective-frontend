@@ -44,10 +44,10 @@
       --r: 10px;
     }
     body { background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
-    .page { max-width: 680px; margin: 0 auto; padding: 0 20px 100px; }
+    .page { max-width: 680px; margin: 0 auto; padding: 0 16px 80px; }
 
     /* ── NAV ── */
-    nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0 16px; border-bottom: 1px solid var(--border); margin-bottom: 52px; }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 0 14px; border-bottom: 1px solid var(--border); margin-bottom: 36px; }
     .logo { display: flex; align-items: center; gap: 9px; font-size: 17px; font-weight: 600; letter-spacing: -0.4px; color: var(--text); text-decoration: none; }
     .logo-icon { width: 28px; height: 28px; background: var(--blue); border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 16px rgba(59,130,246,0.4); }
     .logo-icon svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
@@ -61,7 +61,7 @@
     .nav-email { font-size: 12px; color: var(--text-muted); font-family: 'DM Mono', monospace; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
     /* ── HERO ── */
-    .hero { margin-bottom: 40px; text-align: center; padding: 0 10px; }
+    .hero { margin-bottom: 32px; text-align: center; padding: 0 4px; }
     .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border2); border-radius: 100px; padding: 5px 14px; font-size: 12px; color: var(--text-muted); margin-bottom: 24px; font-family: 'DM Mono', monospace; }
     .badge-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: blink 2.5s ease-in-out infinite; flex-shrink: 0; box-shadow: 0 0 6px var(--green); }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
@@ -79,7 +79,7 @@
     .btn-upgrade:hover { opacity: 0.85; }
 
     /* ── SEARCH ── */
-    .search-wrap { margin-bottom: 40px; }
+    .search-wrap { margin-bottom: 32px; }
     .search-box { display: flex; gap: 8px; background: var(--surface); border: 1.5px solid var(--border2); border-radius: var(--r); padding: 7px 7px 7px 18px; box-shadow: 0 4px 24px rgba(0,0,0,0.3), 0 0 0 1px rgba(59,130,246,0); transition: all 0.2s; }
     .search-box:focus-within { border-color: var(--blue); box-shadow: 0 4px 24px rgba(0,0,0,0.3), 0 0 0 3px var(--blue-glow); }
     .search-input { flex: 1; background: none; border: none; outline: none; font-size: 15px; font-family: 'DM Sans', sans-serif; color: var(--text); min-width: 0; }
@@ -284,6 +284,10 @@
     .history-modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
     .history-modal-bg.open { display: flex; }
     .history-modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; width: 100%; max-width: 560px; max-height: 80vh; overflow-y: auto; }
+    @media (max-width: 600px) {
+      .history-modal-bg { align-items: flex-end; padding: 0; }
+      .history-modal { border-radius: 20px 20px 0 0; max-height: 75vh; padding: 24px 16px 32px; margin: 0; width: 100%; max-width: 100%; }
+    }
     .history-modal-title { font-size: 18px; font-weight: 600; letter-spacing: -0.4px; margin-bottom: 4px; }
     .history-modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
     .history-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 8px; gap: 12px; }
@@ -302,18 +306,43 @@
     .pass-eye:hover { color: var(--text-muted); }
 
     /* ── Mobile Nav ── */
+    .history-drag-handle { display: none; width: 40px; height: 4px; background: var(--border2); border-radius: 4px; margin: 0 auto 20px; }
+
     @media (max-width: 600px) {
-      .user-btn { max-width: 120px; font-size: 11px; }
-      .user-dropdown { right: 0; min-width: 160px; }
-      .history-modal { padding: 20px 16px; margin: 10px; max-height: 85vh; }
-      .history-item { flex-wrap: wrap; gap: 6px; }
-      .history-date { width: 100%; }
-      .lock-overlay { padding: 16px; }
-      .lock-features { display: none; }
+      /* Nav */
+      .user-btn { max-width: 130px; font-size: 11px; }
+      .user-dropdown { right: 0; min-width: 165px; }
+      /* Hero */
+      .hero-title { letter-spacing: -0.8px; }
+      .hero-sub { font-size: 14px; }
+      /* Search */
+      .search-box { padding: 6px 6px 6px 14px; }
+      .search-input { font-size: 14px; }
+      .search-btn { padding: 9px 16px; font-size: 13px; }
+      /* Verdict card */
+      .verdict-card { padding: 18px 16px; }
       .verdict-top { flex-direction: column; align-items: center; text-align: center; }
       .verdict-meta { min-width: unset; width: 100%; }
+      /* Sections */
+      .section { padding: 16px; }
+      /* Lock overlay */
+      .lock-overlay { padding: 16px; }
+      .lock-features { display: none; }
+      /* History */
+      .history-drag-handle { display: block; }
+      .history-item { flex-wrap: wrap; gap: 6px; }
+      .history-date { width: 100%; }
+      /* Pricing */
       .pricing-grid { grid-template-columns: 1fr; }
+      .pricing { margin-top: 40px; padding-top: 36px; }
+      /* Share */
       .share-platforms { grid-template-columns: repeat(3, 1fr); }
+      /* Trust strip */
+      .trust-strip { gap: 14px; padding: 16px; }
+      .trust-item { font-size: 11px; }
+      /* How it works - already handles via 520px query */
+      /* Plan banner */
+      .plan-banner { flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
@@ -375,7 +404,7 @@
   <!-- Scan History Modal -->
   <div class="history-modal-bg" id="historyModal" onclick="if(event.target===this)closeHistory()">
     <div class="history-modal">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+      <div class="history-drag-handle"></div>      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
         <div class="history-modal-title">Scan History</div>
         <button onclick="closeHistory()" style="background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:18px;">✕</button>
       </div>
@@ -431,7 +460,7 @@
   <!-- Search -->
   <div class="search-wrap">
     <div class="search-box">
-      <input class="search-input" type="text" id="urlInput" onkeydown="if(event.key==='Enter')runScan()" />
+      <input class="search-input" type="text" id="urlInput" placeholder="e.g. amazon.com" onkeydown="if(event.key==='Enter')runScan()" />
       <button class="search-btn" id="scanBtn" onclick="runScan()">Analyze</button>
     </div>
     <div class="search-hint" id="tHint">No account required · Results in ~20 seconds</div>
