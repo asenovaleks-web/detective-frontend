@@ -126,27 +126,27 @@
     .score-ring svg { width: 80px; height: 80px; transform: rotate(-90deg); }
     .score-ring-bg { fill: none; stroke-width: 6; stroke: rgba(255,255,255,0.06); }
     .score-ring-fill { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
-    .verdict-card.GREEN .score-ring-fill { stroke: var(--green); }
-    .verdict-card.YELLOW .score-ring-fill { stroke: var(--yellow); }
-    .verdict-card.RED .score-ring-fill { stroke: var(--red); }
+    .verdict-card.GREEN .score-ring-fill { stroke: var(--green) !important; }
+    .verdict-card.YELLOW .score-ring-fill { stroke: var(--yellow) !important; }
+    .verdict-card.RED .score-ring-fill { stroke: var(--red) !important; }
     .score-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .score-num { font-size: 22px; font-weight: 700; letter-spacing: -1px; line-height: 1; }
-    .verdict-card.GREEN .score-num { color: var(--green); }
-    .verdict-card.YELLOW .score-num { color: var(--yellow); }
-    .verdict-card.RED .score-num { color: var(--red); }
+    .verdict-card.GREEN .score-num { color: var(--green) !important; }
+    .verdict-card.YELLOW .score-num { color: var(--yellow) !important; }
+    .verdict-card.RED .score-num { color: var(--red) !important; }
     .score-lbl { font-size: 9px; font-family: 'DM Mono', monospace; color: var(--text-faint); margin-top: 2px; }
     .verdict-meta { flex: 1; min-width: 160px; }
     .verdict-label { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 4px; }
-    .verdict-card.GREEN .verdict-label { color: var(--green); }
-    .verdict-card.YELLOW .verdict-label { color: var(--yellow); }
-    .verdict-card.RED .verdict-label { color: var(--red); }
+    .verdict-card.GREEN .verdict-label { color: var(--green) !important; }
+    .verdict-card.YELLOW .verdict-label { color: var(--yellow) !important; }
+    .verdict-card.RED .verdict-label { color: var(--red) !important; }
     .verdict-summary { font-size: 14px; color: var(--text-muted); line-height: 1.55; }
 
     /* Dashboard signals */
     .dashboard { background: rgba(0,0,0,0.2); border-radius: 8px; padding: 16px; border: 1px solid rgba(255,255,255,0.05); }
     .dashboard-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; font-size: 13px; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.04); }
     .dashboard-row:last-child { border-bottom: none; }
-    .dash-icon { font-size: 13px; flex-shrink: 0; width: 20px; }
+    .dash-icon { font-size: 13px; flex-shrink: 0; width: 20px; display:inline-flex; align-items:center; justify-content:center; }
     .confidence-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
     .confidence-label { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--text-faint); }
     .confidence-badge { font-size: 11px; font-family: 'DM Mono', monospace; font-weight: 500; padding: 2px 8px; border-radius: 100px; }
@@ -651,7 +651,7 @@
   <!-- Share Modal -->
   <div class="share-modal" id="shareModal" onclick="if(event.target===this)closeShare()">
     <div class="share-sheet">
-      <div class="share-sheet-title" id="tShareTitle">Share security report</div>
+      <div class="share-sheet-title" id="tShareTitle">⚠️ Help others stay safe</div>
       <div class="share-sheet-sub" id="tShareSub">—</div>
       <div class="share-platforms">
         <a class="share-platform" id="shareWhatsApp" href="#" target="_blank" rel="noopener">
@@ -711,7 +711,7 @@ var user=null, token=null, plan="free", mode="signin", anonScans=parseInt(localS
 // ── Auth ──────────────────────────────────────────────────────────────────────
 function sbRefresh(){
   var rt = localStorage.getItem("sg_refresh");
-  if(!rt) return;
+  if(!rt||rt==="null") return;
   fetch(SB_URL+"/auth/v1/token?grant_type=refresh_token",{
     method:"POST",
     headers:{"Content-Type":"application/json","apikey":SB_KEY},
@@ -724,13 +724,16 @@ function sbRefresh(){
       if(d.refresh_token) localStorage.setItem("sg_refresh",d.refresh_token);
       fetchPlan(d.user.id); updateUI();
     } else {
-      // Refresh failed — log out silently
+      // Token expired — clear and show sign in (don't wipe, just reset state)
       token=null; user=null; plan="free";
       localStorage.removeItem("sg_token"); localStorage.removeItem("sg_user");
       localStorage.removeItem("sg_refresh"); localStorage.removeItem("sg_plan");
       updateUI();
     }
-  }).catch(function(){});
+  }).catch(function(){ 
+    // Network error — keep existing cached user state, don't log out
+    updateUI(); 
+  });
 }
 
 function sbIn(e,p){ return fetch(SB_URL+"/auth/v1/token?grant_type=password",{method:"POST",headers:{"Content-Type":"application/json","apikey":SB_KEY},body:JSON.stringify({email:e,password:p})}).then(function(r){return r.json();}); }
@@ -767,7 +770,10 @@ window.addEventListener("load",function(){
     sbRefresh();
   } else if(st&&st!=="null"&&su&&su!=="null"){
     try{ token=st; user=JSON.parse(su); plan=localStorage.getItem("sg_plan")||"free"; fetchPlan(user.id); }
-    catch(e){ localStorage.clear(); }
+    catch(e){ 
+      localStorage.removeItem("sg_token"); localStorage.removeItem("sg_user");
+      localStorage.removeItem("sg_plan"); localStorage.removeItem("sg_refresh");
+    }
   }
   var p=new URLSearchParams(window.location.search);
   if(p.get("upgrade")==="success"){
@@ -1015,10 +1021,16 @@ function runScan(){
 function renderReport(r){
   var card=document.getElementById("verdictCard");
   card.className="verdict-card "+r.verdict;
+  // Force colors via JS to ensure cross-platform consistency (iOS/Android)
+  var colorMap={"GREEN":"#22c55e","YELLOW":"#eab308","RED":"#ef4444"};
+  var vColor=colorMap[r.verdict]||"#eab308";
   var circ=207;
   var arc=document.getElementById("scoreArc");
+  arc.style.stroke=vColor;
   arc.style.strokeDashoffset=circ;
   setTimeout(function(){ arc.style.strokeDashoffset=circ-(r.score/100)*circ; },60);
+  document.getElementById("scoreNum").style.color=vColor;
+  document.getElementById("verdictLabel").style.color=vColor;
   document.getElementById("scoreNum").textContent=r.score;
   var verdictLabels={"GREEN":"Safe","YELLOW":"Caution","RED":"Danger"};
   document.getElementById("verdictLabel").textContent=verdictLabels[r.verdict]||r.verdict;
@@ -1028,17 +1040,20 @@ function renderReport(r){
   var confMap = {"high":"high","medium":"med","low":"low"};
   var conf = confMap[r.data_confidence] || "med";
   var confLabels = {"high":"High Confidence","med":"Medium Confidence","low":"Low Confidence"};
+  var confColors = {"high":"#22c55e","med":"#eab308","low":"#ef4444"};
   var confEl = document.getElementById("confBadge");
-  confEl.textContent = confLabels[conf];
+  var cColor = confColors[conf];
+  var cDot = '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:'+cColor+';margin-right:5px;vertical-align:middle;"></span>';
+  confEl.innerHTML = cDot + confLabels[conf];
   confEl.className = "confidence-badge conf-"+conf;
 
-  // Dashboard signals — top 5 findings as clean signals
+  // Dashboard signals — top 5 findings as clean signals (CSS dots, cross-platform)
   var signals=document.getElementById("dashSignals");
   signals.innerHTML="";
   (r.findings||[]).slice(0,5).forEach(function(f){
-    var icon = f.tag==="OK" ? "✔" : f.tag==="RISK" ? "✖" : "⚠";
-    var color = f.tag==="OK" ? "var(--green)" : f.tag==="RISK" ? "var(--red)" : "var(--yellow)";
-    signals.innerHTML+='<div class="dashboard-row"><span class="dash-icon" style="color:'+color+'">'+icon+'</span><span>'+f.text+'</span></div>';
+    var color = f.tag==="OK" ? "#22c55e" : f.tag==="RISK" ? "#ef4444" : "#eab308";
+    var dot = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'+color+';flex-shrink:0;margin-top:3px;"></span>';
+    signals.innerHTML+='<div class="dashboard-row"><span class="dash-icon">'+dot+'</span><span>'+f.text+'</span></div>';
   });
 
   // Findings
@@ -1110,7 +1125,7 @@ function shareReport(){
   var encoded=encodeURIComponent(shareText+" "+shareUrl);
   var encodedUrl=encodeURIComponent(shareUrl);
 
-  document.getElementById("tShareTitle").textContent = "Share security report";
+  document.getElementById("tShareTitle").innerHTML = '⚠️ Help others stay safe';
   document.getElementById("tShareSub").textContent = url+" — "+score+"/100 "+verdict;
   document.getElementById("tShareDismiss").textContent = "Dismiss";
   document.getElementById("shareCopyBtn").textContent = "Copy";
@@ -1192,6 +1207,12 @@ function doReset(){
 }
 
 </script>
+<style>
+  /* Tawk.to size override for mobile */
+  @media (max-width: 600px) {
+    #fc_widget, iframe[title*="chat"], iframe[src*="tawk"] { transform: scale(0.82) !important; transform-origin: bottom right !important; }
+  }
+</style>
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
