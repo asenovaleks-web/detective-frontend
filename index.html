@@ -167,7 +167,7 @@
     .share-platforms { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 16px; }
     .share-platform { display: flex; flex-direction: column; align-items: center; gap: 7px; padding: 14px 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.15s; text-decoration: none; }
     .share-platform:hover { border-color: var(--blue); background: var(--blue-soft); }
-    .share-platform-icon { font-size: 22px; line-height: 1; }
+    .share-platform-icon { font-size: 22px; line-height: 1; width:28px; height:28px; display:flex; align-items:center; justify-content:center; }
     .share-platform-name { font-size: 10px; color: var(--text-muted); font-weight: 500; text-align: center; }
     .share-copy-row { display: flex; gap: 8px; }
     .share-copy-input { flex: 1; background: var(--bg2); border: 1px solid var(--border); color: var(--text-muted); padding: 9px 12px; font-size: 12px; font-family: 'DM Mono', monospace; border-radius: 7px; outline: none; }
@@ -655,35 +655,35 @@
       <div class="share-sheet-sub" id="tShareSub">—</div>
       <div class="share-platforms">
         <a class="share-platform" id="shareWhatsApp" href="#" target="_blank" rel="noopener">
-          <span class="share-platform-icon">💬</span>
+          <span class="share-platform-icon"><svg width="26" height="26" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#25D366"/><path d="M23.5 8.5C21.7 6.7 19.3 5.7 16.8 5.7C11.6 5.7 7.4 9.9 7.4 15.1C7.4 16.9 7.9 18.6 8.8 20.1L7.3 25.3L12.6 23.8C14 24.6 15.6 25.1 17.2 25.1H17.3C22.5 25.1 26.7 20.9 26.7 15.7C26.6 13.2 25.3 10.3 23.5 8.5ZM16.8 23.4H16.7C15.3 23.4 13.9 23 12.8 22.3L12.5 22.1L9.5 22.9L10.3 20L10.1 19.7C9.3 18.5 8.9 17.1 8.9 15.6C8.9 11 12.6 7.3 17.2 7.3C19.4 7.3 21.5 8.2 23.1 9.8C24.7 11.4 25.5 13.5 25.5 15.7C25.1 20.5 21.4 23.4 16.8 23.4ZM21.3 17.5C21.1 17.4 19.9 16.8 19.7 16.7C19.5 16.6 19.4 16.6 19.2 16.8C19.1 17 18.6 17.6 18.5 17.7C18.4 17.9 18.2 17.9 18.1 17.8C16.9 17.2 16.1 16.7 15.3 15.3C15.1 15 15.4 15 15.7 14.4C15.8 14.2 15.7 14.1 15.7 13.9C15.6 13.8 15.1 12.6 14.9 12.1C14.8 11.7 14.6 11.7 14.4 11.7H14C13.8 11.7 13.6 11.8 13.4 12C13.2 12.2 12.6 12.8 12.6 14C12.6 15.2 13.4 16.4 13.5 16.5C13.6 16.7 15.1 19 17.4 20C19 20.7 19.7 20.7 20.5 20.6C21 20.5 21.9 20 22.2 19.3C22.4 18.7 22.4 18.2 22.3 18.1C22.2 17.8 21.5 17.6 21.3 17.5Z" fill="white"/></svg></span>
           <span class="share-platform-name">WhatsApp</span>
         </a>
         <a class="share-platform" id="shareViber" href="#" target="_blank" rel="noopener">
-          <span class="share-platform-icon">📱</span>
+          <span class="share-platform-icon"><svg width="26" height="26" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#7360F2"/><path d="M22.8 9.4C21.3 8 18.9 7.3 16 7.3C12.7 7.3 9.9 8.3 8.3 10.1C7 11.6 6.3 13.7 6.3 16.3C6.3 18.6 7 20.5 8.2 21.8L8.2 24.3C8.2 24.7 8.6 24.9 8.9 24.7L11.3 23.4C12.4 23.8 13.6 24 14.9 24.1C15.3 24.1 15.7 24.1 16 24.1C19.3 24.1 22.1 23.1 23.7 21.3C25 19.8 25.7 17.8 25.7 15.5C25.7 12.9 24.6 10.9 22.8 9.4ZM21.2 20.3C20.2 21.3 18.6 21.8 16.5 21.9C16.2 21.9 15.8 21.9 15.5 21.9C14.4 21.9 13.3 21.7 12.4 21.3L12 21.1L10 22.1L10.1 19.9L9.8 19.6C8.8 18.5 8.3 17.1 8.3 15.5C8.3 11.1 11.5 9.2 16 9.2C20.5 9.2 23.7 11.1 23.7 15.5C23.7 17.3 23.1 18.9 21.2 20.3ZM19.9 17.2C19.6 17 18.5 16.5 18.2 16.4C17.9 16.3 17.8 16.2 17.6 16.5C17.4 16.8 16.9 17.3 16.8 17.5C16.7 17.7 16.5 17.7 16.3 17.6C15.2 17.1 14.2 16.4 13.5 15.5C13.1 15 12.8 14.4 12.6 13.8C12.5 13.6 12.6 13.4 12.7 13.3C12.9 13.1 13.1 12.9 13.2 12.7C13.3 12.5 13.3 12.3 13.2 12.2C13.1 12 12.7 10.9 12.5 10.4C12.3 9.9 12.1 10 11.9 10H11.5C11.3 10 11 10.1 10.8 10.3C10.4 10.7 9.9 11.2 9.9 12.3C9.9 13.4 10.6 14.5 11.5 15.7C12.7 17.3 14.2 18.6 15.8 19.3C16.7 19.7 17.8 20.1 18.8 20.1C19.3 20.1 19.8 19.9 20.2 19.6C20.6 19.2 20.9 18.6 21 18C21.1 17.6 21 17.4 19.9 17.2Z" fill="white"/></svg></span>
           <span class="share-platform-name">Viber</span>
         </a>
         <a class="share-platform" id="shareTwitter" href="#" target="_blank" rel="noopener">
-          <span class="share-platform-icon">🐦</span>
+          <span class="share-platform-icon"><svg width="26" height="26" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#000"/><path d="M17.9 14.7L23.7 8H22.3L17.3 13.8L13.3 8H8.5L14.6 16.9L8.5 24H9.9L15.2 17.9L19.4 24H24.2L17.9 14.7ZM15.9 17.1L15.3 16.2L10.4 9H12.6L16.5 14.7L17.1 15.6L22.3 23H20.1L15.9 17.1Z" fill="white"/></svg></span>
           <span class="share-platform-name">X / Twitter</span>
         </a>
         <a class="share-platform" id="shareFacebook" href="#" target="_blank" rel="noopener">
-          <span class="share-platform-icon">👥</span>
+          <span class="share-platform-icon"><svg width="26" height="26" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#1877F2"/><path d="M20.5 10H18C17.2 10 17 10.4 17 11V13H20.5L20 16.5H17V26H13V16.5H10.5V13H13V10.5C13 7.8 14.6 6 17.5 6H20.5V10Z" fill="white"/></svg></span>
           <span class="share-platform-name">Facebook</span>
         </a>
         <a class="share-platform" id="shareLinkedIn" href="#" target="_blank" rel="noopener">
-          <span class="share-platform-icon">💼</span>
+          <span class="share-platform-icon"><svg width="26" height="26" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="16" fill="#0A66C2"/><path d="M11 13H8V24H11V13ZM9.5 12C10.6 12 11.5 11.1 11.5 10C11.5 8.9 10.6 8 9.5 8C8.4 8 7.5 8.9 7.5 10C7.5 11.1 8.4 12 9.5 12ZM25 24H22V18.5C22 17 21.9 15.2 20 15.2C18.1 15.2 17.8 16.7 17.8 18.4V24H14.8V13H17.7V14.6H17.7C18.2 13.7 19.2 12.8 20.8 12.8C23.9 12.8 25 14.8 25 17.7V24Z" fill="white"/></svg></span>
           <span class="share-platform-name">LinkedIn</span>
         </a>
         <a class="share-platform" id="shareTelegram" href="#" target="_blank" rel="noopener">
-          <span class="share-platform-icon">✈️</span>
+          <span class="share-platform-icon"><svg width="26" height="26" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#26A5E4"/><path d="M7.3 15.6L22.1 9.7C22.9 9.4 23.5 9.9 23.3 11L20.8 22.7C20.6 23.7 20 23.9 19.2 23.4L15.2 20.5L13.3 22.3C13.1 22.5 12.8 22.6 12.5 22.6L12.8 18.5L20.3 11.8C20.6 11.5 20.3 11.4 19.9 11.7L10.7 17.4L6.8 16.2C5.8 15.9 5.8 15.2 7.3 15.6Z" fill="white"/></svg></span>
           <span class="share-platform-name">Telegram</span>
         </a>
         <a class="share-platform" id="shareEmail" href="#" target="_blank" rel="noopener">
-          <span class="share-platform-icon">📧</span>
+          <span class="share-platform-icon"><svg width="26" height="26" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#6366F1"/><path d="M8 11C8 10.4 8.4 10 9 10H23C23.6 10 24 10.4 24 11V21C24 21.6 23.6 22 23 22H9C8.4 22 8 21.6 8 21V11ZM10 12V13.5L16 17L22 13.5V12H10ZM10 15.5V20H22V15.5L16 19L10 15.5Z" fill="white"/></svg></span>
           <span class="share-platform-name">Email</span>
         </a>
         <a class="share-platform" id="shareReddit" href="#" target="_blank" rel="noopener">
-          <span class="share-platform-icon">🤖</span>
+          <span class="share-platform-icon"><svg width="26" height="26" viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#FF4500"/><path d="M26 16C26 14.7 25 13.7 23.7 13.7C23.1 13.7 22.6 13.9 22.2 14.3C20.8 13.3 18.9 12.7 16.8 12.6L17.7 8.5L20.5 9.1C20.5 10 21.3 10.7 22.2 10.7C23.1 10.7 23.9 9.9 23.9 9C23.9 8.1 23.1 7.3 22.2 7.3C21.5 7.3 20.9 7.7 20.6 8.3L17.5 7.6C17.2 7.5 17 7.7 16.9 8L15.9 12.6C13.9 12.7 12 13.3 10.6 14.3C10.2 13.9 9.7 13.7 9.1 13.7C7.8 13.7 6.8 14.7 6.8 16C6.8 16.8 7.2 17.5 7.8 17.9C7.8 18.1 7.8 18.2 7.8 18.4C7.8 21.2 11.3 23.5 16.4 23.5C21.5 23.5 25 21.2 25 18.4C25 18.2 25 18.1 24.9 17.9C25.5 17.5 26 16.8 26 16ZM11.8 17.5C11.8 16.9 12.3 16.4 12.9 16.4C13.5 16.4 14 16.9 14 17.5C14 18.1 13.5 18.6 12.9 18.6C12.3 18.6 11.8 18.1 11.8 17.5ZM19.5 20.8C18.8 21.5 17.7 21.8 16.4 21.8C15.1 21.8 14 21.5 13.3 20.8C13.1 20.6 13.1 20.3 13.3 20.1C13.5 19.9 13.8 19.9 14 20.1C14.5 20.6 15.3 20.8 16.4 20.8C17.5 20.8 18.3 20.6 18.8 20.1C19 19.9 19.3 19.9 19.5 20.1C19.7 20.3 19.7 20.6 19.5 20.8ZM19.9 18.6C19.3 18.6 18.8 18.1 18.8 17.5C18.8 16.9 19.3 16.4 19.9 16.4C20.5 16.4 21 16.9 21 17.5C21 18.1 20.5 18.6 19.9 18.6Z" fill="white"/></svg></span>
           <span class="share-platform-name">Reddit</span>
         </a>
       </div>
@@ -700,7 +700,12 @@ var BACKEND = "https://detective-app-production-7080.up.railway.app";
 var SB_URL  = "https://harhjuykvkfwksccjjxq.supabase.co";
 var SB_KEY  = "sb_publishable_gNTIfFSDai7wWPMPIVM-Vg_2rthrcNV";
 
-var user=null, token=null, plan="free", mode="signin", anonScans=parseInt(localStorage.getItem('sg_anon_scans')||'0');
+var user=null, token=null, plan="free", mode="signin", anonScans=parseInt(sg_get('sg_anon_scans')||'0');
+
+// Storage helper — localStorage with sessionStorage fallback (iOS Private mode)
+function sg_set(k,v){ try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}} }
+function sg_get(k){ try{var v=localStorage.getItem(k);if(v!==null)return v;}catch(e){} try{return sessionStorage.getItem(k);}catch(e){return null;} }
+function sg_del(k){ try{localStorage.removeItem(k);}catch(e){} try{sessionStorage.removeItem(k);}catch(e){} }
 
 
 
@@ -710,7 +715,7 @@ var user=null, token=null, plan="free", mode="signin", anonScans=parseInt(localS
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
 function sbRefresh(){
-  var rt = localStorage.getItem("sg_refresh");
+  var rt = sg_get("sg_refresh");
   if(!rt||rt==="null") return;
   fetch(SB_URL+"/auth/v1/token?grant_type=refresh_token",{
     method:"POST",
@@ -719,15 +724,15 @@ function sbRefresh(){
   }).then(function(r){return r.json();}).then(function(d){
     if(d.access_token){
       token=d.access_token; user=d.user;
-      localStorage.setItem("sg_token",token);
-      localStorage.setItem("sg_user",JSON.stringify(d.user));
-      if(d.refresh_token) localStorage.setItem("sg_refresh",d.refresh_token);
+      sg_set("sg_token",token);
+      sg_set("sg_user",JSON.stringify(d.user));
+      if(d.refresh_token) sg_set("sg_refresh",d.refresh_token);
       fetchPlan(d.user.id); updateUI();
     } else {
       // Token expired — clear and show sign in (don't wipe, just reset state)
       token=null; user=null; plan="free";
-      localStorage.removeItem("sg_token"); localStorage.removeItem("sg_user");
-      localStorage.removeItem("sg_refresh"); localStorage.removeItem("sg_plan");
+      sg_del("sg_token"); sg_del("sg_user");
+      sg_del("sg_refresh"); sg_del("sg_plan");
       updateUI();
     }
   }).catch(function(){ 
@@ -741,13 +746,13 @@ function sbUp(e,p){ return fetch(SB_URL+"/auth/v1/signup",{method:"POST",headers
 function sbOut(){
   if(token) fetch(SB_URL+"/auth/v1/logout",{method:"POST",headers:{"Authorization":"Bearer "+token,"apikey":SB_KEY}});
   user=null; token=null; plan="free";
-  localStorage.removeItem("sg_token"); localStorage.removeItem("sg_user"); localStorage.removeItem("sg_plan");
+  sg_del("sg_token"); sg_del("sg_user"); sg_del("sg_plan");
   updateUI();
 }
 function fetchPlan(uid){
   fetch(SB_URL+"/rest/v1/profiles?id=eq."+uid+"&select=plan,subscription_status",{headers:{"apikey":SB_KEY,"Authorization":"Bearer "+token}})
   .then(function(r){return r.json();}).then(function(d){
-    if(d&&d[0]){ plan=(d[0].subscription_status==="active")?d[0].plan:"free"; localStorage.setItem("sg_plan",plan); updateUI(); }
+    if(d&&d[0]){ plan=(d[0].subscription_status==="active")?d[0].plan:"free"; sg_set("sg_plan",plan); updateUI(); }
   }).catch(function(){});
 }
 
@@ -763,13 +768,13 @@ window.addEventListener("load",function(){
     window.history.replaceState({},"",location.pathname);
   }
 
-  var st=localStorage.getItem("sg_token"), su=localStorage.getItem("sg_user"), sr=localStorage.getItem("sg_refresh");
+  var st=sg_get("sg_token"), su=sg_get("sg_user"), sr=sg_get("sg_refresh");
   if(sr && sr!=="null"){
     // Always try to refresh token on page load for persistent login
-    try{ user=JSON.parse(su); token=st; plan=localStorage.getItem("sg_plan")||"free"; updateUI(); } catch(e){}
+    try{ user=JSON.parse(su); token=st; plan=sg_get("sg_plan")||"free"; updateUI(); } catch(e){}
     sbRefresh();
   } else if(st&&st!=="null"&&su&&su!=="null"){
-    try{ token=st; user=JSON.parse(su); plan=localStorage.getItem("sg_plan")||"free"; fetchPlan(user.id); }
+    try{ token=st; user=JSON.parse(su); plan=sg_get("sg_plan")||"free"; fetchPlan(user.id); }
     catch(e){ 
       localStorage.removeItem("sg_token"); localStorage.removeItem("sg_user");
       localStorage.removeItem("sg_plan"); localStorage.removeItem("sg_refresh");
@@ -777,7 +782,7 @@ window.addEventListener("load",function(){
   }
   var p=new URLSearchParams(window.location.search);
   if(p.get("upgrade")==="success"){
-    plan="pro"; localStorage.setItem("sg_plan","pro");
+    plan="pro"; sg_set("sg_plan","pro");
     showMsg("successMsg","Welcome to Pro! Unlimited scans unlocked.");
     window.history.replaceState({},"",location.pathname);
   }
@@ -962,9 +967,9 @@ function doAuth(){
     if(d.error||d.error_description){ showModalMsg(d.error_description||d.error,"error"); return; }
     if(mode==="signup"&&!d.access_token){ showModalMsg("Account created! You can now sign in.","success"); setTimeout(function(){ toggleMode("signin"); },1500); return; }
     token=d.access_token; user=d.user;
-    localStorage.setItem("sg_token",token);
+    sg_set("sg_token",token);
     localStorage.setItem("sg_user",JSON.stringify(user));
-    if(d.refresh_token) localStorage.setItem("sg_refresh",d.refresh_token);
+    if(d.refresh_token) sg_set("sg_refresh",d.refresh_token);
     // Reset anon scan counter on login
     anonScans=0; localStorage.setItem("sg_anon_scans","0");
     fetchPlan(user.id); updateUI(); closeModal();
@@ -996,7 +1001,7 @@ function runScan(){
       return;
     }
     anonScans++;
-    localStorage.setItem("sg_anon_scans", anonScans);
+    sg_set("sg_anon_scans", anonScans);
   }
   document.getElementById("reportSection").classList.remove("visible");
   document.getElementById("errorMsg").classList.remove("visible");
