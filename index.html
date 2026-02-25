@@ -755,14 +755,30 @@ function fetchPlan(uid){
   fetch(SB_URL+"/rest/v1/profiles?id=eq."+uid+"&select=plan,subscription_status",{headers:{"apikey":SB_KEY,"Authorization":"Bearer "+token}})
   .then(function(r){return r.json();}).then(function(d){
     if(d&&d[0]){
-      // Accept pro if plan=pro OR subscription_status=active
       var p = d[0].plan||"free";
       var s = d[0].subscription_status||"";
       plan = (p==="pro" || s==="active") ? "pro" : "free";
       sg_set("sg_plan",plan);
       updateUI();
+      // Re-apply locking if scan result already visible (race condition fix)
+      if(document.getElementById("reportSection").classList.contains("visible")){
+        applyLocking();
+      }
     }
   }).catch(function(){});
+}
+
+function applyLocking(){
+  var isPro = (plan === "pro");
+  ["findingsOverlay","analysisOverlay","rawOverlay"].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.style.display = isPro ? "none" : "flex";
+  });
+  document.querySelectorAll(".locked-section .section").forEach(function(s){
+    s.style.filter = isPro ? "none" : "blur(4px)";
+    s.style.pointerEvents = isPro ? "auto" : "none";
+    s.style.userSelect = isPro ? "auto" : "none";
+  });
 }
 
 window.addEventListener("load",function(){
@@ -786,7 +802,7 @@ window.addEventListener("load",function(){
     try{ token=st; user=JSON.parse(su); plan=sg_get("sg_plan")||"free"; fetchPlan(user.id); }
     catch(e){ 
       localStorage.removeItem("sg_token"); localStorage.removeItem("sg_user");
-      localStorage.removeItem("sg_plan"); localStorage.removeItem("sg_refresh");
+      sg_del("sg_plan"); sg_del("sg_refresh");
     }
   }
   var p=new URLSearchParams(window.location.search);
@@ -1087,20 +1103,8 @@ function renderReport(r){
     grid.innerHTML+='<div class="data-cell"><div class="data-lbl">'+e[0]+'</div><div class="data-val">'+e[1]+'</div></div>';
   });
 
-  // Feature locking for free users
-  var isPro = (plan === "pro");
-  var lockIds = ["findingsOverlay", "analysisOverlay", "rawOverlay"];
-  lockIds.forEach(function(id){
-    var el = document.getElementById(id);
-    if(el) el.style.display = isPro ? "none" : "flex";
-  });
-  // Blur locked sections
-  var lockSections = document.querySelectorAll(".locked-section .section");
-  lockSections.forEach(function(s){
-    s.style.filter = isPro ? "none" : "blur(4px)";
-    s.style.pointerEvents = isPro ? "auto" : "none";
-    s.style.userSelect = isPro ? "auto" : "none";
-  });
+  // Feature locking — also called from fetchPlan to handle async race condition
+  applyLocking();
 
   // Log to scan history
   if(user && token){
