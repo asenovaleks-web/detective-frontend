@@ -272,6 +272,7 @@
     .user-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; font-size: 12px; font-family: 'DM Mono', monospace; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: border-color 0.15s; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .user-btn:hover { border-color: var(--blue); color: var(--text); }
     .user-btn::after { content: "▾"; font-size: 10px; flex-shrink: 0; }
+    .pro-badge { display: inline-flex; align-items: center; font-size: 9px; font-weight: 700; font-family: 'DM Mono', monospace; letter-spacing: 0.5px; background: linear-gradient(135deg, #3b82f6, #6366f1); color: #fff; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
     .user-dropdown { position: absolute; top: calc(100% + 8px); right: 0; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 6px; min-width: 180px; z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.4); display: none; }
     .user-dropdown.open { display: block; }
     .user-dropdown-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 6px; font-size: 13px; color: var(--text-muted); cursor: pointer; transition: background 0.1s; white-space: nowrap; }
@@ -792,9 +793,10 @@ window.addEventListener("load",function(){
 function updateUI(){
   var navAuth=document.getElementById("navAuth");
   if(user){
+    var proBadge = plan==='pro' ? ' <span class="pro-badge">PRO</span>' : '';
     navAuth.innerHTML=
       '<div class="user-menu" id="userMenuWrap">'+
-        '<button class="user-btn" onclick="toggleDropdown()">'+user.email+'</button>'+
+        '<button class="user-btn" onclick="toggleDropdown()">'+user.email+proBadge+'</button>'+
         '<div class="user-dropdown" id="userDropdown">'+
           '<div class="user-dropdown-item" onclick="openHistory()">📋 Scan history</div>'+
           '<div class="user-dropdown-item" onclick="openChpass()">🔑 Change password</div>'+
@@ -1213,14 +1215,58 @@ function doReset(){
 
 </script>
 <style>
-  /* Tawk.to size override for mobile */
+  /* Tawk.to — hidden by default, shown only on user action */
+  #tawk-bubble-container, .tawk-min-container, iframe[src*="tawk.to"],
+  div[id*="tawk"], div[class*="tawk"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+  #tawk-bubble-container.tawk-visible, .tawk-min-container.tawk-visible,
+  div[id*="tawk"].tawk-visible, div[class*="tawk"].tawk-visible,
+  iframe[src*="tawk.to"].tawk-visible {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  /* Custom chat button */
+  #sg-chat-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 16px;
+    bottom: calc(20px + env(safe-area-inset-bottom));
+    width: 44px;
+    height: 44px;
+    background: var(--blue);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 9998;
+    box-shadow: 0 4px 16px rgba(59,130,246,0.4);
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  #sg-chat-btn:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(59,130,246,0.5); }
+  #sg-chat-btn svg { width: 20px; height: 20px; fill: white; }
   @media (max-width: 600px) {
-    #fc_widget, iframe[title*="chat"], iframe[src*="tawk"] { transform: scale(0.82) !important; transform-origin: bottom right !important; }
+    #sg-chat-btn { right: 12px; width: 40px; height: 40px; }
   }
 </style>
+<!-- Custom chat button -->
+<button id="sg-chat-btn" onclick="sgOpenChat()" title="Live support">
+  <svg viewBox="0 0 24 24"><path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2ZM20 16H6L4 18V4H20V16Z"/></svg>
+</button>
+
 <!--Start of Tawk.to Script-->
 <script type="text/javascript">
 var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+Tawk_API.onLoad = function(){
+  Tawk_API.hideWidget();
+};
 (function(){
 var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
 s1.async=true;
@@ -1231,5 +1277,19 @@ s0.parentNode.insertBefore(s1,s0);
 })();
 </script>
 <!--End of Tawk.to Script-->
+<script>
+function sgOpenChat(){
+  if(typeof Tawk_API !== 'undefined' && Tawk_API.showWidget){
+    Tawk_API.showWidget();
+    Tawk_API.maximize();
+    document.getElementById('sg-chat-btn').style.display='none';
+  }
+}
+// Re-show our button when tawk window is minimized/closed
+if(typeof Tawk_API !== 'undefined'){
+  Tawk_API.onChatMinimized = function(){ document.getElementById('sg-chat-btn').style.display='flex'; };
+  Tawk_API.onChatEnded    = function(){ document.getElementById('sg-chat-btn').style.display='flex'; Tawk_API.hideWidget(); };
+}
+</script>
 </body>
 </html>
