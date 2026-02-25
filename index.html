@@ -266,6 +266,39 @@
     .pass-wrap { position: relative; }
     .pass-wrap .modal-input { padding-right: 44px; width: 100%; }
     .pass-eye { position: absolute; right: 13px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--text-faint); font-size: 16px; padding: 0; line-height: 1; }
+
+    /* ── User Dropdown ── */
+    .user-menu { position: relative; display: inline-flex; align-items: center; gap: 8px; }
+    .user-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; font-size: 12px; font-family: 'DM Mono', monospace; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: border-color 0.15s; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .user-btn:hover { border-color: var(--blue); color: var(--text); }
+    .user-btn::after { content: "▾"; font-size: 10px; flex-shrink: 0; }
+    .user-dropdown { position: absolute; top: calc(100% + 8px); right: 0; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 6px; min-width: 180px; z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.4); display: none; }
+    .user-dropdown.open { display: block; }
+    .user-dropdown-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 6px; font-size: 13px; color: var(--text-muted); cursor: pointer; transition: background 0.1s; white-space: nowrap; }
+    .user-dropdown-item:hover { background: var(--surface3); color: var(--text); }
+    .user-dropdown-item.danger { color: #ef4444; }
+    .user-dropdown-item.danger:hover { background: rgba(239,68,68,0.08); }
+    .user-dropdown-sep { height: 1px; background: var(--border); margin: 4px 0; }
+
+    /* ── History Modal ── */
+    .history-modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .history-modal-bg.open { display: flex; }
+    .history-modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; width: 100%; max-width: 560px; max-height: 80vh; overflow-y: auto; }
+    .history-modal-title { font-size: 18px; font-weight: 600; letter-spacing: -0.4px; margin-bottom: 4px; }
+    .history-modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+    .history-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 8px; gap: 12px; }
+    .history-domain { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .history-score { font-size: 13px; font-weight: 600; font-family: 'DM Mono', monospace; }
+    .history-verdict { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; letter-spacing: 0.3px; }
+    .history-verdict.GREEN { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+    .history-verdict.YELLOW { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
+    .history-verdict.RED { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+    .history-date { font-size: 11px; color: var(--text-faint); font-family: 'DM Mono', monospace; white-space: nowrap; }
+    .history-empty { text-align: center; color: var(--text-faint); font-size: 14px; padding: 32px 0; }
+
+    /* ── Change Password Modal ── */
+    .chpass-modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .chpass-modal-bg.open { display: flex; }
     .pass-eye:hover { color: var(--text-muted); }
   </style>
 </head>
@@ -321,6 +354,37 @@
       <div style="text-align:center;margin-top:8px;" id="mForgotWrap">
         <a onclick="toggleMode('forgot')" style="font-size:12px;color:var(--text-faint);cursor:pointer;text-decoration:underline;text-underline-offset:3px;">Forgot password?</a>
       </div>
+    </div>
+  </div>
+
+  <!-- Scan History Modal -->
+  <div class="history-modal-bg" id="historyModal" onclick="if(event.target===this)closeHistory()">
+    <div class="history-modal">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+        <div class="history-modal-title">Scan History</div>
+        <button onclick="closeHistory()" style="background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:18px;">✕</button>
+      </div>
+      <div class="history-modal-sub" id="historySubtitle">Your recent domain scans</div>
+      <div id="historyList"><div class="history-empty">Loading...</div></div>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div class="chpass-modal-bg" id="chpassModal" onclick="if(event.target===this)closeChpass()">
+    <div class="modal">
+      <button class="modal-x" onclick="closeChpass()">✕</button>
+      <div class="modal-title">Change password</div>
+      <div class="modal-sub">Enter your new password below.</div>
+      <div class="modal-msg" id="chpassMsg"></div>
+      <div class="pass-wrap">
+        <input class="modal-input" type="password" id="chpassNew" placeholder="New password (min 6 characters)" />
+        <button class="pass-eye" type="button" onclick="togglePass('chpassNew',this)" tabindex="-1">👁</button>
+      </div>
+      <div class="pass-wrap">
+        <input class="modal-input" type="password" id="chpassConfirm" placeholder="Confirm new password" onkeydown="if(event.key==='Enter')doChangePass()" />
+        <button class="pass-eye" type="button" onclick="togglePass('chpassConfirm',this)" tabindex="-1">👁</button>
+      </div>
+      <button class="modal-submit" id="chpassBtn" onclick="doChangePass()">Update password</button>
     </div>
   </div>
 
@@ -687,13 +751,105 @@ function updateUI(){
   var fb=document.getElementById("freeBanner");
   var pb=document.getElementById("proBanner");
   if(user){
-    navAuth.innerHTML='<span class="nav-email">'+user.email+'</span>&nbsp;<button class="btn-sm btn-outline" onclick="sbOut()">Sign out</button>';
-    fb.style.display=plan==="pro"?"none":"flex";
+    navAuth.innerHTML=
+      '<div class="user-menu" id="userMenuWrap">'+
+        '<button class="user-btn" onclick="toggleDropdown()">'+user.email+'</button>'+
+        '<div class="user-dropdown" id="userDropdown">'+
+          '<div class="user-dropdown-item" onclick="openHistory()">📋 Scan history</div>'+
+          '<div class="user-dropdown-item" onclick="openChpass()">🔑 Change password</div>'+
+          (plan!=="pro"?'<div class="user-dropdown-item" onclick="upgradeToPro();closeDropdown()">⭐ Upgrade to Pro</div>':'')+
+          '<div class="user-dropdown-sep"></div>'+
+          '<div class="user-dropdown-item danger" onclick="sbOut()">Sign out</div>'+
+        '</div>'+
+      '</div>';
+    fb.style.display=plan==="pro"?"none":"none";
     pb.style.display=plan==="pro"?"flex":"none";
   } else {
     navAuth.innerHTML='<button class="btn-sm btn-blue" onclick="openModal()">'+"Sign in"+'</button>';
     fb.style.display="none"; pb.style.display="none";
   }
+}
+
+function toggleDropdown(){
+  var d=document.getElementById("userDropdown");
+  if(d) d.classList.toggle("open");
+}
+function closeDropdown(){
+  var d=document.getElementById("userDropdown");
+  if(d) d.classList.remove("open");
+}
+document.addEventListener("click",function(e){
+  var wrap=document.getElementById("userMenuWrap");
+  if(wrap&&!wrap.contains(e.target)) closeDropdown();
+});
+
+function openHistory(){
+  closeDropdown();
+  document.getElementById("historyModal").classList.add("open");
+  loadHistory();
+}
+function closeHistory(){
+  document.getElementById("historyModal").classList.remove("open");
+}
+
+function loadHistory(){
+  var list=document.getElementById("historyList");
+  var sub=document.getElementById("historySubtitle");
+  if(!token){ list.innerHTML='<div class="history-empty">Sign in to see your scan history.</div>'; return; }
+  list.innerHTML='<div class="history-empty">Loading...</div>';
+  fetch(SB_URL+"/rest/v1/scan_history?user_id=eq."+user.id+"&order=created_at.desc&limit=50",{
+    headers:{"apikey":SB_KEY,"Authorization":"Bearer "+token}
+  }).then(function(r){return r.json();}).then(function(data){
+    if(!data||!data.length){
+      list.innerHTML='<div class="history-empty">No scans yet. Start by checking a website above.</div>';
+      sub.textContent="Your recent domain scans";
+      return;
+    }
+    sub.textContent="Showing "+data.length+" recent scan"+(data.length!==1?"s":"");
+    list.innerHTML=data.map(function(s){
+      var d=new Date(s.created_at);
+      var dateStr=d.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});
+      var scoreColor=s.verdict==="GREEN"?"var(--green)":s.verdict==="RED"?"var(--red)":"var(--yellow)";
+      return '<div class="history-item">'+
+        '<div class="history-domain">'+s.domain+'</div>'+
+        '<div class="history-score" style="color:'+scoreColor+'">'+s.score+'</div>'+
+        '<div class="history-verdict '+s.verdict+'">'+s.verdict+'</div>'+
+        '<div class="history-date">'+dateStr+'</div>'+
+      '</div>';
+    }).join("");
+  }).catch(function(){
+    list.innerHTML='<div class="history-empty">Could not load history. Please try again.</div>';
+  });
+}
+
+function openChpass(){
+  closeDropdown();
+  document.getElementById("chpassModal").classList.add("open");
+  document.getElementById("chpassNew").focus();
+}
+function closeChpass(){
+  document.getElementById("chpassModal").classList.remove("open");
+  document.getElementById("chpassMsg").className="modal-msg";
+  document.getElementById("chpassNew").value="";
+  document.getElementById("chpassConfirm").value="";
+}
+function doChangePass(){
+  var p1=document.getElementById("chpassNew").value;
+  var p2=document.getElementById("chpassConfirm").value;
+  var btn=document.getElementById("chpassBtn");
+  var msg=document.getElementById("chpassMsg");
+  if(!p1||p1.length<6){msg.textContent="Password must be at least 6 characters.";msg.className="modal-msg error visible";return;}
+  if(p1!==p2){msg.textContent="Passwords do not match.";msg.className="modal-msg error visible";return;}
+  btn.disabled=true;btn.textContent="Updating...";
+  fetch(SB_URL+"/auth/v1/user",{
+    method:"PUT",
+    headers:{"Content-Type":"application/json","apikey":SB_KEY,"Authorization":"Bearer "+token},
+    body:JSON.stringify({password:p1})
+  }).then(function(r){return r.json();}).then(function(d){
+    btn.disabled=false;btn.textContent="Update password";
+    if(d.error||d.error_description){msg.textContent=d.error_description||d.error;msg.className="modal-msg error visible";}
+    else{msg.textContent="Password updated successfully!";msg.className="modal-msg success visible";setTimeout(closeChpass,2000);}
+  }).catch(function(){btn.disabled=false;btn.textContent="Update password";msg.textContent="Something went wrong.";msg.className="modal-msg error visible";});
 }
 
 function openModal(m){ if(m) mode=m; document.getElementById("authModal").classList.add("open"); setModalMode(mode); document.getElementById("mEmail").focus(); }
@@ -888,6 +1044,15 @@ function renderReport(r){
     s.style.pointerEvents = isPro ? "auto" : "none";
     s.style.userSelect = isPro ? "auto" : "none";
   });
+
+  // Log to scan history
+  if(user && token){
+    fetch(SB_URL+"/rest/v1/scan_history",{
+      method:"POST",
+      headers:{"apikey":SB_KEY,"Authorization":"Bearer "+token,"Content-Type":"application/json","Prefer":"return=minimal"},
+      body:JSON.stringify({user_id:user.id,domain:r.target,score:r.score,verdict:r.verdict})
+    }).catch(function(){});
+  }
 
   // Scan count social proof
   var scWrap = document.getElementById("scanCountWrap");
