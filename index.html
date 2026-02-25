@@ -269,9 +269,10 @@
 
     /* ── User Dropdown ── */
     .user-menu { position: relative; display: inline-flex; align-items: center; gap: 8px; }
-    .user-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; font-size: 12px; font-family: 'DM Mono', monospace; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: border-color 0.15s; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .user-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; font-size: 12px; font-family: 'DM Mono', monospace; color: var(--text-muted); cursor: pointer; display: flex; align-items: center; gap: 5px; transition: border-color 0.15s; max-width: 210px; white-space: nowrap; }
     .user-btn:hover { border-color: var(--blue); color: var(--text); }
-    .user-btn::after { content: "▾"; font-size: 10px; flex-shrink: 0; }
+    .user-btn-email { overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
+    .user-btn-arrow { font-size: 10px; flex-shrink: 0; }
     .pro-badge { display: inline-flex; align-items: center; font-size: 9px; font-weight: 700; font-family: 'DM Mono', monospace; letter-spacing: 0.5px; background: linear-gradient(135deg, #3b82f6, #6366f1); color: #fff; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
     .user-dropdown { position: absolute; top: calc(100% + 8px); right: 0; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 6px; min-width: 180px; z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.4); display: none; }
     .user-dropdown.open { display: block; }
@@ -311,7 +312,7 @@
 
     @media (max-width: 600px) {
       /* Nav */
-      .user-btn { max-width: 130px; font-size: 11px; }
+      .user-btn { max-width: 160px; font-size: 11px; }
       .user-dropdown { right: 0; min-width: 165px; }
       /* Hero */
       .hero-title { letter-spacing: -0.8px; }
@@ -753,7 +754,14 @@ function sbOut(){
 function fetchPlan(uid){
   fetch(SB_URL+"/rest/v1/profiles?id=eq."+uid+"&select=plan,subscription_status",{headers:{"apikey":SB_KEY,"Authorization":"Bearer "+token}})
   .then(function(r){return r.json();}).then(function(d){
-    if(d&&d[0]){ plan=(d[0].subscription_status==="active")?d[0].plan:"free"; sg_set("sg_plan",plan); updateUI(); }
+    if(d&&d[0]){
+      // Accept pro if plan=pro OR subscription_status=active
+      var p = d[0].plan||"free";
+      var s = d[0].subscription_status||"";
+      plan = (p==="pro" || s==="active") ? "pro" : "free";
+      sg_set("sg_plan",plan);
+      updateUI();
+    }
   }).catch(function(){});
 }
 
