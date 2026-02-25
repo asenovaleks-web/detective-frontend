@@ -405,23 +405,11 @@
 
   <!-- Hero -->
   <div class="hero">
-    <div class="hero-badge">
-      <span class="badge-dot"></span>
-      <span id="tBadge">20 intelligence sources · Live analysis</span>
-    </div>
     <h1 class="hero-title" id="tHeroTitle">The intelligence layer<br/>between you and <em>the internet.</em></h1>
     <p class="hero-sub" id="tHeroSub">Real-time risk analysis on any website — instant, accurate, uncompromising.</p>
   </div>
 
-  <!-- Plan banners -->
-  <div class="plan-banner free" id="freeBanner" style="display:none!important;">
-  </div>
-  <div class="plan-banner pro" id="proBanner">
-    <div>
-      <div class="banner-label" id="tProPlanLabel">Pro plan</div>
-      <div class="banner-sub" id="tProPlanSub">Unlimited scans</div>
-    </div>
-  </div>
+
 
   <div class="msg success" id="successMsg"></div>
 
@@ -748,8 +736,6 @@ window.addEventListener("load",function(){
 
 function updateUI(){
   var navAuth=document.getElementById("navAuth");
-  var fb=document.getElementById("freeBanner");
-  var pb=document.getElementById("proBanner");
   if(user){
     navAuth.innerHTML=
       '<div class="user-menu" id="userMenuWrap">'+
@@ -762,11 +748,8 @@ function updateUI(){
           '<div class="user-dropdown-item danger" onclick="sbOut()">Sign out</div>'+
         '</div>'+
       '</div>';
-    fb.style.display=plan==="pro"?"none":"none";
-    pb.style.display=plan==="pro"?"flex":"none";
   } else {
     navAuth.innerHTML='<button class="btn-sm btn-blue" onclick="openModal()">'+"Sign in"+'</button>';
-    fb.style.display="none"; pb.style.display="none";
   }
 }
 
