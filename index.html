@@ -243,8 +243,10 @@
     .pricing-head { text-align: center; margin-bottom: 28px; }
     .pricing-title { font-size: 26px; font-weight: 600; letter-spacing: -0.6px; margin-bottom: 6px; }
     .pricing-sub { font-size: 14px; color: var(--text-muted); }
-    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    @media(max-width:520px){ .pricing-grid { grid-template-columns: 1fr; } }
+    .pricing-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    @media(max-width:760px){ .pricing-grid { grid-template-columns: 1fr; } }
+    .pricing-card.team { border-color: #818cf8; box-shadow: 0 0 24px rgba(129,140,248,0.15); }
+    .team-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg,#6366f1,#818cf8); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; padding: 3px 12px; border-radius: 100px; white-space: nowrap; }
     .pricing-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; position: relative; }
     .pricing-card.pro { border-color: var(--blue); box-shadow: 0 0 24px var(--blue-glow); }
     .popular-badge { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); background: var(--blue); color: #fff; font-size: 10px; font-weight: 600; font-family: 'DM Mono', monospace; padding: 3px 12px; border-radius: 100px; white-space: nowrap; letter-spacing: 0.5px; }
@@ -660,7 +662,7 @@
   <!-- Pricing -->
   <div class="pricing">
     <div class="pricing-head">
-      <h2 class="pricing-title">Everything you need to stay safe online</h2>
+      <h2 class="pricing-title">The right plan for every level of protection</h2>
       <p class="pricing-sub">More than peace of mind.</p>
     </div>
     <div class="pricing-grid">
@@ -673,7 +675,7 @@
           <li><span class="fi">✓</span>Safe / Caution / Danger verdict</li>
           <li><span class="fi">✓</span>Basic confidence level</li>
           <li class="muted"><span class="fi">–</span>Full AI threat analysis</li>
-          <li class="muted"><span class="fi">–</span>20 source breakdown</li>
+          <li class="muted"><span class="fi">–</span>Full intelligence breakdown</li>
           <li class="muted"><span class="fi">–</span>Malicious code scanner</li>
           <li class="muted"><span class="fi">–</span>Scan history</li>
           <li class="muted"><span class="fi">–</span>Watchlist &amp; alerts</li>
@@ -704,7 +706,72 @@
         <button class="plan-cta filled" onclick="upgradeToPro()">Upgrade to Pro — €3.99/month</button>
       </div>
     </div>
-    <div class="pricing-note">Cancel anytime · Billed monthly · No hidden fees</div>
+      <div class="pricing-card team" style="position:relative;">
+        <div class="team-badge">FOR TEAMS</div>
+        <div class="plan-name" style="margin-top:8px;">Team</div>
+        <div class="plan-price">€19.99</div>
+        <div class="plan-period">per month · up to 5 seats</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px;padding:8px 12px;background:rgba(129,140,248,0.08);border:1px solid rgba(129,140,248,0.2);border-radius:6px;">
+          🏢 Built for exec teams &amp; businesses
+        </div>
+        <ul class="plan-features">
+          <li><span class="fi">✓</span>Everything in Pro</li>
+          <li><span class="fi">✓</span>Up to 5 team members</li>
+          <li><span class="fi">✓</span>Shared watchlist &amp; targets</li>
+          <li><span class="fi">✓</span>Team scan history</li>
+          <li><span class="fi">✓</span>Unlimited scans</li>
+          <li><span class="fi">✓</span>Instant threat alerts for team</li>
+          <li><span class="fi">✓</span>Dedicated account manager</li>
+          <li><span class="fi">✓</span>Priority support &amp; onboarding</li>
+        </ul>
+        <button class="plan-cta" style="width:100%;padding:12px;border-radius:8px;border:1px solid #818cf8;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(129,140,248,0.1));color:#a5b4fc;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s;" onclick="openTeamContact()">Get Team access →</button>
+      </div>
+    <div class="pricing-note">Cancel anytime · Billed monthly · No hidden fees · Team plan billed annually</div>
+  </div>
+
+  <!-- B2B Section -->
+  <div style="margin-top:56px;padding:48px 0;border-top:1px solid var(--border);">
+    <div style="max-width:640px;margin:0 auto;text-align:center;padding:0 20px;">
+      <div style="display:inline-flex;align-items:center;gap:6px;font-size:11px;font-family:'DM Mono',monospace;font-weight:600;letter-spacing:0.8px;color:#818cf8;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);padding:4px 12px;border-radius:100px;margin-bottom:20px;">FOR BUSINESSES</div>
+      <h2 style="font-size:26px;font-weight:700;letter-spacing:-0.6px;margin-bottom:12px;">Due diligence in seconds.<br/>For teams that can't afford to be wrong.</h2>
+      <p style="font-size:15px;color:var(--text-muted);line-height:1.7;margin-bottom:32px;">Executive assistants, Chiefs of Staff, procurement teams, and business owners use Signum to vet vendors, suppliers, and partners before engaging. One bad click costs more than a year of Pro.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:36px;text-align:left;">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;">
+          <div style="font-size:20px;margin-bottom:8px;">🔍</div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Vendor Vetting</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Scan any supplier or partner before you sign a contract or make a payment.</div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;">
+          <div style="font-size:20px;margin-bottom:8px;">🔔</div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Ongoing Monitoring</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Add targets to your watchlist and get alerted the moment something changes.</div>
+        </div>
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;">
+          <div style="font-size:20px;margin-bottom:8px;">👥</div>
+          <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Team Access</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Share watchlists and intelligence across your team. Everyone stays protected.</div>
+        </div>
+      </div>
+      <button onclick="openTeamContact()" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#6366f1,#818cf8);color:#fff;font-size:14px;font-weight:600;padding:13px 28px;border-radius:9px;border:none;cursor:pointer;letter-spacing:-0.2px;">Get Team access — €19.99/month →</button>
+      <div style="margin-top:12px;font-size:12px;color:var(--text-faint);">Up to 5 seats · Cancel anytime · Setup in minutes</div>
+    </div>
+  </div>
+
+  <!-- Team Contact Modal -->
+  <div style="position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:300;display:none;align-items:center;justify-content:center;padding:20px;" id="teamModal" onclick="if(event.target===this)closeTeamContact()">
+    <div style="background:var(--surface);border:1px solid #818cf8;border-radius:16px;padding:32px;width:100%;max-width:440px;">
+      <h3 style="font-size:20px;font-weight:700;margin-bottom:8px;letter-spacing:-0.4px;">Get Team access</h3>
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:24px;">Tell us about your team and we'll set you up within 24 hours.</p>
+      <input id="teamName" type="text" placeholder="Your name" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-size:14px;margin-bottom:10px;box-sizing:border-box;font-family:inherit;" />
+      <input id="teamEmail" type="email" placeholder="Work email" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-size:14px;margin-bottom:10px;box-sizing:border-box;font-family:inherit;" />
+      <input id="teamCompany" type="text" placeholder="Company name" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-size:14px;margin-bottom:10px;box-sizing:border-box;font-family:inherit;" />
+      <input id="teamSize" type="text" placeholder="Team size (e.g. 3 people)" style="width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:11px 14px;color:var(--text);font-size:14px;margin-bottom:20px;box-sizing:border-box;font-family:inherit;" />
+      <div id="teamMsg" style="font-size:13px;margin-bottom:12px;display:none;"></div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="closeTeamContact()" style="flex:1;padding:11px;background:none;border:1px solid var(--border);border-radius:8px;color:var(--text-muted);font-size:14px;cursor:pointer;">Cancel</button>
+        <button onclick="submitTeamContact()" style="flex:2;padding:11px;background:linear-gradient(135deg,#6366f1,#818cf8);border:none;border-radius:8px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;">Send request →</button>
+      </div>
+    </div>
   </div>
 
   <!-- Footer -->
@@ -1341,6 +1408,40 @@ function doReset(){
     msg.className = "modal-msg error visible";
   });
 }
+// ── Team Contact ──────────────────────────────────────────────────────────────
+function openTeamContact(){
+  document.getElementById("teamModal").style.display="flex";
+}
+function closeTeamContact(){
+  document.getElementById("teamModal").style.display="none";
+}
+async function submitTeamContact(){
+  var name=document.getElementById("teamName").value.trim();
+  var email=document.getElementById("teamEmail").value.trim();
+  var company=document.getElementById("teamCompany").value.trim();
+  var size=document.getElementById("teamSize").value.trim();
+  var msg=document.getElementById("teamMsg");
+  if(!name||!email||!company){
+    msg.style.display="block";msg.style.color="var(--red)";msg.textContent="Please fill in all required fields.";return;
+  }
+  msg.style.display="block";msg.style.color="var(--text-muted)";msg.textContent="Sending...";
+  try{
+    var r=await fetch(API+"/team-contact",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({name,email,company,team_size:size})
+    });
+    if(r.ok){
+      msg.style.color="var(--green)";msg.textContent="✓ Request sent! We'll be in touch within 24 hours.";
+      setTimeout(closeTeamContact,2500);
+    } else {
+      msg.style.color="var(--red)";msg.textContent="Something went wrong. Email us at hello@signumaiapp.com";
+    }
+  }catch(e){
+    msg.style.color="var(--red)";msg.textContent="Something went wrong. Email us at hello@signumaiapp.com";
+  }
+}
+
 // ── Watchlist ──────────────────────────────────────────────────────────────
 var currentWatchlistDomain = null;
 var isWatching = false;
