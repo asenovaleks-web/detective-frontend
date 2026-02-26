@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- signum v2.1 --><!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -190,16 +190,23 @@
     .f-tag.OK      { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
     .f-text { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
     .narrative { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
+    .site-screenshot { width: 100%; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 14px; display: block; max-height: 200px; object-fit: cover; object-position: top; }
+    .screenshot-wrap { position: relative; margin-bottom: 16px; }
+    .screenshot-label { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text-faint); margin-top: 6px; letter-spacing: 0.3px; }
     .ai-analysis-wrap { position: relative; }
     .ai-label { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-family: 'DM Mono', monospace; font-weight: 600; letter-spacing: 0.8px; color: #818cf8; background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2); padding: 3px 10px; border-radius: 100px; margin-bottom: 14px; }
     .ai-label-dot { width: 5px; height: 5px; background: #818cf8; border-radius: 50%; animation: blink 2.5s ease-in-out infinite; }
     .narrative-text { font-size: 14px; color: var(--text); line-height: 1.8; border-left: 2px solid rgba(99,102,241,0.4); padding-left: 16px; }
-    .raw-btn { background: var(--surface2); border: 1px solid var(--border); font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text-muted); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 6px; margin-bottom: 14px; transition: all 0.15s; font-weight: 500; }
-    .raw-btn:hover { border-color: var(--blue); color: var(--text); }
-    .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .raw-toggle-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .raw-toggle-btn { display: inline-flex; align-items: center; gap: 8px; background: none; border: none; cursor: pointer; padding: 0; }
+    .raw-toggle-label { font-size: 13px; font-weight: 600; color: var(--text); }
+    .raw-toggle-icon { width: 28px; height: 16px; background: var(--surface2); border: 1px solid var(--border); border-radius: 100px; position: relative; transition: background 0.2s, border-color 0.2s; flex-shrink: 0; }
+    .raw-toggle-icon.on { background: var(--blue); border-color: var(--blue); }
+    .raw-toggle-icon::after { content: ""; position: absolute; width: 10px; height: 10px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: left 0.2s; }
+    .raw-toggle-icon.on::after { left: 14px; }
+    .raw-source-count { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text-faint); background: var(--surface2); border: 1px solid var(--border); padding: 2px 10px; border-radius: 100px; }
+    .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 6px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
     .data-grid.open { max-height: 3000px; }
-    .raw-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
-    .raw-count { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text-faint); }
 
     /* ── Feature Lock ── */
     .locked-section { position: relative; }
@@ -214,10 +221,14 @@
     .lock-features { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
     .lock-feature { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
     .lock-feature::before { content: "✓"; color: var(--green); font-weight: 600; }
-    .data-cell { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; transition: border-color 0.15s; }
-    .data-cell:hover { border-color: var(--border2); }
-    .data-lbl { font-size: 9px; font-family: 'DM Mono', monospace; color: var(--text-faint); margin-bottom: 4px; letter-spacing: 0.5px; text-transform: uppercase; }
-    .data-val { font-size: 12px; color: var(--text); font-weight: 500; }
+    .data-cell { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 11px 13px; transition: border-color 0.15s, background 0.15s; position: relative; overflow: hidden; }
+    .data-cell:hover { border-color: var(--border2); background: var(--surface2); }
+    .data-cell.risk-cell { border-color: rgba(239,68,68,0.3); background: rgba(239,68,68,0.04); }
+    .data-cell.warn-cell { border-color: rgba(234,179,8,0.3); background: rgba(234,179,8,0.04); }
+    .data-cell.ok-cell { border-color: rgba(34,197,94,0.2); }
+    .data-lbl { font-size: 9px; font-family: 'DM Mono', monospace; color: var(--text-faint); margin-bottom: 5px; letter-spacing: 0.6px; text-transform: uppercase; display: flex; align-items: center; gap: 5px; }
+    .data-lbl-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+    .data-val { font-size: 12px; color: var(--text); font-weight: 500; line-height: 1.4; }
     .data-val.clear { color: var(--green); }
     .data-val.risk  { color: var(--red); }
     .data-val.warn  { color: var(--yellow); }
@@ -284,13 +295,22 @@
     .user-btn-email { overflow: hidden; text-overflow: ellipsis; flex: 1; min-width: 0; }
     .user-btn-arrow { font-size: 10px; flex-shrink: 0; }
     .pro-badge { display: inline-flex; align-items: center; font-size: 9px; font-weight: 700; font-family: 'DM Mono', monospace; letter-spacing: 0.5px; background: linear-gradient(135deg, #3b82f6, #6366f1); color: #fff; padding: 2px 6px; border-radius: 4px; flex-shrink: 0; }
-    .user-dropdown { position: absolute; top: calc(100% + 8px); right: 0; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 6px; min-width: 180px; z-index: 100; box-shadow: 0 8px 32px rgba(0,0,0,0.4); display: none; }
+    .user-dropdown { position: absolute; top: calc(100% + 10px); right: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 8px; min-width: 210px; z-index: 100; box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04); display: none; animation: ddIn 0.12s ease; }
+    @keyframes ddIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:none} }
     .user-dropdown.open { display: block; }
-    .user-dropdown-item { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-radius: 6px; font-size: 13px; color: var(--text-muted); cursor: pointer; transition: background 0.1s; white-space: nowrap; }
-    .user-dropdown-item:hover { background: var(--surface3); color: var(--text); }
-    .user-dropdown-item.danger { color: #ef4444; }
-    .user-dropdown-item.danger:hover { background: rgba(239,68,68,0.08); }
-    .user-dropdown-sep { height: 1px; background: var(--border); margin: 4px 0; }
+    .user-dropdown-header { padding: 10px 12px 8px; border-bottom: 1px solid var(--border); margin-bottom: 6px; }
+    .user-dropdown-email { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--text-faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .user-dropdown-plan { font-size: 11px; font-weight: 600; margin-top: 3px; }
+    .user-dropdown-plan.pro { color: #818cf8; }
+    .user-dropdown-plan.free { color: var(--text-faint); }
+    .user-dropdown-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; font-size: 13px; color: var(--text-muted); cursor: pointer; transition: background 0.1s, color 0.1s; white-space: nowrap; font-weight: 500; }
+    .user-dropdown-item:hover { background: var(--surface2); color: var(--text); }
+    .user-dropdown-item svg { width: 15px; height: 15px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; opacity: 0.7; }
+    .user-dropdown-item.danger { color: #f87171; }
+    .user-dropdown-item.danger:hover { background: rgba(239,68,68,0.08); color: #ef4444; }
+    .user-dropdown-item.upgrade { color: #818cf8; }
+    .user-dropdown-item.upgrade:hover { background: rgba(99,102,241,0.08); color: #a5b4fc; }
+    .user-dropdown-sep { height: 1px; background: var(--border); margin: 6px 0; }
 
     /* ── History Modal ── */
     .history-modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
@@ -602,6 +622,10 @@
     <div class="locked-section" id="analysisLock">
       <div class="section">
         <div class="section-header" id="tAnalysis">AI Analysis</div>
+        <div class="screenshot-wrap" id="screenshotWrap" style="display:none;">
+          <img id="siteScreenshot" class="site-screenshot" src="" alt="Site preview" />
+          <div class="screenshot-label">Live site snapshot via URLScan</div>
+        </div>
         <div class="ai-analysis-wrap">
           <div class="ai-label"><span class="ai-label-dot"></span>CLAUDE INTELLIGENCE</div>
           <div class="narrative-text" id="narrativeText"></div>
@@ -612,11 +636,12 @@
 
     <div class="locked-section" id="rawLock">
       <div class="section">
-        <div class="raw-header">
-          <button class="raw-btn" onclick="toggleRaw()">
-            <span id="rawArrow">▸</span> <span id="tRawLabel">Raw intelligence data</span>
+        <div class="raw-toggle-row">
+          <button class="raw-toggle-btn" onclick="toggleRaw()">
+            <span class="raw-toggle-label" id="tRawLabel">Intelligence Sources</span>
+            <span class="raw-toggle-icon" id="rawToggleIcon"></span>
           </button>
-          <span class="raw-count" id="rawCount"></span>
+          <span class="raw-source-count" id="rawCount"></span>
         </div>
         <div class="data-grid" id="dataGrid"></div>
       </div>
@@ -1153,6 +1178,18 @@ function renderReport(r){
 
   document.getElementById("narrativeText").textContent=r.narrative;
 
+  // Screenshot from URLScan
+  var screenshotUrl = (r.raw_data && r.raw_data.urlscan && r.raw_data.urlscan.screenshot_url) || "";
+  var screenshotWrap = document.getElementById("screenshotWrap");
+  var screenshotImg = document.getElementById("siteScreenshot");
+  if(screenshotUrl && screenshotWrap && screenshotImg){
+    screenshotImg.src = screenshotUrl;
+    screenshotImg.onload = function(){ screenshotWrap.style.display = "block"; };
+    screenshotImg.onerror = function(){ screenshotWrap.style.display = "none"; };
+  } else if(screenshotWrap){
+    screenshotWrap.style.display = "none";
+  }
+
   var grid=document.getElementById("dataGrid");
   grid.innerHTML="";
   var rawEntries=Object.entries(r.raw_labels||{});
@@ -1160,12 +1197,17 @@ function renderReport(r){
   if(rawCount) rawCount.textContent=rawEntries.length+" sources";
   rawEntries.forEach(function(e){
     var val=String(e[1]);
-    var cls="data-val";
     var lo=val.toLowerCase();
-    if(lo==="clear"||lo==="none"||lo==="0"||lo.includes("no threat")||lo.includes("safe")||lo.includes("found")){cls="data-val clear";}
-    else if(lo.includes("flag")||lo.includes("malicious")||lo.includes("danger")||lo.includes("risk")||parseInt(val)>2){cls="data-val risk";}
-    else if(lo.includes("caution")||lo.includes("warning")||lo.includes("suspicious")){cls="data-val warn";}
-    grid.innerHTML+='<div class="data-cell"><div class="data-lbl">'+e[0]+'</div><div class="'+cls+'">'+val+'</div></div>';
+    var valCls="data-val", cellCls="data-cell", dotColor="var(--border2)";
+    if(lo.includes("not flagged")||lo.includes("not listed")||lo.includes("clean")||lo.includes("no history")||lo.includes("stable")){
+      valCls="data-val clear"; cellCls="data-cell ok-cell"; dotColor="var(--green)";
+    } else if(lo.includes("flagged")||lo.includes("malicious")||lo.includes("phishing")||lo.includes("high risk")||lo.includes("reports")){
+      valCls="data-val risk"; cellCls="data-cell risk-cell"; dotColor="var(--red)";
+    } else if(lo.includes("suspicious")||lo.includes("caution")||lo.includes("pulse")||lo.includes("changes detected")){
+      valCls="data-val warn"; cellCls="data-cell warn-cell"; dotColor="var(--yellow)";
+    }
+    var dot='<span class="data-lbl-dot" style="background:'+dotColor+'"></span>';
+    grid.innerHTML+='<div class="'+cellCls+'"><div class="data-lbl">'+dot+e[0]+'</div><div class="'+valCls+'">'+val+'</div></div>';
   });
 
   // Feature locking — also called from fetchPlan to handle async race condition
