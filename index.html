@@ -334,7 +334,7 @@
     .history-date { font-size: 11px; color: var(--text-faint); font-family: 'DM Mono', monospace; white-space: nowrap; }
     .history-empty { text-align: center; color: var(--text-faint); font-size: 14px; padding: 32px 0; }
 
-    /* ── Watchlist ── */
+    /* ── Targets ── */
     .watchlist-modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(8px); z-index: 300; display: none; align-items: center; justify-content: center; padding: 20px; }
     .watchlist-modal-bg.open { display: flex; }
     .watchlist-modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; width: 100%; max-width: 560px; max-height: 80vh; overflow-y: auto; }
@@ -476,10 +476,10 @@
     <div class="watchlist-modal">
       <div class="history-drag-handle"></div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-        <div class="history-modal-title">🔔 Watchlist</div>
+        <div class="history-modal-title">🎯 Targets</div>
         <button onclick="closeWatchlist()" style="background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:18px;">✕</button>
       </div>
-      <div class="history-modal-sub" id="watchlistSubtitle">Domains you're monitoring</div>
+      <div class="history-modal-sub" id="watchlistSubtitle">Domains you're tracking</div>
       <div id="watchlistList"><div class="history-empty">Loading...</div></div>
     </div>
   </div>
@@ -584,7 +584,7 @@
           <div class="verdict-label" id="verdictLabel">—</div>
           <div class="verdict-summary" id="verdictSummary"></div>
           <button class="share-btn" onclick="shareReport()" id="tShareBtn">↗ Share report</button>
-          <button class="btn-watchlist" id="watchlistBtn" onclick="toggleWatchlistDomain()" style="display:none;">🔔 Add to watchlist</button>
+          <button class="btn-watchlist" id="watchlistBtn" onclick="toggleWatchlistDomain()" style="display:none;">🎯 Track this domain</button>
         <div id="scanCountWrap" style="margin-top:8px;font-size:12px;color:var(--text-faint);font-family:'DM Mono',monospace;display:none;">
           <span id="scanCountText"></span>
         </div>
@@ -614,7 +614,7 @@
           <div class="lock-feature">Complete AI threat analysis</div>
           <div class="lock-feature">20 intelligence source breakdown</div>
           <div class="lock-feature">Malicious code scanner</div>
-          <div class="lock-feature">Scan history &amp; watchlist</div>
+          <div class="lock-feature">Scan history &amp; targets</div>
         </div>
         <button class="lock-btn" onclick="upgradeToPro()">Upgrade to Pro — €3.99/month</button>
         <div style="font-size:11px;color:var(--text-faint);margin-top:6px;">Cheaper than being scammed · Cancel anytime</div>
@@ -678,7 +678,7 @@
           <li class="muted"><span class="fi">–</span>Full intelligence breakdown</li>
           <li class="muted"><span class="fi">–</span>Malicious code scanner</li>
           <li class="muted"><span class="fi">–</span>Scan history</li>
-          <li class="muted"><span class="fi">–</span>Watchlist &amp; alerts</li>
+          <li class="muted"><span class="fi">–</span>Targets &amp; alerts</li>
           <li class="muted"><span class="fi">–</span>Priority support</li>
         </ul>
         <button class="plan-cta outline" onclick="openModal()">Get started free</button>
@@ -699,7 +699,7 @@
           <li><span class="fi">✓</span>SSL &amp; infrastructure deep dive</li>
           <li><span class="fi">✓</span>Business registry checks</li>
           <li><span class="fi">✓</span>Scan history &amp; dashboard</li>
-          <li><span class="fi">✓</span>Watchlist with real-time alerts</li>
+          <li><span class="fi">✓</span>Targets with real-time alerts</li>
           <li><span class="fi">✓</span>Weekly threat digest email</li>
           <li><span class="fi">✓</span>Priority support</li>
         </ul>
@@ -717,7 +717,7 @@
         <ul class="plan-features">
           <li><span class="fi">✓</span>Everything in Pro</li>
           <li><span class="fi">✓</span>Up to 5 team members</li>
-          <li><span class="fi">✓</span>Shared watchlist &amp; targets</li>
+          <li><span class="fi">✓</span>Shared targets &amp; team watchlist</li>
           <li><span class="fi">✓</span>Team scan history</li>
           <li><span class="fi">✓</span>Unlimited scans</li>
           <li><span class="fi">✓</span>Instant threat alerts for team</li>
@@ -744,12 +744,12 @@
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;">
           <div style="font-size:20px;margin-bottom:8px;">🔔</div>
           <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Ongoing Monitoring</div>
-          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Add targets to your watchlist and get alerted the moment something changes.</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Add targets and get alerted the moment something changes.</div>
         </div>
         <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;">
           <div style="font-size:20px;margin-bottom:8px;">👥</div>
           <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Team Access</div>
-          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Share watchlists and intelligence across your team. Everyone stays protected.</div>
+          <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Share targets and intelligence across your team. Everyone stays protected.</div>
         </div>
       </div>
       <button onclick="openTeamContact()" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#6366f1,#818cf8);color:#fff;font-size:14px;font-weight:600;padding:13px 28px;border-radius:9px;border:none;cursor:pointer;letter-spacing:-0.2px;">Get Team access — €19.99/month →</button>
@@ -970,7 +970,7 @@ function updateUI(){
         '<button class="user-btn" onclick="toggleDropdown()">'+user.email+proBadge+'</button>'+
         '<div class="user-dropdown" id="userDropdown">'+
           '<div class="user-dropdown-item" onclick="openHistory()">📋 Scan history</div>'+
-          '<div class="user-dropdown-item" onclick="openWatchlist()">🔔 Watchlist</div>'+
+          '<div class="user-dropdown-item" onclick="openWatchlist()">🎯 Targets</div>'+
           '<div class="user-dropdown-item" onclick="openChpass()">🔑 Change password</div>'+
           (plan!=="pro"?'<div class="user-dropdown-item" onclick="upgradeToPro();closeDropdown()">⭐ Upgrade to Pro</div>':'')+
           '<div class="user-dropdown-sep"></div>'+
@@ -1465,10 +1465,10 @@ function loadWatchlist(){
   }).then(function(r){return r.json();}).then(function(data){
     if(!data||!data.length){
       list.innerHTML='<div class="history-empty">No domains yet. Add domains from scan results.</div>';
-      sub.textContent="Domains you're monitoring";
+      sub.textContent="Domains you're tracking";
       return;
     }
-    sub.textContent="Monitoring "+data.length+" domain"+(data.length!==1?"s":"");
+    sub.textContent="Tracking "+data.length+" target"+(data.length!==1?"s":"");
     list.innerHTML=data.map(function(w){
       var sc=w.last_verdict==="GREEN"?"var(--green)":w.last_verdict==="RED"?"var(--red)":"var(--yellow)";
       var score=w.last_score!==null?w.last_score:"—";
@@ -1503,8 +1503,8 @@ function checkWatchlistStatus(domain){
 function updateWatchlistBtn(){
   var btn=document.getElementById("watchlistBtn");
   if(!btn)return;
-  if(isWatching){btn.textContent="🔔 Watching — click to remove";btn.className="btn-watchlist watching";}
-  else{btn.textContent="🔔 Add to watchlist";btn.className="btn-watchlist";}
+  if(isWatching){btn.textContent="🎯 Tracking — click to remove";btn.className="btn-watchlist watching";}
+  else{btn.textContent="🎯 Track this domain";btn.className="btn-watchlist";}
 }
 
 function toggleWatchlistDomain(){
