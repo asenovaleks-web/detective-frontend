@@ -244,10 +244,11 @@
     .pricing-title { font-size: 26px; font-weight: 600; letter-spacing: -0.6px; margin-bottom: 6px; }
     .pricing-sub { font-size: 14px; color: var(--text-muted); }
     .pricing-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
-    @media(max-width:760px){ .pricing-grid { grid-template-columns: 1fr; } }
+    @media(max-width:900px){ .pricing-grid { grid-template-columns: 1fr 1fr; } }
+    @media(max-width:560px){ .pricing-grid { grid-template-columns: 1fr; } }
     .pricing-card.team { border-color: #818cf8; box-shadow: 0 0 24px rgba(129,140,248,0.15); }
-    .team-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg,#6366f1,#818cf8); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; padding: 3px 12px; border-radius: 100px; white-space: nowrap; }
-    .pricing-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; position: relative; }
+    .team-badge { display: inline-block; background: linear-gradient(135deg,#6366f1,#818cf8); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; padding: 3px 12px; border-radius: 100px; white-space: nowrap; margin-bottom: 8px; }
+    .pricing-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; }
     .pricing-card.pro { border-color: var(--blue); box-shadow: 0 0 24px var(--blue-glow); }
     .popular-badge { position: absolute; top: -11px; left: 50%; transform: translateX(-50%); background: var(--blue); color: #fff; font-size: 10px; font-weight: 600; font-family: 'DM Mono', monospace; padding: 3px 12px; border-radius: 100px; white-space: nowrap; letter-spacing: 0.5px; }
     .plan-name { font-size: 11px; font-family: 'DM Mono', monospace; font-weight: 500; color: var(--text-faint); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
@@ -706,9 +707,9 @@
         <button class="plan-cta filled" onclick="upgradeToPro()">Upgrade to Pro — €3.99/month</button>
       </div>
     </div>
-      <div class="pricing-card team" style="position:relative;">
+      <div class="pricing-card team">
         <div class="team-badge">FOR TEAMS</div>
-        <div class="plan-name" style="margin-top:8px;">Team</div>
+        <div class="plan-name">Team</div>
         <div class="plan-price">€19.99</div>
         <div class="plan-period">per month · up to 5 seats</div>
         <div style="font-size:12px;color:var(--text-muted);margin-bottom:16px;padding:8px 12px;background:rgba(129,140,248,0.08);border:1px solid rgba(129,140,248,0.2);border-radius:6px;">
