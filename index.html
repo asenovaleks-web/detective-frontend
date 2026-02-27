@@ -354,6 +354,24 @@
     .watchlist-remove:hover { color: var(--red); }
     .watchlist-date { font-size: 10px; color: var(--text-faint); font-family: 'DM Mono', monospace; white-space: nowrap; }
     .btn-watchlist { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; background: none; border: 1px solid var(--border2); border-radius: 7px; padding: 7px 14px; font-size: 12px; font-family: 'DM Sans', sans-serif; color: var(--text-muted); cursor: pointer; transition: all 0.15s; font-weight: 500; }
+    .btn-report { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; margin-left: 8px; background: none; border: 1px solid rgba(239,68,68,0.3); border-radius: 7px; padding: 7px 14px; font-size: 12px; font-family: 'DM Sans', sans-serif; color: var(--text-muted); cursor: pointer; transition: all 0.15s; font-weight: 500; }
+    .btn-report:hover { border-color: var(--red); color: var(--red); }
+    /* Report Modal */
+    .report-modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); z-index: 400; display: none; align-items: center; justify-content: center; padding: 20px; }
+    .report-modal-bg.open { display: flex; }
+    .report-modal { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 28px; width: 100%; max-width: 480px; }
+    .report-modal-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.3px; }
+    .report-modal-sub { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+    .report-categories { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px; }
+    .report-cat { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 13px; color: var(--text-muted); transition: all 0.15s; background: var(--bg2); }
+    .report-cat:hover { border-color: var(--red); color: var(--text); }
+    .report-cat.selected { border-color: var(--red); background: rgba(239,68,68,0.08); color: var(--text); }
+    .report-cat-icon { font-size: 16px; flex-shrink: 0; }
+    .report-textarea { width: 100%; background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 11px 14px; color: var(--text); font-size: 13px; font-family: inherit; resize: none; height: 80px; box-sizing: border-box; margin-bottom: 16px; transition: border-color 0.15s; }
+    .report-textarea:focus { outline: none; border-color: var(--border2); }
+    .report-textarea::placeholder { color: var(--text-faint); }
+    .report-actions { display: flex; gap: 10px; }
+    .report-msg { font-size: 13px; margin-bottom: 12px; display: none; }
     .btn-watchlist:hover { border-color: var(--blue); color: var(--blue); }
     .btn-watchlist.watching { border-color: var(--green); color: var(--green); }
     .btn-watchlist.watching:hover { border-color: var(--red); color: var(--red); }
@@ -585,6 +603,7 @@
           <div class="verdict-summary" id="verdictSummary"></div>
           <button class="share-btn" onclick="shareReport()" id="tShareBtn">↗ Share report</button>
           <button class="btn-watchlist" id="watchlistBtn" onclick="toggleWatchlistDomain()" style="display:none;">🎯 Track this domain</button>
+          <button class="btn-report" id="reportBtn" onclick="openReportModal()" style="display:none;">⚑ Report this site</button>
         <div id="scanCountWrap" style="margin-top:8px;font-size:12px;color:var(--text-faint);font-family:'DM Mono',monospace;display:none;">
           <span id="scanCountText"></span>
         </div>
@@ -754,6 +773,34 @@
       </div>
       <button onclick="openTeamContact()" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#6366f1,#818cf8);color:#fff;font-size:14px;font-weight:600;padding:13px 28px;border-radius:9px;border:none;cursor:pointer;letter-spacing:-0.2px;">Get Team access — €19.99/month →</button>
       <div style="margin-top:12px;font-size:12px;color:var(--text-faint);">Up to 5 seats · Cancel anytime · Setup in minutes</div>
+    </div>
+  </div>
+
+  <!-- Report Modal -->
+  <div class="report-modal-bg" id="reportModal" onclick="if(event.target===this)closeReportModal()">
+    <div class="report-modal">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div>
+          <div class="report-modal-title">⚑ Report this site</div>
+          <div class="report-modal-sub">Help protect others. Reports go directly to our team for review.</div>
+        </div>
+        <button onclick="closeReportModal()" style="background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:18px;padding:4px;">✕</button>
+      </div>
+      <div id="reportDomain" style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--blue);margin-bottom:16px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;"></div>
+      <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:10px;letter-spacing:0.3px;">WHAT'S THE ISSUE?</div>
+      <div class="report-categories">
+        <div class="report-cat" onclick="selectCategory(this,'fake_shop')"><span class="report-cat-icon">🛒</span>Fake shop</div>
+        <div class="report-cat" onclick="selectCategory(this,'phishing')"><span class="report-cat-icon">🎣</span>Phishing</div>
+        <div class="report-cat" onclick="selectCategory(this,'scam')"><span class="report-cat-icon">💸</span>Scam / Ponzi</div>
+        <div class="report-cat" onclick="selectCategory(this,'malware')"><span class="report-cat-icon">🦠</span>Malware</div>
+        <div class="report-cat" onclick="selectCategory(this,'other')" style="grid-column:span 2;"><span class="report-cat-icon">⚠️</span>Other</div>
+      </div>
+      <textarea class="report-textarea" id="reportDetails" placeholder="Tell us what happened (optional) — the more detail, the better we can protect others."></textarea>
+      <div class="report-msg" id="reportMsg"></div>
+      <div class="report-actions">
+        <button onclick="closeReportModal()" style="flex:1;padding:11px;background:none;border:1px solid var(--border);border-radius:8px;color:var(--text-muted);font-size:14px;cursor:pointer;font-family:inherit;">Cancel</button>
+        <button onclick="submitReport()" style="flex:2;padding:11px;background:rgba(239,68,68,0.12);border:1px solid rgba(239,68,68,0.4);border-radius:8px;color:#f87171;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s;" onmouseover="this.style.background='rgba(239,68,68,0.2)'" onmouseout="this.style.background='rgba(239,68,68,0.12)'">Submit report →</button>
+      </div>
     </div>
   </div>
 
@@ -1301,6 +1348,8 @@ function renderReport(r){
   }
 
   // Show watchlist btn for logged-in users
+  var rBtn = document.getElementById("reportBtn");
+  if(rBtn) rBtn.style.display = user ? "inline-flex" : "none";
   var wBtn = document.getElementById("watchlistBtn");
   if(wBtn){
     if(user && plan==="pro"){
@@ -1408,6 +1457,69 @@ function doReset(){
     msg.className = "modal-msg error visible";
   });
 }
+// ── Report this site ──────────────────────────────────────────────────────────
+var _reportCategory = "";
+
+function openReportModal(){
+  var modal = document.getElementById("reportModal");
+  var domainEl = document.getElementById("reportDomain");
+  var inp = document.getElementById("domainInput");
+  if(domainEl && inp) domainEl.textContent = inp.value.trim() || "Unknown domain";
+  _reportCategory = "";
+  document.querySelectorAll(".report-cat").forEach(function(el){ el.classList.remove("selected"); });
+  var det = document.getElementById("reportDetails");
+  if(det) det.value = "";
+  var msg = document.getElementById("reportMsg");
+  if(msg) msg.style.display = "none";
+  if(modal) modal.classList.add("open");
+}
+function closeReportModal(){
+  var modal = document.getElementById("reportModal");
+  if(modal) modal.classList.remove("open");
+}
+function selectCategory(el, cat){
+  document.querySelectorAll(".report-cat").forEach(function(c){ c.classList.remove("selected"); });
+  el.classList.add("selected");
+  _reportCategory = cat;
+}
+async function submitReport(){
+  var msg = document.getElementById("reportMsg");
+  var domainEl = document.getElementById("reportDomain");
+  var details = document.getElementById("reportDetails").value.trim();
+  var domain = domainEl ? domainEl.textContent : "";
+
+  if(!_reportCategory){
+    msg.style.display="block"; msg.style.color="var(--red)";
+    msg.textContent="Please select a category."; return;
+  }
+  if(!user){
+    msg.style.display="block"; msg.style.color="var(--red)";
+    msg.textContent="Please sign in to submit a report."; return;
+  }
+
+  msg.style.display="block"; msg.style.color="var(--text-muted)";
+  msg.textContent="Submitting...";
+
+  try{
+    var r = await fetch(API+"/report-site", {
+      method: "POST",
+      headers: {"Content-Type":"application/json", "Authorization":"Bearer "+token},
+      body: JSON.stringify({ domain, category: _reportCategory, details })
+    });
+    if(r.ok){
+      msg.style.color="var(--green)";
+      msg.textContent="✓ Report received. Thank you for helping protect others.";
+      setTimeout(closeReportModal, 2200);
+    } else {
+      msg.style.color="var(--red)";
+      msg.textContent="Something went wrong. Please try again.";
+    }
+  } catch(e){
+    msg.style.color="var(--red)";
+    msg.textContent="Something went wrong. Please try again.";
+  }
+}
+
 // ── Team Contact ──────────────────────────────────────────────────────────────
 function openTeamContact(){
   document.getElementById("teamModal").style.display="flex";
