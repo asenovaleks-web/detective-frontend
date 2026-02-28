@@ -43,7 +43,7 @@
       --red-border: rgba(239,68,68,0.25);
       --r: 10px;
     }
-    body { background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    body { background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--text); min-height: 100vh; font-size: 18px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
     .page { max-width: 680px; margin: 0 auto; padding: 0 16px 80px; }
 
     /* ── NAV ── */
@@ -67,7 +67,7 @@
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
     .hero-title { font-size: clamp(28px, 5vw, 42px); font-weight: 600; letter-spacing: -1.2px; line-height: 1.12; color: var(--text); margin-bottom: 14px; }
     .hero-title em { color: var(--blue); font-style: normal; }
-    .hero-sub { font-size: 18px; color: var(--text-muted); max-width: 460px; margin: 0 auto; line-height: 1.65; }
+    .hero-sub { font-size: 21px; color: var(--text-muted); max-width: 460px; margin: 0 auto; line-height: 1.65; }
 
     /* ── BANNERS ── */
     .plan-banner { display: none; align-items: center; justify-content: space-between; gap: 12px; border-radius: var(--r); padding: 11px 16px; margin-bottom: 16px; font-size: 13px; flex-wrap: wrap; }
@@ -95,8 +95,8 @@
     @media(max-width:560px){ #beforeAfterSection { grid-template-columns: 1fr !important; } }
     .how-step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 18px; }
     .how-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--blue); margin-bottom: 8px; font-weight: 500; }
-    .how-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
-    .how-sub { font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+    .how-title { font-size: 19px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
+    .how-sub { font-size: 17px; color: var(--text-muted); line-height: 1.5; }
 
     /* ── STATUS ── */
     .status-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 16px 20px; margin-bottom: 16px; display: none; }
@@ -141,11 +141,11 @@
     .verdict-card.GREEN .verdict-label { color: var(--green) !important; }
     .verdict-card.YELLOW .verdict-label { color: var(--yellow) !important; }
     .verdict-card.RED .verdict-label { color: var(--red) !important; }
-    .verdict-summary { font-size: 16px; color: var(--text-muted); line-height: 1.55; }
+    .verdict-summary { font-size: 19px; color: var(--text-muted); line-height: 1.55; }
 
     /* Dashboard signals */
     .dashboard { background: rgba(0,0,0,0.2); border-radius: 8px; padding: 16px; border: 1px solid rgba(255,255,255,0.05); }
-    .dashboard-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 15px; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .dashboard-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; font-size: 18px; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.04); }
     .dashboard-row:last-child { border-bottom: none; }
     .dash-icon { font-size: 13px; flex-shrink: 0; width: 20px; display:inline-flex; align-items:center; justify-content:center; }
     .confidence-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -189,15 +189,15 @@
     .f-tag.RISK    { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
     .f-tag.CAUTION { background: var(--yellow-bg); color: var(--yellow); border: 1px solid var(--yellow-border); }
     .f-tag.OK      { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
-    .f-text { font-size: 15px; color: var(--text-muted); line-height: 1.5; }
-    .narrative { font-size: 16px; color: var(--text-muted); line-height: 1.7; }
+    .f-text { font-size: 18px; color: var(--text-muted); line-height: 1.5; }
+    .narrative { font-size: 19px; color: var(--text-muted); line-height: 1.7; }
     .site-screenshot { width: 100%; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 14px; display: block; max-height: 200px; object-fit: cover; object-position: top; }
     .screenshot-wrap { position: relative; margin-bottom: 16px; }
     .screenshot-label { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text-faint); margin-top: 6px; letter-spacing: 0.3px; }
     .ai-analysis-wrap { position: relative; }
     .ai-label { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-family: 'DM Mono', monospace; font-weight: 600; letter-spacing: 0.8px; color: #818cf8; background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2); padding: 3px 10px; border-radius: 100px; margin-bottom: 14px; }
     .ai-label-dot { width: 5px; height: 5px; background: #818cf8; border-radius: 50%; animation: blink 2.5s ease-in-out infinite; }
-    .narrative-text { font-size: 16px; color: var(--text); line-height: 1.8; border-left: 2px solid rgba(99,102,241,0.4); padding-left: 16px; }
+    .narrative-text { font-size: 19px; color: var(--text); line-height: 1.8; border-left: 2px solid rgba(99,102,241,0.4); padding-left: 16px; }
     .raw-toggle-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
     .raw-toggle-btn { display: inline-flex; align-items: center; gap: 8px; background: none; border: none; cursor: pointer; padding: 0; }
     .raw-toggle-label { font-size: 13px; font-weight: 600; color: var(--text); }
@@ -391,10 +391,10 @@
       .user-dropdown { right: 0; min-width: 165px; }
       /* Hero */
       .hero-title { letter-spacing: -0.8px; }
-      .hero-sub { font-size: 16px; }
+      .hero-sub { font-size: 19px; }
       /* Search */
       .search-box { padding: 6px 6px 6px 14px; }
-      .search-input { font-size: 14px; }
+      .search-input { font-size: 16px; }
       .search-btn { padding: 9px 16px; font-size: 13px; }
       /* Verdict card */
       .verdict-card { padding: 18px 16px; }
@@ -588,19 +588,19 @@
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;">
       <div style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:var(--text-faint);margin-bottom:16px;">WITHOUT SIGNUM</div>
       <div style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted);"><span style="color:#ef4444;font-size:16px;">✗</span> Unknown risk — trust your gut</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted);"><span style="color:#ef4444;font-size:16px;">✗</span> Manual Google search — 20 minutes</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted);"><span style="color:#ef4444;font-size:16px;">✗</span> No visibility into threat history</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted);"><span style="color:#ef4444;font-size:16px;">✗</span> Find out too late — after the loss</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#ef4444;font-size:18px;">✗</span> Unknown risk — trust your gut</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#ef4444;font-size:18px;">✗</span> Manual Google search — 20 minutes</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#ef4444;font-size:18px;">✗</span> No visibility into threat history</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#ef4444;font-size:18px;">✗</span> Find out too late — after the loss</div>
       </div>
     </div>
     <div style="background:var(--surface);border:1px solid rgba(59,130,246,0.3);border-radius:12px;padding:24px;box-shadow:0 0 20px rgba(59,130,246,0.06);">
       <div style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:var(--blue);margin-bottom:16px;">WITH SIGNUM</div>
       <div style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted);"><span style="color:#22c55e;font-size:16px;">✓</span> Full risk picture — AI-powered</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted);"><span style="color:#22c55e;font-size:16px;">✓</span> Results in seconds — not hours</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted);"><span style="color:#22c55e;font-size:16px;">✓</span> 12 intelligence sources checked</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted);"><span style="color:#22c55e;font-size:16px;">✓</span> Know before you click, pay, or partner</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#22c55e;font-size:18px;">✓</span> Full risk picture — AI-powered</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#22c55e;font-size:18px;">✓</span> Results in seconds — not hours</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#22c55e;font-size:18px;">✓</span> 12 intelligence sources checked</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#22c55e;font-size:18px;">✓</span> Know before you click, pay, or partner</div>
       </div>
     </div>
   </div>
@@ -862,7 +862,7 @@
     </div>
     <div style="font-size:12px;color:var(--text-faint);margin-bottom:10px;">Building the global trust infrastructure of the internet.</div>
     <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
-      <a href="mailto:hello@signumaiapp.com" style="font-size:12px;color:var(--text-faint);text-decoration:none;">Contact</a>
+      <a href="/contact.html" style="font-size:12px;color:var(--text-faint);text-decoration:none;" onclick="window.location.href='/contact.html';return false;">Contact</a>
       <span style="color:var(--border2);">·</span>
       <a href="/privacy.html" style="font-size:12px;color:var(--text-faint);text-decoration:none;">Privacy Policy</a>
       <span style="color:var(--border2);">·</span>
@@ -1119,16 +1119,29 @@ function loadHistory(){
       var d=new Date(s.created_at);
       var dateStr=d.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});
       var scoreColor=s.verdict==="GREEN"?"var(--green)":s.verdict==="RED"?"var(--red)":"var(--yellow)";
-      return '<div class="history-item">'+
-        '<div class="history-domain">'+s.domain+'</div>'+
-        '<div class="history-score" style="color:'+scoreColor+'">'+s.score+'</div>'+
-        '<div class="history-verdict '+s.verdict+'">'+s.verdict+'</div>'+
-        '<div class="history-date">'+dateStr+'</div>'+
+      var verdictLabel=s.verdict==="GREEN"?"Safe":s.verdict==="RED"?"Danger":"Caution";
+      return '<div class="history-item" style="cursor:pointer;" onclick="rescanFromHistory(this.dataset.domain)" data-domain="'+s.domain+'" title="Click to re-scan">'+
+        '<div style="flex:1;min-width:0;">'+
+          '<div class="history-domain" style="margin-bottom:2px;">'+s.domain+'</div>'+
+          '<div style="font-size:11px;color:var(--text-faint);">'+dateStr+'</div>'+
+        '</div>'+
+        '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">'+
+          '<div class="history-verdict '+s.verdict+'" style="font-size:11px;">'+verdictLabel+'</div>'+
+          '<div class="history-score" style="color:'+scoreColor+';font-weight:700;">'+s.score+'</div>'+
+          '<span style="font-size:11px;color:var(--text-faint);">↗</span>'+
+        '</div>'+
       '</div>';
     }).join("");
   }).catch(function(){
     list.innerHTML='<div class="history-empty">Could not load history. Please try again.</div>';
   });
+}
+
+function rescanFromHistory(domain){
+  closeHistory();
+  var inp = document.getElementById("urlInput");
+  if(inp){ inp.value = domain; }
+  setTimeout(function(){ runScan(); }, 150);
 }
 
 function openChpass(){
