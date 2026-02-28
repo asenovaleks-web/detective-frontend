@@ -545,10 +545,10 @@
 
   <!-- Use Cases -->
   <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:20px 0 32px;">
-    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;cursor:pointer;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'" onclick="document.getElementById('urlInput').value='';document.getElementById('urlInput').focus()">🛒 Check if a shop is legit</div>
-    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;cursor:pointer;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'" onclick="document.getElementById('urlInput').value='';document.getElementById('urlInput').focus()">🤝 Vet a new business partner</div>
-    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;cursor:pointer;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'" onclick="document.getElementById('urlInput').value='';document.getElementById('urlInput').focus()">🔗 Verify a link before clicking</div>
-    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;cursor:pointer;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'" onclick="document.getElementById('urlInput').value='';document.getElementById('urlInput').focus()">💸 Spot scam investment sites</div>
+    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;">🛒 Check if a shop is legit</div>
+    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;">🤝 Vet a new business partner</div>
+    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;">🔗 Verify a link before clicking</div>
+    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;">💸 Spot scam investment sites</div>
   </div>
 
 
@@ -651,6 +651,21 @@
       </div>
     </div>
 
+    <div class="locked-section" id="analysisLock">
+      <div class="section">
+        <div class="section-header" id="tAnalysis">AI Analysis</div>
+        <div class="screenshot-wrap" id="screenshotWrap" style="display:none;">
+          <img id="siteScreenshot" class="site-screenshot" src="" alt="Site preview" />
+          <div class="screenshot-label">Live site snapshot via URLScan</div>
+        </div>
+        <div class="ai-analysis-wrap">
+          <div class="ai-label"><span class="ai-label-dot"></span>SIGNUM VERDICT</div>
+          <div class="narrative-text" id="narrativeText"></div>
+        </div>
+      </div>
+      <div class="lock-overlay" id="analysisOverlay" style="display:none;"></div>
+    </div>
+
     <div class="locked-section" id="findingsLock">
       <div class="section">
         <div class="section-header" id="tFindings">Findings</div>
@@ -671,20 +686,6 @@
       </div>
     </div>
 
-    <div class="locked-section" id="analysisLock">
-      <div class="section">
-        <div class="section-header" id="tAnalysis">AI Analysis</div>
-        <div class="screenshot-wrap" id="screenshotWrap" style="display:none;">
-          <img id="siteScreenshot" class="site-screenshot" src="" alt="Site preview" />
-          <div class="screenshot-label">Live site snapshot via URLScan</div>
-        </div>
-        <div class="ai-analysis-wrap">
-          <div class="ai-label"><span class="ai-label-dot"></span>CLAUDE INTELLIGENCE</div>
-          <div class="narrative-text" id="narrativeText"></div>
-        </div>
-      </div>
-      <div class="lock-overlay" id="analysisOverlay" style="display:none;"></div>
-    </div>
 
     <div class="locked-section" id="rawLock">
       <div class="section">
@@ -1308,6 +1309,7 @@ function runScan(){
 
 // ── Render ────────────────────────────────────────────────────────────────────
 function renderReport(r){
+  if(r && r.target) scanCache[r.target] = r;
   var rawTarget = r.target || "";
   try {
     if(rawTarget && !rawTarget.startsWith("http")) rawTarget = "https://"+rawTarget;
@@ -1668,14 +1670,18 @@ function loadWatchlist(){
       var sc=w.last_verdict==="GREEN"?"var(--green)":w.last_verdict==="RED"?"var(--red)":"var(--yellow)";
       var score=w.last_score!==null?w.last_score:"—";
       var verdict=w.last_verdict||"—";
+      var verdictLabel=w.last_verdict==="GREEN"?"Safe":w.last_verdict==="RED"?"Danger":w.last_verdict==="YELLOW"?"Caution":"—";
       var d=new Date(w.last_checked);
       var ds=d.toLocaleDateString("en-GB",{day:"2-digit",month:"short"});
       return '<div class="watchlist-item" onclick="scanFromWatchlist(\'"+w.domain+"\')">'+
         '<div class="watchlist-domain">'+w.domain+'</div>'+
         (w.last_verdict?'<div class="watchlist-score" style="color:'+sc+'">'+score+'</div>'+
-        '<div class="watchlist-verdict '+verdict+'">'+verdict+'</div>':'<div style="font-size:11px;color:var(--text-faint);">Not scanned yet</div>')+
+        '<div class="watchlist-verdict '+verdict+'">'+verdictLabel+'</div>':'<div style="font-size:11px;color:var(--text-faint);">Not scanned yet</div>')+
         '<div class="watchlist-date">'+ds+'</div>'+
-        '<button class="watchlist-remove" onclick="event.stopPropagation();removeFromWatchlist(\'"+w.id+"\'%2Cthis)" title="Remove">✕</button>'+
+        '<div style="display:flex;align-items:center;gap:6px;">'+
+        '<span style="font-size:10px;color:var(--text-faint);" title="Click to scan">↗</span>'+
+        '<button class="watchlist-remove" onclick="event.stopPropagation();removeFromWatchlist(\''+w.id+'\',this)" title="Remove">✕</button>'+
+        '</div>'+
       '</div>';
     }).join("");
   }).catch(function(){
@@ -1731,10 +1737,34 @@ function removeFromWatchlist(id,btn){
   });
 }
 
+// Cache for last scan results per domain
+var scanCache = {};
+
 function scanFromWatchlist(domain){
   closeWatchlist();
-  document.getElementById("urlInput").value=domain;
-  runScan();
+  var inp = document.getElementById("urlInput");
+  if(inp) inp.value = domain;
+  // If we have a cached result, show it instantly then refresh in background
+  if(scanCache[domain]){
+    renderReport(scanCache[domain]);
+    // Refresh in background silently
+    setTimeout(function(){ runScanSilent(domain); }, 100);
+  } else {
+    runScan();
+  }
+}
+
+function runScanSilent(domain){
+  // Background refresh without showing loading state
+  fetch(BACKEND+"/investigate", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({url:domain, user_token: token||""})
+  }).then(function(r){return r.json();}).then(function(data){
+    if(data && data.score !== undefined){
+      scanCache[domain] = data;
+    }
+  }).catch(function(){});
 }
 
 </script>
