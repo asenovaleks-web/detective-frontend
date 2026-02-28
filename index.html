@@ -1007,13 +1007,15 @@ window.addEventListener("load",function(){
   }
   // Auto-fill and scan domain from URL param e.g. ?domain=example.com
   var domainParam = p.get("domain");
-  if(domainParam){
-    var inp = document.getElementById("domainInput");
-    if(inp){ inp.value = domainParam; }
-    window.history.replaceState({},"",location.pathname);
-    setTimeout(function(){ runScan(); }, 400);
-  }
   updateUI();
+  if(domainParam){
+    window.history.replaceState({},"",location.pathname);
+    setTimeout(function(){
+      var inp = document.getElementById("urlInput");
+      if(inp){ inp.value = domainParam.trim(); }
+      runScan();
+    }, 800);
+  }
 });
 
 function updateUI(){
