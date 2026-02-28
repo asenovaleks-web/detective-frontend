@@ -1495,13 +1495,13 @@ async function submitReport(){
   var msg = document.getElementById("reportMsg");
   var domainEl = document.getElementById("reportDomain");
   var details = document.getElementById("reportDetails").value.trim();
-  var domain = domainEl ? domainEl.textContent : "";
+  var domain = domainEl ? domainEl.textContent.trim() : "";
 
   if(!_reportCategory){
     msg.style.display="block"; msg.style.color="var(--red)";
     msg.textContent="Please select a category."; return;
   }
-  if(!user){
+  if(!user || !token){
     msg.style.display="block"; msg.style.color="var(--red)";
     msg.textContent="Please sign in to submit a report."; return;
   }
@@ -1513,19 +1513,22 @@ async function submitReport(){
     var r = await fetch(API+"/report-site", {
       method: "POST",
       headers: {"Content-Type":"application/json", "Authorization":"Bearer "+token},
-      body: JSON.stringify({ domain, category: _reportCategory, details })
+      body: JSON.stringify({ domain: domain||"unknown", category: _reportCategory, details })
     });
+    var respText = await r.text();
     if(r.ok){
       msg.style.color="var(--green)";
       msg.textContent="✓ Report received. Thank you for helping protect others.";
       setTimeout(closeReportModal, 2200);
     } else {
+      console.error("Report failed:", r.status, respText);
       msg.style.color="var(--red)";
-      msg.textContent="Something went wrong. Please try again.";
+      msg.textContent="Error "+r.status+": "+respText.slice(0,80);
     }
   } catch(e){
+    console.error("Report fetch error:", e);
     msg.style.color="var(--red)";
-    msg.textContent="Something went wrong. Please try again.";
+    msg.textContent="Network error: "+e.message;
   }
 }
 
