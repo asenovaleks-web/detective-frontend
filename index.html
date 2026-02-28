@@ -895,7 +895,7 @@ var BACKEND = "https://detective-app-production-7080.up.railway.app";
 var SB_URL  = "https://harhjuykvkfwksccjjxq.supabase.co";
 var SB_KEY  = "sb_publishable_gNTIfFSDai7wWPMPIVM-Vg_2rthrcNV";
 
-var user=null, token=null, plan="free", mode="signin", anonScans=parseInt(sg_get('sg_anon_scans')||'0');
+var user=null, token=null, plan="free", mode="signin", currentDomain="", anonScans=parseInt(sg_get('sg_anon_scans')||'0');
 
 // Storage helper — localStorage with sessionStorage fallback (iOS Private mode)
 function sg_set(k,v){ try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}} }
@@ -1004,6 +1004,14 @@ window.addEventListener("load",function(){
     plan="pro"; sg_set("sg_plan","pro");
     showMsg("successMsg","Welcome to Pro! Unlimited scans unlocked.");
     window.history.replaceState({},"",location.pathname);
+  }
+  // Auto-fill and scan domain from URL param e.g. ?domain=example.com
+  var domainParam = p.get("domain");
+  if(domainParam){
+    var inp = document.getElementById("domainInput");
+    if(inp){ inp.value = domainParam; }
+    window.history.replaceState({},"",location.pathname);
+    setTimeout(function(){ runScan(); }, 400);
   }
   updateUI();
 });
@@ -1254,6 +1262,7 @@ function runScan(){
 
 // ── Render ────────────────────────────────────────────────────────────────────
 function renderReport(r){
+  currentDomain = r.target || "";
   var card=document.getElementById("verdictCard");
   card.className="verdict-card "+r.verdict;
   // Force colors via JS to ensure cross-platform consistency (iOS/Android)
@@ -1473,7 +1482,9 @@ function openReportModal(){
   var modal = document.getElementById("reportModal");
   var domainEl = document.getElementById("reportDomain");
   var inp = document.getElementById("domainInput");
-  if(domainEl && inp) domainEl.textContent = inp.value.trim() || "Unknown domain";
+  // Try multiple sources for the domain
+  var d = currentDomain || (inp && inp.value.trim()) || "";
+  if(domainEl) domainEl.textContent = d || "Unknown domain";
   _reportCategory = "";
   document.querySelectorAll(".report-cat").forEach(function(el){ el.classList.remove("selected"); });
   var det = document.getElementById("reportDetails");
