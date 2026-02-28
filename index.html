@@ -486,7 +486,7 @@
         <button onclick="closeHistory()" style="background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:18px;">✕</button>
       </div>
       <div class="history-modal-sub" id="historySubtitle">Your recent domain scans</div>
-      <div id="historyList"><div class="history-empty">Loading...</div></div>
+      <div id="historyList"><div class="history-empty">Give us a moment...</div></div>
     </div>
   </div>
 
@@ -499,7 +499,7 @@
         <button onclick="closeWatchlist()" style="background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:18px;">✕</button>
       </div>
       <div class="history-modal-sub" id="watchlistSubtitle">Domains you're tracking</div>
-      <div id="watchlistList"><div class="history-empty">Loading...</div></div>
+      <div id="watchlistList"><div class="history-empty">Give us a moment...</div></div>
     </div>
   </div>
 
@@ -1105,13 +1105,13 @@ function closeHistory(){
 function loadHistory(){
   var list=document.getElementById("historyList");
   var sub=document.getElementById("historySubtitle");
-  if(!token){ list.innerHTML='<div class="history-empty">Sign in to see your scan history.</div>'; return; }
-  list.innerHTML='<div class="history-empty">Loading...</div>';
+  if(!token){ list.innerHTML='<div class="history-empty">Sign in to see your past scans.</div>'; return; }
+  list.innerHTML='<div class="history-empty">Give us a moment...</div>';
   fetch(SB_URL+"/rest/v1/scan_history?user_id=eq."+user.id+"&order=created_at.desc&limit=50",{
     headers:{"apikey":SB_KEY,"Authorization":"Bearer "+token}
   }).then(function(r){return r.json();}).then(function(data){
     if(!data||!data.length){
-      list.innerHTML='<div class="history-empty">No scans yet. Start by scanning a website.</div>';
+      list.innerHTML='<div class="history-empty">Nothing here yet — paste a domain above to run your first scan.</div>';
       sub.textContent="Your recent domain scans";
       return;
     }
@@ -1134,7 +1134,7 @@ function loadHistory(){
       '</div>';
     }).join("");
   }).catch(function(){
-    list.innerHTML='<div class="history-empty">Could not load history. Please try again.</div>';
+    list.innerHTML='<div class="history-empty">Could not load your history right now. Try refreshing the page.</div>';
   });
 }
 
@@ -1258,7 +1258,7 @@ function doAuth(){
     // Reset anon scan counter on login
     anonScans=0; localStorage.setItem("sg_anon_scans","0");
     fetchPlan(user.id); updateUI(); closeModal();
-  }).catch(function(){ btn.disabled=false; btn.textContent=mode==="signin"?"Sign in":"Create account"; showModalMsg("Invalid email or password. Please try again.","error"); });
+  }).catch(function(){ btn.disabled=false; btn.textContent=mode==="signin"?"Sign in":"Create account"; showModalMsg("That email or password does not look right. Try again.","error"); });
 }
 function showModalMsg(t,type){ var el=document.getElementById("mMsg"); el.textContent=t; el.className="modal-msg "+type+" visible"; }
 
@@ -1293,7 +1293,7 @@ function runScan(){
   document.getElementById("howSection").style.display="none";
   var sw=document.getElementById("statusWrap"), st=document.getElementById("statusText");
   sw.classList.add("visible");
-  var steps=["Initializing scan...","Querying domain registry...","Running malware scan...","Checking Safe Browsing...","Verifying SSL certificate...","Searching global registries...","Scanning community signals...","Checking sanctions lists...","Running live page analysis...","Consulting AI analyst...","Compiling report..."], i=0;
+  var steps=["Looking up this domain...","Checking who owns it and when it appeared...","Searching threat databases...","Looking for red flags in the infrastructure...","Checking if anyone has reported this site...","Scanning for malware and phishing signals...","Looking for reviews and reputation history...","Cross-checking against global scam lists...","Taking a closer look at the live site...","Our AI is reading all the signals...","Putting it all together..."], i=0;
   var iv=setInterval(function(){ if(i<steps.length) st.textContent=steps[i++]; },1300);
   document.getElementById("scanBtn").disabled=true;
   var body={target:url};
@@ -1301,15 +1301,14 @@ function runScan(){
   fetch(BACKEND+"/investigate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})
   .then(function(res){
     clearInterval(iv); document.getElementById("scanBtn").disabled=false; sw.classList.remove("visible");
-    if(res.status===429){ showMsg("errorMsg","Daily limit reached — upgrade to Pro for unlimited scans."); return null; }
-    return res.json().then(function(d){ if(!res.ok){ showMsg("errorMsg",d.detail||"Could not reach server. Please try again."); return null; } return d; });
+    if(res.status===429){ showMsg("errorMsg","You have used your free scan for today — upgrade to Pro to keep going."); return null; }
+    return res.json().then(function(d){ if(!res.ok){ showMsg("errorMsg",d.detail||"We couldn't reach our servers. Check your connection and try again."); return null; } return d; });
   }).then(function(d){ if(d) renderReport(d); })
-  .catch(function(){ clearInterval(iv); document.getElementById("scanBtn").disabled=false; sw.classList.remove("visible"); showMsg("errorMsg","Could not reach server. Please try again."); });
+  .catch(function(){ clearInterval(iv); document.getElementById("scanBtn").disabled=false; sw.classList.remove("visible"); showMsg("errorMsg","We couldn't reach our servers. Check your connection and try again."); });
 }
 
 // ── Render ────────────────────────────────────────────────────────────────────
 function renderReport(r){
-  if(r && r.target) scanCache[r.target] = r;
   var rawTarget = r.target || "";
   try {
     if(rawTarget && !rawTarget.startsWith("http")) rawTarget = "https://"+rawTarget;
@@ -1632,10 +1631,10 @@ async function submitTeamContact(){
       msg.style.color="var(--green)";msg.textContent="✓ Request sent! We'll be in touch within 24 hours.";
       setTimeout(closeTeamContact,2500);
     } else {
-      msg.style.color="var(--red)";msg.textContent="Something went wrong. Email us at hello@signumaiapp.com";
+      msg.style.color="var(--red)";msg.textContent="Something went wrong on our end. Email us at hello@signumaiapp.com and we'll sort it out.";
     }
   }catch(e){
-    msg.style.color="var(--red)";msg.textContent="Something went wrong. Email us at hello@signumaiapp.com";
+    msg.style.color="var(--red)";msg.textContent="Something went wrong on our end. Email us at hello@signumaiapp.com and we'll sort it out.";
   }
 }
 
@@ -1655,13 +1654,13 @@ function closeWatchlist(){
 function loadWatchlist(){
   var list=document.getElementById("watchlistList");
   var sub=document.getElementById("watchlistSubtitle");
-  if(!token){list.innerHTML='<div class="history-empty">Sign in to use Watchlist.</div>';return;}
-  list.innerHTML='<div class="history-empty">Loading...</div>';
+  if(!token){list.innerHTML='<div class="history-empty">Sign in to start tracking domains.</div>';return;}
+  list.innerHTML='<div class="history-empty">Give us a moment...</div>';
   fetch(SB_URL+"/rest/v1/watchlist?user_id=eq."+user.id+"&order=created_at.desc",{
     headers:{"apikey":SB_KEY,"Authorization":"Bearer "+token}
   }).then(function(r){return r.json();}).then(function(data){
     if(!data||!data.length){
-      list.innerHTML='<div class="history-empty">No domains yet. Add domains from scan results.</div>';
+      list.innerHTML='<div class="history-empty">You are not tracking anything yet — add a domain after your next scan.</div>';
       sub.textContent="Domains you're tracking";
       return;
     }
@@ -1676,7 +1675,7 @@ function loadWatchlist(){
       return '<div class="watchlist-item" onclick="scanFromWatchlist(\'"+w.domain+"\')">'+
         '<div class="watchlist-domain">'+w.domain+'</div>'+
         (w.last_verdict?'<div class="watchlist-score" style="color:'+sc+'">'+score+'</div>'+
-        '<div class="watchlist-verdict '+verdict+'">'+verdictLabel+'</div>':'<div style="font-size:11px;color:var(--text-faint);">Not scanned yet</div>')+
+        '<div class="watchlist-verdict '+verdict+'">'+verdictLabel+'</div>':'<div style="font-size:11px;color:var(--text-faint);">Tap to scan</div>')+
         '<div class="watchlist-date">'+ds+'</div>'+
         '<div style="display:flex;align-items:center;gap:6px;">'+
         '<span style="font-size:10px;color:var(--text-faint);" title="Click to scan">↗</span>'+
@@ -1737,34 +1736,13 @@ function removeFromWatchlist(id,btn){
   });
 }
 
-// Cache for last scan results per domain
-var scanCache = {};
-
 function scanFromWatchlist(domain){
   closeWatchlist();
   var inp = document.getElementById("urlInput");
   if(inp) inp.value = domain;
-  // If we have a cached result, show it instantly then refresh in background
-  if(scanCache[domain]){
-    renderReport(scanCache[domain]);
-    // Refresh in background silently
-    setTimeout(function(){ runScanSilent(domain); }, 100);
-  } else {
-    runScan();
-  }
-}
-
-function runScanSilent(domain){
-  // Background refresh without showing loading state
-  fetch(BACKEND+"/investigate", {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({url:domain, user_token: token||""})
-  }).then(function(r){return r.json();}).then(function(data){
-    if(data && data.score !== undefined){
-      scanCache[domain] = data;
-    }
-  }).catch(function(){});
+  // Smooth scroll to top then scan
+  window.scrollTo({top: 0, behavior: "smooth"});
+  setTimeout(function(){ runScan(); }, 300);
 }
 
 </script>
