@@ -1510,7 +1510,7 @@ async function submitReport(){
   msg.textContent="Submitting...";
 
   try{
-    var r = await fetch(API+"/report-site", {
+    var r = await fetch(BACKEND+"/report-site", {
       method: "POST",
       headers: {"Content-Type":"application/json", "Authorization":"Bearer "+token},
       body: JSON.stringify({ domain: domain||"unknown", category: _reportCategory, details })
@@ -1550,7 +1550,7 @@ async function submitTeamContact(){
   }
   msg.style.display="block";msg.style.color="var(--text-muted)";msg.textContent="Sending...";
   try{
-    var r=await fetch(API+"/team-contact",{
+    var r=await fetch(BACKEND+"/team-contact",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({name,email,company,team_size:size})
