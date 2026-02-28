@@ -92,6 +92,7 @@
     /* ── HOW IT WORKS ── */
     .how-wrap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 44px; }
     @media(max-width:520px){ .how-wrap { grid-template-columns: 1fr; } }
+    @media(max-width:560px){ #beforeAfterSection { grid-template-columns: 1fr !important; } }
     .how-step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 18px; }
     .how-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--blue); margin-bottom: 8px; font-weight: 500; }
     .how-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
@@ -538,8 +539,16 @@
 
   <!-- Hero -->
   <div class="hero">
-    <h1 class="hero-title" id="tHeroTitle">The intelligence layer<br/>between you and <em>the internet.</em></h1>
-    <p class="hero-sub" id="tHeroSub">Real-time risk analysis on any website — instant, accurate, uncompromising.</p>
+    <h1 class="hero-title" id="tHeroTitle">See risks before<br/>they become <em>losses.</em></h1>
+    <p class="hero-sub" id="tHeroSub">Instant AI trust intelligence on any website — so you know what you're dealing with before you click, pay, or partner.</p>
+  </div>
+
+  <!-- Use Cases -->
+  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:20px 0 32px;">
+    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;cursor:pointer;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'" onclick="document.getElementById('urlInput').value='';document.getElementById('urlInput').focus()">🛒 Check if a shop is legit</div>
+    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;cursor:pointer;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'" onclick="document.getElementById('urlInput').value='';document.getElementById('urlInput').focus()">🤝 Vet a new business partner</div>
+    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;cursor:pointer;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'" onclick="document.getElementById('urlInput').value='';document.getElementById('urlInput').focus()">🔗 Verify a link before clicking</div>
+    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;cursor:pointer;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border)'" onclick="document.getElementById('urlInput').value='';document.getElementById('urlInput').focus()">💸 Spot scam investment sites</div>
   </div>
 
 
@@ -552,7 +561,7 @@
       <input class="search-input" type="text" id="urlInput" placeholder="e.g. amazon.com" onkeydown="if(event.key==='Enter')runScan()" />
       <button class="search-btn" id="scanBtn" onclick="runScan()">Analyze</button>
     </div>
-    <div class="search-hint" id="tHint">No account required · Results in ~20 seconds</div>
+    <div class="search-hint" id="tHint">Free to try · No account required · Results in seconds</div>
   </div>
 
   <!-- How it works -->
@@ -571,6 +580,28 @@
       <div class="how-num">03</div>
       <div class="how-title" id="tH3">Know in seconds</div>
       <div class="how-sub" id="tH3s">Safe, caution, or danger — with the reasoning behind it. No technical knowledge needed.</div>
+    </div>
+  </div>
+
+  <!-- Before / After -->
+  <div style="margin:48px 0;display:grid;grid-template-columns:1fr 1fr;gap:12px;" id="beforeAfterSection">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;">
+      <div style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:var(--text-faint);margin-bottom:16px;">WITHOUT SIGNUM</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted);"><span style="color:#ef4444;font-size:16px;">✗</span> Unknown risk — trust your gut</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted);"><span style="color:#ef4444;font-size:16px;">✗</span> Manual Google search — 20 minutes</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted);"><span style="color:#ef4444;font-size:16px;">✗</span> No visibility into threat history</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted);"><span style="color:#ef4444;font-size:16px;">✗</span> Find out too late — after the loss</div>
+      </div>
+    </div>
+    <div style="background:var(--surface);border:1px solid rgba(59,130,246,0.3);border-radius:12px;padding:24px;box-shadow:0 0 20px rgba(59,130,246,0.06);">
+      <div style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:var(--blue);margin-bottom:16px;">WITH SIGNUM</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted);"><span style="color:#22c55e;font-size:16px;">✓</span> Full risk picture — AI-powered</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted);"><span style="color:#22c55e;font-size:16px;">✓</span> Results in seconds — not hours</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted);"><span style="color:#22c55e;font-size:16px;">✓</span> 12 intelligence sources checked</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:14px;color:var(--text-muted);"><span style="color:#22c55e;font-size:16px;">✓</span> Know before you click, pay, or partner</div>
+      </div>
     </div>
   </div>
 
