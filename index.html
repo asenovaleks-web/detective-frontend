@@ -831,11 +831,11 @@
     </div>
     <div style="font-size:12px;color:var(--text-faint);margin-bottom:10px;">Building the global trust infrastructure of the internet.</div>
     <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
-      <a href="/cdn-cgi/l/email-protection#81f2f4f1f1eef3f5c1f2e8e6eff4ece0e8e0f1f1afe2eeec" style="font-size:12px;color:var(--text-faint);text-decoration:none;">Contact</a>
+      <a href="mailto:hello@signumaiapp.com" style="font-size:12px;color:var(--text-faint);text-decoration:none;">Contact</a>
       <span style="color:var(--border2);">·</span>
-      <a href="#" style="font-size:12px;color:var(--text-faint);text-decoration:none;">Privacy Policy</a>
+      <a href="/privacy.html" style="font-size:12px;color:var(--text-faint);text-decoration:none;">Privacy Policy</a>
       <span style="color:var(--border2);">·</span>
-      <a href="#" style="font-size:12px;color:var(--text-faint);text-decoration:none;">Terms of Service</a>
+      <a href="/terms.html" style="font-size:12px;color:var(--text-faint);text-decoration:none;">Terms of Service</a>
       <span style="color:var(--border2);">·</span>
       <span style="font-size:12px;color:var(--text-faint);">© 2026 Signum. All rights reserved.</span>
     </div>
@@ -1264,7 +1264,11 @@ function runScan(){
 
 // ── Render ────────────────────────────────────────────────────────────────────
 function renderReport(r){
-  currentDomain = r.target || "";
+  var rawTarget = r.target || "";
+  try {
+    if(rawTarget && !rawTarget.startsWith("http")) rawTarget = "https://"+rawTarget;
+    currentDomain = new URL(rawTarget).hostname.replace(/^www\./, "");
+  } catch(e){ currentDomain = rawTarget.split("/")[0].split("?")[0]; }
   var card=document.getElementById("verdictCard");
   card.className="verdict-card "+r.verdict;
   // Force colors via JS to ensure cross-platform consistency (iOS/Android)
@@ -1485,7 +1489,12 @@ function openReportModal(){
   var domainEl = document.getElementById("reportDomain");
   var inp = document.getElementById("domainInput");
   // Try multiple sources for the domain
-  var d = currentDomain || (inp && inp.value.trim()) || "";
+  var raw = currentDomain || (inp && inp.value.trim()) || "";
+  var d = raw;
+  try {
+    if(raw && !raw.startsWith("http")) raw = "https://"+raw;
+    d = new URL(raw).hostname.replace(/^www\./, "");
+  } catch(e){ d = raw.split("/")[0].split("?")[0]; }
   if(domainEl) domainEl.textContent = d || "Unknown domain";
   _reportCategory = "";
   document.querySelectorAll(".report-cat").forEach(function(el){ el.classList.remove("selected"); });
@@ -1508,7 +1517,12 @@ async function submitReport(){
   var msg = document.getElementById("reportMsg");
   var domainEl = document.getElementById("reportDomain");
   var details = document.getElementById("reportDetails").value.trim();
-  var domain = domainEl ? domainEl.textContent.trim() : "";
+  var rawDomain = domainEl ? domainEl.textContent.trim() : "";
+  var domain = rawDomain;
+  try {
+    if(rawDomain && !rawDomain.startsWith("http")) rawDomain = "https://"+rawDomain;
+    domain = new URL(rawDomain).hostname.replace(/^www\./, "");
+  } catch(e){ domain = rawDomain.split("/")[0].split("?")[0]; }
 
   if(!_reportCategory){
     msg.style.display="block"; msg.style.color="var(--red)";
