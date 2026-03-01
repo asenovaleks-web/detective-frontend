@@ -46,6 +46,19 @@
     body { background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--text); min-height: 100vh; font-size: 18px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
     .page { max-width: 680px; margin: 0 auto; padding: 0 16px 80px; }
 
+    /* -- DESKTOP TWO-COLUMN LAYOUT -- */
+    @media (min-width: 1100px) {
+      body { overflow-x: hidden; }
+      .page { max-width: 1200px; padding: 0 32px 80px; }
+      .desktop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+      .desktop-col-left { position: sticky; top: 24px; }
+      .desktop-col-right { min-width: 0; }
+    }
+    @media (max-width: 1099px) {
+      .desktop-grid { display: block; }
+      .desktop-col-left, .desktop-col-right { width: 100%; }
+    }
+
     /* -- NAV -- */
     nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 0 14px; border-bottom: 1px solid var(--border); margin-bottom: 36px; }
     .logo { display: flex; align-items: center; gap: 9px; font-size: 17px; font-weight: 600; letter-spacing: -0.4px; color: var(--text); text-decoration: none; }
@@ -58,11 +71,11 @@
     .btn-outline:hover { border-color: var(--blue) !important; color: var(--blue); }
     .btn-blue { background: var(--blue); color: #fff; box-shadow: 0 0 20px rgba(59,130,246,0.3); }
     .btn-blue:hover { opacity: 0.88; }
-    .nav-email { font-size: 12px; color: var(--text-muted); font-family: 'DM Mono', monospace; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .nav-email { font-size: 13px; color: #8a9bc0; font-family: 'DM Mono', monospace; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
     /* -- HERO -- */
     .hero { margin-bottom: 32px; text-align: center; padding: 0 4px; }
-    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border2); border-radius: 100px; padding: 5px 14px; font-size: 12px; color: var(--text-muted); margin-bottom: 24px; font-family: 'DM Mono', monospace; }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border2); border-radius: 100px; padding: 5px 14px; font-size: 12px; color: #8a9bc0; margin-bottom: 24px; font-family: 'DM Mono', monospace; }
     .badge-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: blink 2.5s ease-in-out infinite; flex-shrink: 0; box-shadow: 0 0 6px var(--green); }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
     .hero-title { font-size: clamp(28px, 5vw, 42px); font-weight: 600; letter-spacing: -1.2px; line-height: 1.12; color: var(--text); margin-bottom: 14px; }
@@ -87,7 +100,7 @@
     .search-btn { background: var(--blue); color: #fff; border: none; padding: 10px 24px; border-radius: 7px; font-size: 14px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; white-space: nowrap; transition: opacity 0.15s; flex-shrink: 0; box-shadow: 0 0 20px rgba(59,130,246,0.35); }
     .search-btn:hover { opacity: 0.85; }
     .search-btn:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
-    .search-hint { margin-top: 9px; text-align: center; font-size: 14px; color: var(--text-faint); font-family: 'DM Mono', monospace; }
+    .search-hint { margin-top: 9px; text-align: center; font-size: 14px; color: #7a8aaa; font-family: 'DM Mono', monospace; }
 
     /* -- HOW IT WORKS -- */
     .how-wrap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 44px; }
@@ -135,7 +148,7 @@
     .verdict-card.GREEN .score-num { color: var(--green) !important; }
     .verdict-card.YELLOW .score-num { color: var(--yellow) !important; }
     .verdict-card.RED .score-num { color: var(--red) !important; }
-    .score-lbl { font-size: 9px; font-family: 'DM Mono', monospace; color: var(--text-faint); margin-top: 2px; }
+    .score-lbl { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text-faint); margin-top: 2px; }
     .verdict-meta { flex: 1; min-width: 160px; }
     .verdict-label { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 4px; }
     .verdict-card.GREEN .verdict-label { color: var(--green) !important; }
@@ -149,7 +162,7 @@
     .dashboard-row:last-child { border-bottom: none; }
     .dash-icon { font-size: 13px; flex-shrink: 0; width: 20px; display:inline-flex; align-items:center; justify-content:center; }
     .confidence-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-    .confidence-label { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--text-faint); }
+    .confidence-label { font-size: 12px; font-family: 'DM Mono', monospace; color: #8a9bc0; font-weight: 600; }
     .confidence-badge { font-size: 11px; font-family: 'DM Mono', monospace; font-weight: 500; padding: 2px 8px; border-radius: 100px; }
     .conf-high { background: rgba(34,197,94,0.15); color: var(--green); }
     .conf-med  { background: rgba(234,179,8,0.15); color: var(--yellow); }
@@ -179,7 +192,7 @@
 
     /* Sections */
     .section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 20px; margin-bottom: 10px; }
-    .section-header { font-size: 11px; font-family: 'DM Mono', monospace; font-weight: 500; color: var(--text-faint); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 14px; }
+    .section-header { font-size: 11px; font-family: 'DM Mono', monospace; font-weight: 500; color: #8a9bc0; letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 14px; }
     .finding { display: flex; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); }
     .finding:last-child { border-bottom: none; padding-bottom: 0; }
     .finding:first-child { padding-top: 0; }
@@ -193,7 +206,7 @@
     .narrative { font-size: 19px; color: var(--text-muted); line-height: 1.7; }
     .site-screenshot { width: 100%; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 14px; display: block; max-height: 200px; object-fit: cover; object-position: top; }
     .screenshot-wrap { position: relative; margin-bottom: 16px; }
-    .screenshot-label { font-size: 10px; font-family: 'DM Mono', monospace; color: var(--text-faint); margin-top: 6px; letter-spacing: 0.3px; }
+    .screenshot-label { font-size: 11px; font-family: 'DM Mono', monospace; color: #7a8aaa; margin-top: 6px; letter-spacing: 0.3px; }
     .ai-analysis-wrap { position: relative; }
     .ai-label { display: inline-flex; align-items: center; gap: 6px; font-size: 10px; font-family: 'DM Mono', monospace; font-weight: 600; letter-spacing: 0.8px; color: #818cf8; background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.2); padding: 3px 10px; border-radius: 100px; margin-bottom: 14px; }
     .ai-label-dot { width: 5px; height: 5px; background: #818cf8; border-radius: 50%; animation: blink 2.5s ease-in-out infinite; }
@@ -205,7 +218,7 @@
     .raw-toggle-icon.on { background: var(--blue); border-color: var(--blue); }
     .raw-toggle-icon::after { content: ""; position: absolute; width: 10px; height: 10px; background: white; border-radius: 50%; top: 2px; left: 2px; transition: left 0.2s; }
     .raw-toggle-icon.on::after { left: 14px; }
-    .raw-source-count { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text-faint); background: var(--surface2); border: 1px solid var(--border); padding: 2px 10px; border-radius: 100px; }
+    .raw-source-count { font-size: 12px; font-family: 'DM Mono', monospace; color: #8a9bc0; background: var(--surface2); border: 1px solid var(--border); padding: 2px 10px; border-radius: 100px; }
     .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 6px; max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
     .data-grid.open { max-height: 3000px; }
 
@@ -220,7 +233,7 @@
     .lock-btn { background: var(--blue); color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-size: 13px; font-weight: 600; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: opacity 0.15s; box-shadow: 0 0 20px var(--blue-glow); margin-top: 4px; }
     .lock-btn:hover { opacity: 0.85; }
     .lock-features { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
-    .lock-feature { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+    .lock-feature { font-size: 13px; color: #a0aec0; display: flex; align-items: center; gap: 6px; }
     .lock-feature::before { content: "✓"; color: var(--green); font-weight: 600; }
     .data-cell { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 11px 13px; transition: border-color 0.15s, background 0.15s; position: relative; overflow: hidden; }
     .data-cell:hover { border-color: var(--border2); background: var(--surface2); }
@@ -251,7 +264,7 @@
     .pricing-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; }
     .pricing-card.pro { border-color: var(--blue); box-shadow: inset 0 0 24px var(--blue-glow); }
     .popular-badge { display: inline-block; background: var(--blue); color: #fff; font-size: 10px; font-weight: 600; font-family: 'DM Mono', monospace; padding: 3px 12px; border-radius: 100px; white-space: nowrap; letter-spacing: 0.5px; margin-bottom: 8px; }
-    .plan-name { font-size: 11px; font-family: 'DM Mono', monospace; font-weight: 500; color: var(--text-faint); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
+    .plan-name { font-size: 12px; font-family: 'DM Mono', monospace; font-weight: 600; color: #8a9bc0; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; }
     .plan-price { font-size: 34px; font-weight: 700; letter-spacing: -1.5px; margin-bottom: 2px; }
     .plan-period { font-size: 12px; color: var(--text-muted); margin-bottom: 20px; }
     .plan-features { list-style: none; margin-bottom: 22px; }
@@ -538,6 +551,8 @@
   </nav>
 
   <!-- Hero -->
+  <div class="desktop-grid">
+  <div class="desktop-col-left">
   <div class="hero">
     <h1 class="hero-title" id="tHeroTitle">See risks before<br/>they become <em>losses.</em></h1>
     <p class="hero-sub" id="tHeroSub">Instant AI trust intelligence on any website -- so you know what you're dealing with before you click, pay, or partner.</p>
@@ -608,6 +623,8 @@
     </div>
   </div>
 
+  </div><!-- /col-left -->
+  <div class="desktop-col-right">
 
   <div class="msg error" id="errorMsg"></div>
 
@@ -858,6 +875,8 @@
     </div>
   </div>
 
+  </div><!-- /col-right -->
+  </div><!-- /desktop-grid -->
   <!-- Footer -->
   <footer style="margin-top:64px;padding:24px 0 32px;border-top:1px solid var(--border);text-align:center;">
     <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;">
