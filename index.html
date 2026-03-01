@@ -1067,10 +1067,10 @@ function updateUI(){
           '</button>';
         })()+
         '<div class="user-dropdown" id="userDropdown">'+
-          '<div class="user-dropdown-item" onclick="openHistory()">\U0001f4cb Scan history</div>'+
-          '<div class="user-dropdown-item" onclick="openWatchlist()">\U0001f3af Targets</div>'+
-          '<div class="user-dropdown-item" onclick="openChpass()">\U0001f511 Change password</div>'+
-          (plan!=="pro"?'<div class="user-dropdown-item" onclick="upgradeToPro();closeDropdown()">\u2b50 Upgrade to Pro</div>':'')+
+          '<div class="user-dropdown-item" onclick="openHistory()">📋 Scan history</div>'+
+          '<div class="user-dropdown-item" onclick="openWatchlist()">🎯 Targets</div>'+
+          '<div class="user-dropdown-item" onclick="openChpass()">🔑 Change password</div>'+
+          (plan!=="pro"?'<div class="user-dropdown-item" onclick="upgradeToPro();closeDropdown()">⭐ Upgrade to Pro</div>':'')+
           '<div class="user-dropdown-sep"></div>'+
           '<div class="user-dropdown-item danger" onclick="sbOut()">Sign out</div>'+
         '</div>'+
@@ -1129,7 +1129,7 @@ function loadHistory(){
         '<div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">'+
           '<div class="history-verdict '+s.verdict+'" style="font-size:11px;">'+verdictLabel+'</div>'+
           '<div class="history-score" style="color:'+scoreColor+';font-weight:700;">'+s.score+'</div>'+
-          '<span style="font-size:11px;color:var(--text-faint);">\u2197</span>'+
+          '<span style="font-size:11px;color:var(--text-faint);">↗</span>'+
         '</div>'+
       '</div>';
     }).join("");
@@ -1196,8 +1196,8 @@ function openModal(m){ if(m) mode=m; document.getElementById("authModal").classL
 function closeModal(){ document.getElementById("authModal").classList.remove("open"); }
 function togglePass(id, btn){
   var inp = document.getElementById(id);
-  if(inp.type === "password"){ inp.type = "text"; btn.textContent = "\U0001f648"; }
-  else { inp.type = "password"; btn.textContent = "\U0001f441"; }
+  if(inp.type === "password"){ inp.type = "text"; btn.textContent = "🙈"; }
+  else { inp.type = "password"; btn.textContent = "👁"; }
 }
 function closeAnonModal(){ document.getElementById("anonModal").classList.remove("open"); }
 function setModalMode(m){
@@ -1427,7 +1427,7 @@ function renderReport(r){
   var scText = document.getElementById("scanCountText");
   var scanCount = parseInt(r.scan_count) || 0;
   if(scanCount > 1){
-    scText.textContent = "\U0001f50d Scanned " + scanCount + " times by Signum users";
+    scText.textContent = "🔍 Scanned " + scanCount + " times by Signum users";
     scWrap.style.display = "block";
   } else {
     scWrap.style.display = "none";
@@ -1451,7 +1451,7 @@ function renderReport(r){
 
 function toggleRaw(){
   var g=document.getElementById("dataGrid"), a=document.getElementById("rawArrow");
-  g.classList.toggle("open"); a.textContent=g.classList.contains("open")?"\u25be":"\u25b8";
+  g.classList.toggle("open"); a.textContent=g.classList.contains("open")?"▾":"▸";
 }
 
 function shareReport(){
@@ -1463,7 +1463,7 @@ function shareReport(){
   var encoded=encodeURIComponent(shareText+" "+shareUrl);
   var encodedUrl=encodeURIComponent(shareUrl);
 
-  document.getElementById("tShareTitle").innerHTML = '\u26a0 Help others stay safe';
+  document.getElementById("tShareTitle").innerHTML = '⚠ Help others stay safe';
   document.getElementById("tShareSub").textContent = url+" -- "+score+"/100 "+verdict;
   document.getElementById("tShareDismiss").textContent = "Dismiss";
   document.getElementById("shareCopyBtn").textContent = "Copy";
@@ -1607,7 +1607,7 @@ async function submitReport(){
     var respText = await r.text();
     if(r.ok){
       msg.style.color="var(--green)";
-      msg.textContent="\u2713 Report received. Thank you for helping protect others.";
+      msg.textContent="✓ Report received. Thank you for helping protect others.";
       setTimeout(closeReportModal, 2200);
     } else {
       console.error("Report failed:", r.status, respText);
@@ -1645,7 +1645,7 @@ async function submitTeamContact(){
       body:JSON.stringify({name,email,company,team_size:size})
     });
     if(r.ok){
-      msg.style.color="var(--green)";msg.textContent="\u2713 Request sent! We'll be in touch within 24 hours.";
+      msg.style.color="var(--green)";msg.textContent="✓ Request sent! We'll be in touch within 24 hours.";
       setTimeout(closeTeamContact,2500);
     } else {
       msg.style.color="var(--red)";msg.textContent="Something went wrong on our end. Email us at hello@signumaiapp.com and we'll sort it out.";
@@ -1695,8 +1695,8 @@ function loadWatchlist(){
         '<div class="watchlist-verdict '+verdict+'">'+verdictLabel+'</div>':'<div style="font-size:11px;color:var(--text-faint);">Tap to scan</div>')+
         '<div class="watchlist-date">'+ds+'</div>'+
         '<div style="display:flex;align-items:center;gap:6px;">'+
-        '<span style="font-size:10px;color:var(--text-faint);" title="Click to scan">\u2197</span>'+
-        '<button class="watchlist-remove" onclick="event.stopPropagation();removeFromWatchlist(\''+w.id+'\',this)" title="Remove">\u2715</button>'+
+        '<span style="font-size:10px;color:var(--text-faint);" title="Click to scan">↗</span>'+
+        '<button class="watchlist-remove" onclick="event.stopPropagation();removeFromWatchlist(\''+w.id+'\',this)" title="Remove">✕</button>'+
         '</div>'+
       '</div>';
     }).join("");
@@ -1720,8 +1720,8 @@ function checkWatchlistStatus(domain){
 function updateWatchlistBtn(){
   var btn=document.getElementById("watchlistBtn");
   if(!btn)return;
-  if(isWatching){btn.textContent="\U0001f3af Tracking -- click to remove";btn.className="btn-watchlist watching";}
-  else{btn.textContent="\U0001f3af Track this domain";btn.className="btn-watchlist";}
+  if(isWatching){btn.textContent="🎯 Tracking -- click to remove";btn.className="btn-watchlist watching";}
+  else{btn.textContent="🎯 Track this domain";btn.className="btn-watchlist";}
 }
 
 function toggleWatchlistDomain(){
