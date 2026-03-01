@@ -77,12 +77,12 @@
     }
 
     /* -- NAV -- */
-    nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 0 14px; border-bottom: 1px solid var(--border); margin-bottom: 36px; }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border); margin-bottom: 36px; position: sticky; top: 0; z-index: 100; background: var(--bg); backdrop-filter: blur(12px); }
     .logo { display: flex; align-items: center; gap: 9px; font-size: 17px; font-weight: 600; letter-spacing: -0.4px; color: var(--text); text-decoration: none; }
     .logo-icon { width: 28px; height: 28px; background: var(--blue); border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 16px rgba(59,130,246,0.4); }
     .logo-icon svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
     .nav-right { display: flex; align-items: center; gap: 8px; }
-    .nav-tabs { display: flex; align-items: center; gap: 2px; margin: 0 12px; }
+    .nav-tabs { display: flex; align-items: center; gap: 2px; margin: 0 auto; }
     .nav-tab { background: none; border: none; padding: 6px 12px; font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-radius: 7px; transition: all 0.15s; font-family: "DM Sans", sans-serif; white-space: nowrap; }
     .nav-tab:hover { color: var(--text); background: var(--surface2); }
     .nav-tab.active { color: var(--blue); background: var(--blue-glow); }
@@ -567,7 +567,6 @@
     </a>
     <div class="nav-tabs" id="navTabs">
       <button class="nav-tab active" onclick="showTab('scan')" id="tab-scan">Scan</button>
-      <button class="nav-tab" onclick="showTab('how')" id="tab-how">How it works</button>
       <button class="nav-tab" onclick="showTab('pricing')" id="tab-pricing">Pricing</button>
       <button class="nav-tab" onclick="showTab('business')" id="tab-business">For Business</button>
     </div>
@@ -1391,7 +1390,7 @@ function runScan(){
 // -- Render --------------------------------------------------------------------
 function showTab(tab){
   // Update active tab
-  ["scan","how","pricing","business"].forEach(function(t){
+  ["scan","pricing","business"].forEach(function(t){
     var el = document.getElementById("tab-"+t);
     if(el) el.classList.toggle("active", t===tab);
   });
@@ -1399,7 +1398,6 @@ function showTab(tab){
   // Sections mapping
   var sections = {
     "scan":     ["howSection","beforeAfterSection"],
-    "how":      ["howSection","beforeAfterSection"],
     "pricing":  ["pricingSection","trustStrip"],
     "business": ["b2bSection"]
   };
