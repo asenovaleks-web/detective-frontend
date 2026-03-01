@@ -582,16 +582,17 @@
   </div>
 
   <!-- Trending Threats -->
-  <div id="trendingSection" style="margin:32px 0;">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+  <div id="trendingSection" style="margin:28px 0;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
       <div style="display:flex;align-items:center;gap:8px;">
-        <span style="font-size:11px;font-family:'DM Mono',monospace;font-weight:600;letter-spacing:0.8px;color:#ef4444;">🔴 TRENDING THREATS</span>
-        <span style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;">last 7 days</span>
+        <span style="width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block;box-shadow:0 0 6px #ef4444;"></span>
+        <span style="font-size:11px;font-family:'DM Mono',monospace;font-weight:600;letter-spacing:0.8px;color:#ef4444;text-transform:uppercase;">Trending Threats</span>
+        <span style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;">· last 7 days</span>
       </div>
-      <span id="trendingUpdated" style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;"></span>
+      <span id="trendingUpdated" style="font-size:10px;color:var(--text-muted);font-family:'DM Mono',monospace;"></span>
     </div>
-    <div id="trendingList" style="display:flex;flex-direction:column;gap:6px;">
-      <div style="color:var(--text-muted);font-size:13px;font-family:'DM Mono',monospace;">Loading...</div>
+    <div id="trendingList" style="display:flex;flex-direction:column;gap:5px;">
+      <div style="color:var(--text-muted);font-size:12px;font-family:'DM Mono',monospace;padding:8px 0;">Loading...</div>
     </div>
   </div>
 
@@ -1455,14 +1456,14 @@ function downloadReport(){
   var domain = document.getElementById("urlInput") ? document.getElementById("urlInput").value.trim() : "";
   if(!domain){ alert("Please scan a domain first."); return; }
   domain = domain.replace(/^https?:\/\//,"").replace(/\/.*/,"").toLowerCase();
-  var token = localStorage.getItem("sb_access_token") || "";
-  if(!token){ alert("Please sign in to download reports."); return; }
+  var dlToken = sg_get("sg_token") || "";
+  if(!dlToken){ alert("Please sign in to download reports."); return; }
 
   var btn = document.getElementById("downloadReportBtn");
   if(btn){ btn.textContent = "⏳ Generating..."; btn.disabled = true; }
 
   fetch(BACKEND + "/generate-report?domain=" + encodeURIComponent(domain), {
-    headers: { "Authorization": "Bearer " + token }
+    headers: { "Authorization": "Bearer " + dlToken }
   })
   .then(function(r){
     if(!r.ok) return r.json().then(function(e){ throw new Error(e.detail || "Failed"); });
