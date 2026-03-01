@@ -673,6 +673,8 @@
           <button class="share-btn" onclick="shareReport()" id="tShareBtn">↗ Share report</button>
           <button class="btn-watchlist" id="watchlistBtn" onclick="toggleWatchlistDomain()" style="display:none;">🎯 Track this domain</button>
           <button class="btn-report" id="reportBtn" onclick="openReportModal()" style="display:none;">⚑ Report this site</button>
+          <button class="btn-download-report" id="downloadReportBtn" onclick="downloadReport()" style="display:none;">⬇ Download Report</button>
+          <button class="btn-download-report" id="downloadReportFreeBtn" onclick="upgradeToPro()" style="display:none;opacity:0.6;border-style:dashed;">🔒 Download Report <span style="font-size:11px;margin-left:4px;">Pro</span></button>
         <div id="scanCountWrap" style="margin-top:8px;font-size:12px;color:var(--text-faint);font-family:'DM Mono',monospace;display:none;">
           <span id="scanCountText"></span>
         </div>
@@ -854,6 +856,35 @@
     <div class="trust-item"><span class="trust-icon">🌍</span><span id="tT4">Global threat coverage</span></div>
   </div>
 
+
+  <!-- One-Time Scan CTA -->
+  <div id="onetimeScanSection" style="margin-top:56px;padding:48px 0;border-top:1px solid var(--border);">
+    <div style="max-width:580px;margin:0 auto;text-align:center;padding:0 20px;">
+      <div style="display:inline-flex;align-items:center;gap:6px;font-size:11px;font-family:'DM Mono',monospace;font-weight:600;letter-spacing:0.8px;color:#f59e0b;background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);padding:4px 12px;border-radius:100px;margin-bottom:20px;">ONE-TIME CHECK</div>
+      <h2 style="font-size:clamp(24px,3.5vw,36px);font-weight:700;letter-spacing:-0.8px;margin-bottom:12px;line-height:1.2;">Not ready to subscribe?<br/>Just need one check.</h2>
+      <p style="font-size:16px;color:var(--text-muted);line-height:1.7;margin-bottom:28px;">Get a full 2-page PDF Trust Intelligence Report for any domain. No account. No subscription. Just the answer you need before you click, pay, or partner.</p>
+
+      <div style="background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:28px;margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <input type="text" id="onetimeDomain" placeholder="e.g. suspicious-shop.com" style="flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:12px 14px;font-size:15px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border2)'"/>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+          <div>
+            <div style="font-size:26px;font-weight:700;color:var(--text);">€4.99</div>
+            <div style="font-size:12px;color:var(--text-muted);">one-time · no account needed</div>
+          </div>
+          <button onclick="buyOneScan()" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-size:15px;font-weight:700;padding:13px 28px;border-radius:9px;border:none;cursor:pointer;letter-spacing:-0.2px;">Get My Report →</button>
+        </div>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;font-size:13px;color:var(--text-muted);">
+        <span>✓ Full 2-page PDF</span>
+        <span>✓ 12 intelligence sources</span>
+        <span>✓ Delivered instantly</span>
+        <span>✓ No account needed</span>
+      </div>
+    </div>
+  </div>
 
   <!-- Report Modal -->
   <div class="report-modal-bg" id="reportModal" onclick="if(event.target===this)closeReportModal()">
@@ -1382,13 +1413,13 @@ function showTab(tab){
 
   // Sections mapping
   var sections = {
-    "scan":     ["howSection","beforeAfterSection"],
+    "scan":     ["howSection","beforeAfterSection","onetimeScanSection"],
     "pricing":  ["pricingSection","trustStrip"],
     "business": ["b2bSection"]
   };
 
   // All toggleable sections
-  var all = ["howSection","beforeAfterSection","pricingSection","b2bSection","trustStrip"];
+  var all = ["howSection","beforeAfterSection","pricingSection","b2bSection","trustStrip","onetimeScanSection"];
 
   if(tab === "scan"){
     all.forEach(function(id){
@@ -1407,13 +1438,85 @@ function showTab(tab){
 
 // Init: hide pricing/b2b on load (scan is default)
 document.addEventListener("DOMContentLoaded", function(){
-  ["pricingSection","b2bSection","trustStrip"].forEach(function(id){
+  ["pricingSection","b2bSection","trustStrip","onetimeScanSection"].forEach(function(id){
     var el = document.getElementById(id);
     if(el) el.style.display = "none";
   });
 });
 
 function isDesktop(){ return window.innerWidth >= 1100; }
+
+function downloadReport(){
+  var domain = document.getElementById("scanInput") ? document.getElementById("scanInput").value.trim() : "";
+  if(!domain){ alert("Please scan a domain first."); return; }
+  domain = domain.replace(/^https?:\/\//,"").replace(/\/.*/,"").toLowerCase();
+  var token = localStorage.getItem("sb_access_token") || "";
+  if(!token){ alert("Please sign in to download reports."); return; }
+
+  var btn = document.getElementById("downloadReportBtn");
+  if(btn){ btn.textContent = "⏳ Generating..."; btn.disabled = true; }
+
+  fetch(BACKEND + "/generate-report?domain=" + encodeURIComponent(domain), {
+    headers: { "Authorization": "Bearer " + token }
+  })
+  .then(function(r){
+    if(!r.ok) return r.json().then(function(e){ throw new Error(e.detail || "Failed"); });
+    return r.blob();
+  })
+  .then(function(blob){
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "signum_" + domain.replace(/\./g,"_") + ".pdf";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    if(btn){ btn.textContent = "⬇ Download Report"; btn.disabled = false; }
+  })
+  .catch(function(err){
+    if(btn){ btn.textContent = "⬇ Download Report"; btn.disabled = false; }
+    if(err.message && err.message.includes("Pro or Team")){
+      if(confirm("PDF reports are available on Pro and Team plans.\n\nUpgrade now?")){
+        window.location.href = "#pricing";
+        document.getElementById("tab-pricing") && showTab("pricing");
+      }
+    } else {
+      alert("Could not generate report: " + err.message);
+    }
+  });
+}
+
+function buyOneScan(){
+  var domain = document.getElementById("onetimeDomain").value.trim();
+  if(!domain){ document.getElementById("onetimeDomain").focus(); return; }
+  domain = domain.replace(/^https?:\/\//,"").replace(/\/.*/,"").toLowerCase();
+
+  var btn = event.target;
+  btn.textContent = "⏳ Redirecting...";
+  btn.disabled = true;
+
+  fetch(BACKEND + "/create-scan-checkout", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({domain: domain, user_email: ""})
+  })
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    if(data.checkout_url){
+      window.location.href = data.checkout_url;
+    } else {
+      alert(data.detail || "Something went wrong");
+      btn.textContent = "Get My Report →";
+      btn.disabled = false;
+    }
+  })
+  .catch(function(){
+    alert("Something went wrong. Please try again.");
+    btn.textContent = "Get My Report →";
+    btn.disabled = false;
+  });
+}
 
 function closeResultModal(){
   var bg = document.getElementById("resultModalBg");
