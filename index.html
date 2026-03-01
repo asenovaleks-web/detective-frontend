@@ -46,12 +46,29 @@
     body { background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--text); min-height: 100vh; font-size: 18px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
     .page { max-width: 680px; margin: 0 auto; padding: 0 16px 80px; }
 
+    /* -- RESULT MODAL (desktop) -- */
+    @media (min-width: 1100px) {
+      .result-modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); z-index: 200; align-items: center; justify-content: center; padding: 24px; }
+      .result-modal-bg.visible { display: flex; }
+      .result-modal-inner { background: var(--bg2); border: 1px solid var(--border2); border-radius: 16px; width: 100%; max-width: 680px; max-height: 90vh; overflow-y: auto; position: relative; padding: 0; scrollbar-width: thin; scrollbar-color: var(--border2) transparent; }
+      .result-modal-close { position: sticky; top: 0; z-index: 10; display: flex; justify-content: flex-end; padding: 12px 16px 0; background: var(--bg2); }
+      .result-modal-close-btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text-muted); width: 32px; height: 32px; border-radius: 8px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+      .result-modal-close-btn:hover { color: var(--text); border-color: var(--border2); }
+      .result-modal-content { padding: 0 24px 24px; }
+      /* On desktop, hide inline result */
+      .desktop-result-inline { display: none; }
+    }
+    @media (max-width: 1099px) {
+      .result-modal-bg { display: none !important; }
+      .result-modal-close { display: none !important; }
+    }
     /* -- DESKTOP TWO-COLUMN LAYOUT -- */
     @media (min-width: 1100px) {
       body { overflow-x: hidden; }
-      .page { max-width: 1200px; padding: 0 32px 80px; }
+      .page { max-width: 1180px; padding: 0 32px 80px; }
       .desktop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
-      .desktop-col-left { position: sticky; top: 24px; }
+      .desktop-col-left { position: sticky; top: 24px; max-height: calc(100vh - 48px); overflow-y: auto; scrollbar-width: none; }
+      .desktop-col-left::-webkit-scrollbar { display: none; }
       .desktop-col-right { min-width: 0; }
     }
     @media (max-width: 1099px) {
@@ -278,7 +295,7 @@
     .plan-cta.outline:hover { border-color: var(--blue); color: var(--blue); }
     .plan-cta.filled { background: var(--blue); border: none; color: #fff; box-shadow: 0 0 20px var(--blue-glow); }
     .plan-cta.filled:hover { opacity: 0.85; }
-    .pricing-note { text-align: center; margin-top: 14px; font-size: 12px; color: var(--text-faint); }
+    .pricing-note { text-align: center; margin-top: 14px; font-size: 14px; color: #8a9bc0; font-weight: 500; }
 
     /* -- MODAL -- */
     .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
@@ -628,8 +645,19 @@
 
   <div class="msg error" id="errorMsg"></div>
 
-  <!-- Report -->
-  <div class="report" id="reportSection">
+  <!-- Result Modal (desktop) / Inline (mobile) -->
+  <div class="result-modal-bg" id="resultModalBg" onclick="if(event.target===this)closeResultModal()">
+    <div class="result-modal-inner">
+      <div class="result-modal-close">
+        <button class="result-modal-close-btn" onclick="closeResultModal()">&#10005;</button>
+      </div>
+      <div class="result-modal-content" id="resultModalContent">
+      </div>
+    </div>
+  </div>
+
+  <!-- Report (inline - mobile / fallback) -->
+  <div class="report desktop-result-inline" id="reportSection">
 
     <div class="verdict-card" id="verdictCard">
       <div class="verdict-top">
@@ -704,7 +732,7 @@
           <div class="lock-feature">Scan history &amp; targets</div>
         </div>
         <button class="lock-btn" onclick="upgradeToPro()">Upgrade to Pro -- €3.99/month</button>
-        <div style="font-size:11px;color:var(--text-faint);margin-top:6px;">Cheaper than being scammed . Cancel anytime</div>
+        <div style="font-size:13px;color:#8a9bc0;font-weight:500;margin-top:6px;">Cheaper than being scammed . Cancel anytime</div>
       </div>
     </div>
 
@@ -722,14 +750,6 @@
       </div>
       <div class="lock-overlay" id="rawOverlay" style="display:none;"></div>
     </div>
-  </div>
-
-  <!-- Trust Strip -->
-  <div class="trust-strip">
-    <div class="trust-item"><span class="trust-icon">🔒</span><span id="tT1">Encrypted scanning</span></div>
-    <div class="trust-item"><span class="trust-icon">🛡</span><span id="tT2">Privacy focused</span></div>
-    <div class="trust-item"><span class="trust-icon">⚡</span><span id="tT3">Real-time analysis</span></div>
-    <div class="trust-item"><span class="trust-icon">🌍</span><span id="tT4">Global threat coverage</span></div>
   </div>
 
   <!-- Pricing -->
@@ -826,9 +846,18 @@
         </div>
       </div>
       <button onclick="openTeamContact()" style="display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#6366f1,#818cf8);color:#fff;font-size:14px;font-weight:600;padding:13px 28px;border-radius:9px;border:none;cursor:pointer;letter-spacing:-0.2px;">Get Team access -- €19.99/month →</button>
-      <div style="margin-top:12px;font-size:12px;color:var(--text-faint);">Up to 5 seats . Cancel anytime . Setup in minutes</div>
+      <div style="margin-top:12px;font-size:14px;color:#8a9bc0;font-weight:500;">Up to 5 seats . Cancel anytime . Setup in minutes</div>
     </div>
   </div>
+
+  <!-- Trust Strip -->
+  <div class="trust-strip">
+    <div class="trust-item"><span class="trust-icon">🔒</span><span id="tT1">Encrypted scanning</span></div>
+    <div class="trust-item"><span class="trust-icon">🛡</span><span id="tT2">Privacy focused</span></div>
+    <div class="trust-item"><span class="trust-icon">⚡</span><span id="tT3">Real-time analysis</span></div>
+    <div class="trust-item"><span class="trust-icon">🌍</span><span id="tT4">Global threat coverage</span></div>
+  </div>
+
 
   <!-- Report Modal -->
   <div class="report-modal-bg" id="reportModal" onclick="if(event.target===this)closeReportModal()">
@@ -885,15 +914,15 @@
       </div>
       <span style="font-size:14px;font-weight:600;color:var(--text-muted);">Signum</span>
     </div>
-    <div style="font-size:12px;color:var(--text-faint);margin-bottom:10px;">Building the global trust infrastructure of the internet.</div>
+    <div style="font-size:14px;color:#8a9bc0;margin-bottom:10px;">Building the global trust infrastructure of the internet.</div>
     <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
-      <a href="/contact.html" style="font-size:12px;color:var(--text-faint);text-decoration:none;" onclick="window.location.href='/contact.html';return false;">Contact</a>
+      <a href="/contact.html" style="font-size:14px;color:#8a9bc0;text-decoration:none;" onclick="window.location.href='/contact.html';return false;">Contact</a>
       <span style="color:var(--border2);">.</span>
-      <a href="/privacy.html" style="font-size:12px;color:var(--text-faint);text-decoration:none;">Privacy Policy</a>
+      <a href="/privacy.html" style="font-size:14px;color:#7a8aaa;text-decoration:none;">Privacy Policy</a>
       <span style="color:var(--border2);">.</span>
-      <a href="/terms.html" style="font-size:12px;color:var(--text-faint);text-decoration:none;">Terms of Service</a>
+      <a href="/terms.html" style="font-size:14px;color:#8a9bc0;text-decoration:none;">Terms of Service</a>
       <span style="color:var(--border2);">.</span>
-      <span style="font-size:12px;color:var(--text-faint);">© 2026 Signum. All rights reserved.</span>
+      <span style="font-size:14px;color:#8a9bc0;">© 2026 Signum. All rights reserved.</span>
     </div>
   </footer>
 
@@ -1349,6 +1378,24 @@ function runScan(){
 }
 
 // -- Render --------------------------------------------------------------------
+function isDesktop(){ return window.innerWidth >= 1100; }
+
+function closeResultModal(){
+  var bg = document.getElementById("resultModalBg");
+  if(bg) bg.classList.remove("visible");
+}
+
+function showResultModal(){
+  if(!isDesktop()) return;
+  var bg = document.getElementById("resultModalBg");
+  var content = document.getElementById("resultModalContent");
+  var report = document.getElementById("reportSection");
+  if(bg && content && report){
+    content.innerHTML = report.innerHTML;
+    bg.classList.add("visible");
+  }
+}
+
 function renderReport(r){
   var rawTarget = r.target || "";
   try {
@@ -1401,6 +1448,8 @@ function renderReport(r){
   });
 
   document.getElementById("narrativeText").textContent=r.narrative;
+  // Show as modal on desktop
+  setTimeout(function(){ if(isDesktop()) showResultModal(); }, 100);
 
   // Load diff (what changed since last scan) -- delay to allow scan_results to save
   document.getElementById("diffWrap").style.display="none";
