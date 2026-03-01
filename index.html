@@ -663,6 +663,14 @@
       <div class="lock-overlay" id="analysisOverlay" style="display:none;"></div>
     </div>
 
+    <!-- What Changed -->
+    <div id="diffWrap" style="display:none;margin-bottom:8px;">
+      <div class="section" style="border-left:3px solid #eab308;padding-left:16px;">
+        <div style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:#eab308;margin-bottom:12px;">WHAT CHANGED SINCE LAST SCAN</div>
+        <div id="diffList"></div>
+      </div>
+    </div>
+
     <div class="locked-section" id="findingsLock">
       <div class="section">
         <div class="section-header" id="tFindings">Findings</div>
@@ -1374,6 +1382,31 @@ function renderReport(r){
   });
 
   document.getElementById("narrativeText").textContent=r.narrative;
+
+  // Load diff (what changed since last scan)
+  document.getElementById("diffWrap").style.display="none";
+  if(token && currentDomain){
+    fetch(BACKEND+"/scan-diff?domain="+encodeURIComponent(currentDomain), {
+      headers:{"Authorization":"Bearer "+token}
+    }).then(function(res){ return res.json(); }).then(function(data){
+      if(data && data.has_changes && data.diff && data.diff.length > 0){
+        var diffList = document.getElementById("diffList");
+        var dirColor = {"worsened":"#ef4444","increased":"#ef4444","improved":"#22c55e","decreased":"#22c55e"};
+        diffList.innerHTML = data.diff.map(function(ch){
+          var color = dirColor[ch.direction] || "#eab308";
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #1e2d4a;font-size:14px;">'+
+            '<span style="color:#7a8aaa;">'+ch.field+'</span>'+
+            '<span style="display:flex;align-items:center;gap:8px;font-family:monospace;">'+
+              '<span style="color:#3d4f6e;">'+ch.old+'</span>'+
+              '<span style="color:#3d4f6e;">&#8594;</span>'+
+              '<span style="color:'+color+';font-weight:600;">'+ch.new+'</span>'+
+            '</span>'+
+          '</div>';
+        }).join('');
+        document.getElementById("diffWrap").style.display="block";
+      }
+    }).catch(function(){});
+  }
 
   // Screenshot from URLScan
   var screenshotUrl = (r.raw_data && r.raw_data.urlscan && r.raw_data.urlscan.screenshot_url) || "";
