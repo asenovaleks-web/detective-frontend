@@ -1379,8 +1379,21 @@ function runScan(){
     clearInterval(iv); document.getElementById("scanBtn").disabled=false; sw.classList.remove("visible");
     if(res.status===429){ showMsg("errorMsg","You have used your free scan for today -- upgrade to Pro to keep going."); return null; }
     return res.json().then(function(d){ if(!res.ok){ showMsg("errorMsg",d.detail||"We couldn't reach our servers. Check your connection and try again."); return null; } return d; });
-  }).then(function(d){ if(d) renderReport(d); })
-  .catch(function(){ clearInterval(iv); document.getElementById("scanBtn").disabled=false; sw.classList.remove("visible"); showMsg("errorMsg","We couldn't reach our servers. Check your connection and try again."); });
+  }).then(function(d){
+    if(d){
+      try{ renderReport(d); }
+      catch(e){
+        console.error("renderReport error:", e);
+        showMsg("errorMsg", "Result received but could not display. Please try again.");
+      }
+    }
+  }).catch(function(err){
+    clearInterval(iv);
+    document.getElementById("scanBtn").disabled=false;
+    sw.classList.remove("visible");
+    console.error("Scan fetch error:", err);
+    showMsg("errorMsg","We couldn't reach our servers. Check your connection and try again.");
+  });
 }
 
 // -- Render --------------------------------------------------------------------
