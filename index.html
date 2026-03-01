@@ -1384,6 +1384,14 @@ function runScan(){
 }
 
 // -- Render --------------------------------------------------------------------
+function showMsg(id, msg){
+  var el = document.getElementById(id);
+  if(!el) return;
+  el.textContent = msg;
+  el.classList.add("visible");
+  setTimeout(function(){ el.classList.remove("visible"); }, 6000);
+}
+
 function showTab(tab){
   // Update active tab
   ["scan","pricing","business"].forEach(function(t){
@@ -1434,7 +1442,7 @@ document.addEventListener("DOMContentLoaded", function(){
 function isDesktop(){ return window.innerWidth >= 1100; }
 
 function downloadReport(){
-  var domain = document.getElementById("scanInput") ? document.getElementById("scanInput").value.trim() : "";
+  var domain = document.getElementById("urlInput") ? document.getElementById("urlInput").value.trim() : "";
   if(!domain){ alert("Please scan a domain first."); return; }
   domain = domain.replace(/^https?:\/\//,"").replace(/\/.*/,"").toLowerCase();
   var token = localStorage.getItem("sb_access_token") || "";
@@ -1509,7 +1517,7 @@ function loadTrendingThreats(){
 function scanFromTrending(el){
   var domain = el.getAttribute("data-domain");
   if(!domain) return;
-  var inp = document.getElementById("scanInput");
+  var inp = document.getElementById("urlInput");
   if(inp){ inp.value = domain; runScan(); }
 }
 
