@@ -1121,7 +1121,7 @@ function loadHistory(){
       var dateStr=d.toLocaleDateString("en-GB",{day:"2-digit",month:"short",year:"numeric"});
       var scoreColor=s.verdict==="GREEN"?"var(--green)":s.verdict==="RED"?"var(--red)":"var(--yellow)";
       var verdictLabel=s.verdict==="GREEN"?"Safe":s.verdict==="RED"?"Danger":"Caution";
-      return '<div class="history-item" style="cursor:pointer;" onclick="rescanFromHistory(this.dataset.domain)" data-domain="'+s.domain+'" title="Click to re-scan">'+
+      return '<div class="history-item" style="cursor:pointer;" onclick="handleHistoryClick(this.dataset.domain)" data-domain="'+s.domain+'" title="Click to re-scan">'+
         '<div style="flex:1;min-width:0;">'+
           '<div class="history-domain" style="margin-bottom:2px;">'+s.domain+'</div>'+
           '<div style="font-size:11px;color:var(--text-faint);">'+dateStr+'</div>'+
@@ -1689,7 +1689,7 @@ function loadWatchlist(){
       var verdictLabel=w.last_verdict==="GREEN"?"Safe":w.last_verdict==="RED"?"Danger":w.last_verdict==="YELLOW"?"Caution":"--";
       var d=new Date(w.last_checked);
       var ds=d.toLocaleDateString("en-GB",{day:"2-digit",month:"short"});
-      return '<div class="watchlist-item" onclick="scanFromWatchlist(\'"+w.domain+"\')">'+
+      return '<div class="watchlist-item" onclick="handleTargetClick(\'"+w.domain+"\')">'+
         '<div class="watchlist-domain">'+w.domain+'</div>'+
         (w.last_verdict?'<div class="watchlist-score" style="color:'+sc+'">'+score+'</div>'+
         '<div class="watchlist-verdict '+verdict+'">'+verdictLabel+'</div>':'<div style="font-size:11px;color:var(--text-faint);">Tap to scan</div>')+
@@ -1751,6 +1751,14 @@ function removeFromWatchlist(id,btn){
     loadWatchlist();
     if(currentWatchlistDomain){isWatching=false;updateWatchlistBtn();}
   });
+}
+
+function handleTargetClick(domain){
+  scanFromWatchlist(domain).catch(function(e){ console.error(e); });
+}
+
+function handleHistoryClick(domain){
+  rescanFromHistory(domain).catch(function(e){ console.error(e); });
 }
 
 async function scanFromWatchlist(domain){
