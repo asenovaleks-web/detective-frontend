@@ -929,7 +929,7 @@ var SB_KEY  = "sb_publishable_gNTIfFSDai7wWPMPIVM-Vg_2rthrcNV";
 
 var user=null, token=null, plan="free", mode="signin", currentDomain="", anonScans=parseInt(sg_get('sg_anon_scans')||'0');
 
-// Storage helper — localStorage with sessionStorage fallback (iOS Private mode)
+// Storage helper -- localStorage with sessionStorage fallback (iOS Private mode)
 function sg_set(k,v){ try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}} }
 function sg_get(k){ try{var v=localStorage.getItem(k);if(v!==null)return v;}catch(e){} try{return sessionStorage.getItem(k);}catch(e){return null;} }
 function sg_del(k){ try{localStorage.removeItem(k);}catch(e){} try{sessionStorage.removeItem(k);}catch(e){} }
@@ -956,14 +956,14 @@ function sbRefresh(){
       if(d.refresh_token) sg_set("sg_refresh",d.refresh_token);
       fetchPlan(d.user.id); updateUI();
     } else {
-      // Token expired — clear and show sign in (don't wipe, just reset state)
+      // Token expired -- clear and show sign in (don't wipe, just reset state)
       token=null; user=null; plan="free";
       sg_del("sg_token"); sg_del("sg_user");
       sg_del("sg_refresh"); sg_del("sg_plan");
       updateUI();
     }
   }).catch(function(){ 
-    // Network error — keep existing cached user state, don't log out
+    // Network error -- keep existing cached user state, don't log out
     updateUI(); 
   });
 }
@@ -995,7 +995,7 @@ function fetchPlan(uid){
 
 window.applyLocking = function applyLocking(){
   var isPro = (plan === "pro");
-  // Toggle is-locked class — CSS handles blur via .locked-section.is-locked
+  // Toggle is-locked class -- CSS handles blur via .locked-section.is-locked
   ["findingsLock","analysisLock","rawLock"].forEach(function(id){
     var el = document.getElementById(id);
     if(el){ isPro ? el.classList.remove("is-locked") : el.classList.add("is-locked"); }
@@ -1111,7 +1111,7 @@ function loadHistory(){
     headers:{"apikey":SB_KEY,"Authorization":"Bearer "+token}
   }).then(function(r){return r.json();}).then(function(data){
     if(!data||!data.length){
-      list.innerHTML='<div class="history-empty">Nothing here yet — paste a domain above to run your first scan.</div>';
+      list.innerHTML='<div class="history-empty">Nothing here yet -- paste a domain above to run your first scan.</div>';
       sub.textContent="Your recent domain scans";
       return;
     }
@@ -1296,7 +1296,7 @@ function runScan(){
   var url=document.getElementById("urlInput").value.trim();
   if(!url) return;
 
-  // Enforce anon limit — 1 free scan without account
+  // Enforce anon limit -- 1 free scan without account
   if(!user){
     if(anonScans >= 1){
       document.getElementById("anonModal").classList.add("open");
@@ -1318,7 +1318,7 @@ function runScan(){
   fetch(BACKEND+"/investigate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)})
   .then(function(res){
     clearInterval(iv); document.getElementById("scanBtn").disabled=false; sw.classList.remove("visible");
-    if(res.status===429){ showMsg("errorMsg","You have used your free scan for today — upgrade to Pro to keep going."); return null; }
+    if(res.status===429){ showMsg("errorMsg","You have used your free scan for today -- upgrade to Pro to keep going."); return null; }
     return res.json().then(function(d){ if(!res.ok){ showMsg("errorMsg",d.detail||"We couldn't reach our servers. Check your connection and try again."); return null; } return d; });
   }).then(function(d){ if(d) renderReport(d); })
   .catch(function(){ clearInterval(iv); document.getElementById("scanBtn").disabled=false; sw.classList.remove("visible"); showMsg("errorMsg","We couldn't reach our servers. Check your connection and try again."); });
@@ -1348,7 +1348,7 @@ function renderReport(r){
   document.getElementById("verdictLabel").textContent=verdictLabels[r.verdict]||r.verdict;
   document.getElementById("verdictSummary").textContent=r.verdict_summary;
 
-  // Confidence level — from backend data_confidence field
+  // Confidence level -- from backend data_confidence field
   var confMap = {"high":"high","medium":"med","low":"low"};
   var conf = confMap[r.data_confidence] || "med";
   var confLabels = {"high":"High Confidence","med":"Medium Confidence","low":"Low Confidence"};
@@ -1359,7 +1359,7 @@ function renderReport(r){
   confEl.innerHTML = cDot + confLabels[conf];
   confEl.className = "confidence-badge conf-"+conf;
 
-  // Dashboard signals — top 5 findings as clean signals (CSS dots, cross-platform)
+  // Dashboard signals -- top 5 findings as clean signals (CSS dots, cross-platform)
   var signals=document.getElementById("dashSignals");
   signals.innerHTML="";
   (r.findings||[]).slice(0,5).forEach(function(f){
@@ -1410,7 +1410,7 @@ function renderReport(r){
     grid.innerHTML+='<div class="'+cellCls+'"><div class="data-lbl">'+dot+e[0]+'</div><div class="'+valCls+'">'+val+'</div></div>';
   });
 
-  // Feature locking — also called from fetchPlan to handle async race condition
+  // Feature locking -- also called from fetchPlan to handle async race condition
   applyLocking();
 
   // Log to scan history
@@ -1458,13 +1458,13 @@ function shareReport(){
   var url=document.getElementById("urlInput").value.trim();
   var score=document.getElementById("scoreNum").textContent;
   var verdict=document.getElementById("verdictLabel").textContent;
-  var shareText="I checked "+url+" on Signum — Risk score: "+score+"/100 ("+verdict+"). Check any website for free:";
+  var shareText="I checked "+url+" on Signum -- Risk score: "+score+"/100 ("+verdict+"). Check any website for free:";
   var shareUrl=location.origin;
   var encoded=encodeURIComponent(shareText+" "+shareUrl);
   var encodedUrl=encodeURIComponent(shareUrl);
 
   document.getElementById("tShareTitle").innerHTML = '⚠️ Help others stay safe';
-  document.getElementById("tShareSub").textContent = url+" — "+score+"/100 "+verdict;
+  document.getElementById("tShareSub").textContent = url+" -- "+score+"/100 "+verdict;
   document.getElementById("tShareDismiss").textContent = "Dismiss";
   document.getElementById("shareCopyBtn").textContent = "Copy";
   document.getElementById("shareCopyInput").value = shareUrl;
@@ -1476,7 +1476,7 @@ function shareReport(){
   document.getElementById("shareLinkedIn").href = "https://www.linkedin.com/sharing/share-offsite/?url="+encodedUrl;
   document.getElementById("shareTelegram").href = "https://t.me/share/url?url="+encodedUrl+"&text="+encodeURIComponent(shareText);
   document.getElementById("shareEmail").href = "mailto:?subject="+encodeURIComponent("Security report: "+url)+"&body="+encoded;
-  document.getElementById("shareReddit").href = "https://reddit.com/submit?url="+encodedUrl+"&title="+encodeURIComponent("Security report: "+url+" — "+score+"/100 "+verdict);
+  document.getElementById("shareReddit").href = "https://reddit.com/submit?url="+encodedUrl+"&title="+encodeURIComponent("Security report: "+url+" -- "+score+"/100 "+verdict);
 
   document.getElementById("shareModal").classList.add("open");
 }
@@ -1677,16 +1677,16 @@ function loadWatchlist(){
     headers:{"apikey":SB_KEY,"Authorization":"Bearer "+token}
   }).then(function(r){return r.json();}).then(function(data){
     if(!data||!data.length){
-      list.innerHTML='<div class="history-empty">You are not tracking anything yet — add a domain after your next scan.</div>';
+      list.innerHTML='<div class="history-empty">You are not tracking anything yet -- add a domain after your next scan.</div>';
       sub.textContent="Domains you're tracking";
       return;
     }
     sub.textContent="Tracking "+data.length+" target"+(data.length!==1?"s":"");
     list.innerHTML=data.map(function(w){
       var sc=w.last_verdict==="GREEN"?"var(--green)":w.last_verdict==="RED"?"var(--red)":"var(--yellow)";
-      var score=w.last_score!==null?w.last_score:"—";
-      var verdict=w.last_verdict||"—";
-      var verdictLabel=w.last_verdict==="GREEN"?"Safe":w.last_verdict==="RED"?"Danger":w.last_verdict==="YELLOW"?"Caution":"—";
+      var score=w.last_score!==null?w.last_score:"--";
+      var verdict=w.last_verdict||"--";
+      var verdictLabel=w.last_verdict==="GREEN"?"Safe":w.last_verdict==="RED"?"Danger":w.last_verdict==="YELLOW"?"Caution":"--";
       var d=new Date(w.last_checked);
       var ds=d.toLocaleDateString("en-GB",{day:"2-digit",month:"short"});
       return '<div class="watchlist-item" onclick="scanFromWatchlist(\'"+w.domain+"\')">'+
@@ -1720,7 +1720,7 @@ function checkWatchlistStatus(domain){
 function updateWatchlistBtn(){
   var btn=document.getElementById("watchlistBtn");
   if(!btn)return;
-  if(isWatching){btn.textContent="🎯 Tracking — click to remove";btn.className="btn-watchlist watching";}
+  if(isWatching){btn.textContent="🎯 Tracking -- click to remove";btn.className="btn-watchlist watching";}
   else{btn.textContent="🎯 Track this domain";btn.className="btn-watchlist";}
 }
 
@@ -1776,7 +1776,7 @@ async function scanFromWatchlist(domain){
       }
     } catch(e){}
   }
-  // No cache — run full scan
+  // No cache -- run full scan
   setTimeout(function(){ runScan(); }, 300);
 }
 
