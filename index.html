@@ -862,7 +862,7 @@
   </div>
 
   <!-- Trust Strip -->
-  <div class="trust-strip">
+  <div class="trust-strip" id="trustStrip">
     <div class="trust-item"><span class="trust-icon">🔒</span><span id="tT1">Encrypted scanning</span></div>
     <div class="trust-item"><span class="trust-icon">🛡</span><span id="tT2">Privacy focused</span></div>
     <div class="trust-item"><span class="trust-icon">⚡</span><span id="tT3">Real-time analysis</span></div>
@@ -1400,15 +1400,13 @@ function showTab(tab){
   var sections = {
     "scan":     ["howSection","beforeAfterSection"],
     "how":      ["howSection","beforeAfterSection"],
-    "pricing":  ["pricingSection"],
+    "pricing":  ["pricingSection","trustStrip"],
     "business": ["b2bSection"]
   };
 
   // All toggleable sections
-  var all = ["howSection","beforeAfterSection","pricingSection","b2bSection"];
+  var all = ["howSection","beforeAfterSection","pricingSection","b2bSection","trustStrip"];
 
-  // On scan tab: show hero content, hide pricing/b2b
-  // On others: show only relevant section
   if(tab === "scan"){
     all.forEach(function(id){
       var el = document.getElementById(id);
@@ -1426,7 +1424,7 @@ function showTab(tab){
 
 // Init: hide pricing/b2b on load (scan is default)
 document.addEventListener("DOMContentLoaded", function(){
-  ["pricingSection","b2bSection"].forEach(function(id){
+  ["pricingSection","b2bSection","trustStrip"].forEach(function(id){
     var el = document.getElementById(id);
     if(el) el.style.display = "none";
   });
