@@ -983,7 +983,7 @@ var BACKEND = "https://detective-app-production-7080.up.railway.app";
 var SB_URL  = "https://harhjuykvkfwksccjjxq.supabase.co";
 var SB_KEY  = "sb_publishable_gNTIfFSDai7wWPMPIVM-Vg_2rthrcNV";
 
-var user=null, token=null, plan="free", mode="signin", currentDomain="", anonScans=parseInt(sg_get('sg_anon_scans')||'0');
+var user=null, token=null, plan="free", isPro=false, mode="signin", currentDomain="", anonScans=parseInt(sg_get('sg_anon_scans')||'0');
 
 // Storage helper -- localStorage with sessionStorage fallback (iOS Private mode)
 function sg_set(k,v){ try{localStorage.setItem(k,v);}catch(e){try{sessionStorage.setItem(k,v);}catch(e2){}} }
@@ -1050,7 +1050,7 @@ function fetchPlan(uid){
 }
 
 window.applyLocking = function applyLocking(){
-  var isPro = (plan === "pro");
+  isPro = (plan === "pro");
   // Toggle is-locked class -- CSS handles blur via .locked-section.is-locked
   ["findingsLock","analysisLock","rawLock"].forEach(function(id){
     var el = document.getElementById(id);
