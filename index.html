@@ -1430,13 +1430,10 @@ document.addEventListener("DOMContentLoaded", function(){
     var el = document.getElementById(id);
     if(el) el.style.display = "none";
   });
-  // Hide one-time scan for Pro users after auth loads
-  setTimeout(function(){
-    var ot = document.getElementById("onetimeScanSection");
-    if(ot && typeof isPro !== "undefined" && isPro){
-      ot.style.display = "none";
-    }
-  }, 1500);
+  // Hide one-time scan immediately if cached plan is pro
+  var cachedPlan = localStorage.getItem("sg_plan") || "";
+  var ot = document.getElementById("onetimeScanSection");
+  if(ot && cachedPlan === "pro") ot.style.display = "none";
 });
 
 function isDesktop(){ return window.innerWidth >= 1100; }
