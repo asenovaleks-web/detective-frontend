@@ -82,6 +82,11 @@
     .logo-icon { width: 28px; height: 28px; background: var(--blue); border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 16px rgba(59,130,246,0.4); }
     .logo-icon svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
     .nav-right { display: flex; align-items: center; gap: 8px; }
+    .nav-tabs { display: flex; align-items: center; gap: 2px; margin: 0 12px; }
+    .nav-tab { background: none; border: none; padding: 6px 12px; font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-radius: 7px; transition: all 0.15s; font-family: "DM Sans", sans-serif; white-space: nowrap; }
+    .nav-tab:hover { color: var(--text); background: var(--surface2); }
+    .nav-tab.active { color: var(--blue); background: var(--blue-glow); }
+    @media(max-width:640px){ .nav-tabs { display: none; } }
 
     .btn-sm { padding: 7px 16px; border-radius: 7px; font-size: 13px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.15s; border: none; }
     .btn-outline { background: none; border: 1px solid var(--border2) !important; color: var(--text-muted); }
@@ -560,6 +565,12 @@
       </div>
       Signum
     </a>
+    <div class="nav-tabs" id="navTabs">
+      <button class="nav-tab active" onclick="showTab('scan')" id="tab-scan">Scan</button>
+      <button class="nav-tab" onclick="showTab('how')" id="tab-how">How it works</button>
+      <button class="nav-tab" onclick="showTab('pricing')" id="tab-pricing">Pricing</button>
+      <button class="nav-tab" onclick="showTab('business')" id="tab-business">For Business</button>
+    </div>
     <div class="nav-right">
       <div id="navAuth">
         <button class="btn-sm btn-blue" onclick="openModal()">Sign in</button>
@@ -753,7 +764,7 @@
   </div>
 
   <!-- Pricing -->
-  <div class="pricing">
+  <div class="pricing" id="pricingSection">
     <div class="pricing-head">
       <h2 class="pricing-title">The right plan for every level of protection</h2>
       <p class="pricing-sub">More than peace of mind.</p>
@@ -823,7 +834,7 @@
   </div>
 
   <!-- B2B Section -->
-  <div style="margin-top:56px;padding:48px 0;border-top:1px solid var(--border);">
+  <div id="b2bSection" style="margin-top:56px;padding:48px 0;border-top:1px solid var(--border);">
     <div style="max-width:640px;margin:0 auto;text-align:center;padding:0 20px;">
       <div style="display:inline-flex;align-items:center;gap:6px;font-size:11px;font-family:'DM Mono',monospace;font-weight:600;letter-spacing:0.8px;color:#818cf8;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);padding:4px 12px;border-radius:100px;margin-bottom:20px;">FOR BUSINESSES</div>
       <h2 style="font-size:26px;font-weight:700;letter-spacing:-0.6px;margin-bottom:12px;">Due diligence in seconds.<br/>For teams that can't afford to be wrong.</h2>
@@ -1378,6 +1389,49 @@ function runScan(){
 }
 
 // -- Render --------------------------------------------------------------------
+function showTab(tab){
+  // Update active tab
+  ["scan","how","pricing","business"].forEach(function(t){
+    var el = document.getElementById("tab-"+t);
+    if(el) el.classList.toggle("active", t===tab);
+  });
+
+  // Sections mapping
+  var sections = {
+    "scan":     ["howSection","beforeAfterSection"],
+    "how":      ["howSection","beforeAfterSection"],
+    "pricing":  ["pricingSection"],
+    "business": ["b2bSection"]
+  };
+
+  // All toggleable sections
+  var all = ["howSection","beforeAfterSection","pricingSection","b2bSection"];
+
+  // On scan tab: show hero content, hide pricing/b2b
+  // On others: show only relevant section
+  if(tab === "scan"){
+    all.forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.style.display = (id==="howSection"||id==="beforeAfterSection") ? "" : "none";
+    });
+  } else {
+    all.forEach(function(id){
+      var el = document.getElementById(id);
+      if(!el) return;
+      var show = sections[tab] && sections[tab].indexOf(id) >= 0;
+      el.style.display = show ? "" : "none";
+    });
+  }
+}
+
+// Init: hide pricing/b2b on load (scan is default)
+document.addEventListener("DOMContentLoaded", function(){
+  ["pricingSection","b2bSection"].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.style.display = "none";
+  });
+});
+
 function isDesktop(){ return window.innerWidth >= 1100; }
 
 function closeResultModal(){
