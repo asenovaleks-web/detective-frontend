@@ -583,16 +583,16 @@
 
   <!-- Trending Threats -->
   <div id="trendingSection" style="margin:28px 0;">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
       <div style="display:flex;align-items:center;gap:8px;">
-        <span style="width:8px;height:8px;border-radius:50%;background:#ef4444;display:inline-block;box-shadow:0 0 6px #ef4444;"></span>
-        <span style="font-size:11px;font-family:'DM Mono',monospace;font-weight:600;letter-spacing:0.8px;color:#ef4444;text-transform:uppercase;">Trending Threats</span>
-        <span style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;">· last 7 days</span>
+        <span style="width:7px;height:7px;border-radius:50%;background:#ef4444;display:inline-block;animation:pulse 2s infinite;"></span>
+        <span style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:1px;color:#ef4444;text-transform:uppercase;">Trending Threats</span>
+        <span style="font-size:10px;color:var(--text-muted);font-family:'DM Mono',monospace;">· last 7 days</span>
       </div>
       <span id="trendingUpdated" style="font-size:10px;color:var(--text-muted);font-family:'DM Mono',monospace;"></span>
     </div>
-    <div id="trendingList" style="display:flex;flex-direction:column;gap:5px;">
-      <div style="color:var(--text-muted);font-size:12px;font-family:'DM Mono',monospace;padding:8px 0;">Loading...</div>
+    <div id="trendingList">
+      <div style="color:var(--text-muted);font-size:12px;padding:6px 0;font-family:'DM Mono',monospace;">Loading...</div>
     </div>
   </div>
 
@@ -680,8 +680,8 @@
           <button class="share-btn" onclick="shareReport()" id="tShareBtn">↗ Share report</button>
           <button class="btn-watchlist" id="watchlistBtn" onclick="toggleWatchlistDomain()" style="display:none;">🎯 Track this domain</button>
           <button class="btn-report" id="reportBtn" onclick="openReportModal()" style="display:none;">⚑ Report this site</button>
-          <button class="btn-download-report" id="downloadReportBtn" onclick="downloadReport()" style="display:none;">⬇ Download Report</button>
-          <button class="btn-download-report" id="downloadReportFreeBtn" onclick="upgradeToPro()" style="display:none;opacity:0.6;border-style:dashed;">🔒 Download Report <span style="font-size:11px;margin-left:4px;">Pro</span></button>
+          <button class="btn-download-report" id="downloadReportBtn" onclick="downloadReport()" style="display:none;">⬇ Download PDF Report</button>
+          <button class="btn-download-report" id="downloadReportFreeBtn" onclick="upgradeToPro()" style="display:none;opacity:0.6;border-style:dashed;">🔒 PDF Report <span style="font-size:10px;margin-left:3px;opacity:0.7;">Pro only</span></button>
         <div id="scanCountWrap" style="margin-top:8px;font-size:12px;color:var(--text-faint);font-family:'DM Mono',monospace;display:none;">
           <span id="scanCountText"></span>
         </div>
