@@ -583,16 +583,21 @@
 
   <!-- Trending Threats -->
   <div id="trendingSection" style="margin:28px 0;">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <span style="width:7px;height:7px;border-radius:50%;background:#ef4444;display:inline-block;animation:pulse 2s infinite;"></span>
-        <span style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:1px;color:#ef4444;text-transform:uppercase;">Trending Threats</span>
-        <span style="font-size:10px;color:var(--text-muted);font-family:'DM Mono',monospace;">· last 7 days</span>
+    <div style="background:linear-gradient(135deg,rgba(239,68,68,0.06),rgba(239,68,68,0.02));border:1px solid rgba(239,68,68,0.2);border-radius:14px;padding:20px 24px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="display:inline-flex;align-items:center;gap:6px;font-size:10px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:#ef4444;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);padding:3px 10px;border-radius:100px;text-transform:uppercase;">
+            <span style="width:6px;height:6px;border-radius:50%;background:#ef4444;display:inline-block;animation:pulse 2s infinite;"></span>
+            Live Threat Feed
+          </span>
+          <span style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;">last 7 days</span>
+        </div>
+        <span id="trendingUpdated" style="font-size:10px;color:var(--text-muted);font-family:'DM Mono',monospace;"></span>
       </div>
-      <span id="trendingUpdated" style="font-size:10px;color:var(--text-muted);font-family:'DM Mono',monospace;"></span>
-    </div>
-    <div id="trendingList">
-      <div style="color:var(--text-muted);font-size:12px;padding:6px 0;font-family:'DM Mono',monospace;">Loading...</div>
+      <div id="trendingList" style="display:flex;flex-direction:column;gap:4px;">
+        <div style="color:var(--text-muted);font-size:12px;font-family:'DM Mono',monospace;padding:4px 0;">Loading...</div>
+      </div>
+      <div style="margin-top:12px;font-size:11px;color:var(--text-muted);">Click any domain to scan it instantly →</div>
     </div>
   </div>
 
