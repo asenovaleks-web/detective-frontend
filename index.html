@@ -1449,7 +1449,16 @@ function showTab(tab){
       var el = document.getElementById(id);
       if(el) el.style.display = (id==="howSection"||id==="beforeAfterSection") ? "" : "none";
     });
+    // Keep scan results visible in scan tab
+    ["reportSection","errorMsg","loadingMsg"].forEach(function(id){
+      // don't hide these — they manage their own display
+    });
   } else {
+    // Hide scan results when leaving scan tab
+    ["reportSection","errorMsg","loadingMsg"].forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.style.display = "none";
+    });
     all.forEach(function(id){
       var el = document.getElementById(id);
       if(!el) return;
