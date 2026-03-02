@@ -1518,8 +1518,10 @@ function loadTrendingThreats(){
       var sc = t.count === 1 ? "1 scan" : t.count + " scans";
       rows += "<div class='threat-row " + cls + "' data-domain='" + t.domain + "' onclick='scanFromTrending(this)'>";
       rows += "<span class='threat-domain'>" + t.domain + "</span>";
+      rows += "<span class='threat-meta'>";
       rows += "<span class='threat-score " + cls + "'>" + t.score + "/100</span>";
       rows += "<span class='threat-count'>" + sc + "</span>";
+      rows += "</span>";
       rows += "</div>";
     }
     list.innerHTML = rows;
