@@ -1492,7 +1492,8 @@ function downloadReport(){
   var btn = document.getElementById("downloadReportBtn");
   if(btn){ btn.textContent = "⏳ Generating..."; btn.disabled = true; }
 
-  fetch(BACKEND + "/generate-report?domain=" + encodeURIComponent(domain), {
+  var tzOffset = -new Date().getTimezoneOffset(); // minutes, positive = ahead of UTC
+  fetch(BACKEND + "/generate-report?domain=" + encodeURIComponent(domain) + "&tz_offset=" + tzOffset, {
     headers: { "Authorization": "Bearer " + dlToken }
   })
   .then(function(r){
