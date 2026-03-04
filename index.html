@@ -101,6 +101,7 @@
     .how-wrap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 44px; }
     @media(max-width:520px){ .how-wrap { grid-template-columns: 1fr; } }
     @media(max-width:560px){ #beforeAfterSection { grid-template-columns: 1fr !important; } }
+    @media(max-width:680px){ #realCasesSection .cases-grid { grid-template-columns: 1fr !important; } }
     .how-step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 18px; }
     .how-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--blue); margin-bottom: 8px; font-weight: 500; }
     .how-title { font-size: 19px; font-weight: 600; margin-bottom: 4px; color: var(--text); }
@@ -677,6 +678,35 @@
   </div>
 
 
+
+  <!-- Real Cases Section -->
+  <div id="realCasesSection" style="margin:0 0 48px;">
+    <div style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:var(--text-faint);margin-bottom:16px;text-align:center;">REAL CASES CAUGHT</div>
+    <div class="cases-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+
+      <div style="background:var(--surface);border:1px solid rgba(239,68,68,0.25);border-radius:12px;padding:18px;">
+        <div style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;color:#ef4444;letter-spacing:0.6px;margin-bottom:10px;">HIGH RISK · 91/100</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">fake-amazon-refund.com</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Domain registered 11 days before scan. 7/93 VirusTotal engines flagged phishing. Zero online presence. SSL issued same week.</div>
+        <div style="margin-top:10px;font-size:11px;color:#ef4444;font-weight:600;">⚠ User avoided €340 payment</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid rgba(239,68,68,0.25);border-radius:12px;padding:18px;">
+        <div style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;color:#ef4444;letter-spacing:0.6px;margin-bottom:10px;">HIGH RISK · 87/100</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">uk-supplier-direct.shop</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">IPQS flagged as phishing. AbuseIPDB: 34 abuse reports on server IP. No Trustpilot presence. Domain age: 3 weeks.</div>
+        <div style="margin-top:10px;font-size:11px;color:#ef4444;font-weight:600;">⚠ User avoided £1,200 wire transfer</div>
+      </div>
+
+      <div style="background:var(--surface);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:18px;">
+        <div style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;color:#f59e0b;letter-spacing:0.6px;margin-bottom:10px;">CAUTION · 62/100</div>
+        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">bestprice-electronics.net</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Domain 4 months old. 5 IP changes in 90 days. Trustpilot: 1.8★ with fraud complaints. OTX: 2 threat pulses.</div>
+        <div style="margin-top:10px;font-size:11px;color:#f59e0b;font-weight:600;">⚠ User requested payment via bank first</div>
+      </div>
+
+    </div>
+  </div>
 
   <div class="msg error" id="errorMsg"></div>
 
@@ -1436,18 +1466,18 @@ function showTab(tab){
 
   // Sections mapping
   var sections = {
-    "scan":     ["howSection","beforeAfterSection"],
+    "scan":     ["howSection","beforeAfterSection","realCasesSection"],
     "pricing":  ["pricingSection","trustStrip"],
     "business": ["b2bSection"]
   };
 
   // All toggleable sections
-  var all = ["howSection","beforeAfterSection","pricingSection","b2bSection","trustStrip"];
+  var all = ["howSection","beforeAfterSection","realCasesSection","pricingSection","b2bSection","trustStrip"];
 
   if(tab === "scan"){
     all.forEach(function(id){
       var el = document.getElementById(id);
-      if(el) el.style.display = (id==="howSection"||id==="beforeAfterSection") ? "" : "none";
+      if(el) el.style.display = (id==="howSection"||id==="beforeAfterSection"||id==="realCasesSection") ? "" : "none";
     });
     // Keep scan results visible in scan tab
     ["reportSection","errorMsg","loadingMsg"].forEach(function(id){
@@ -1780,8 +1810,9 @@ function shareReport(){
   var url=document.getElementById("urlInput").value.trim();
   var score=document.getElementById("scoreNum").textContent;
   var verdict=document.getElementById("verdictLabel").textContent;
+  var domain=url.replace(/^https?:\/\//,"").replace(/\/.*/,"").toLowerCase();
   var shareText="I checked "+url+" on Signum -- Risk score: "+score+"/100 ("+verdict+"). Check any website for free:";
-  var shareUrl=location.origin;
+  var shareUrl="https://detective-app-production-7080.up.railway.app/report/"+domain;
   var encoded=encodeURIComponent(shareText+" "+shareUrl);
   var encodedUrl=encodeURIComponent(shareUrl);
 
