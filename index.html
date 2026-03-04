@@ -1397,7 +1397,7 @@ function upgradeToPro(){
   if(!user||!token||token==="null"){ openModal(); return; }
   var btn=document.getElementById("upgBtn");
   if(btn){ btn.textContent="..."; btn.disabled=true; }
-  fetch(BACKEND+"/create-checkout-session",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_token:token,user_email:user.email})})
+  fetch(BACKEND+"/create-checkout-session",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_token:token,user_email:user.email,plan:"pro"})})
   .then(function(r){return r.json();}).then(function(d){
     if(d.checkout_url){ window.location.href=d.checkout_url; }
     else{ alert("Could not start checkout."); if(btn){btn.textContent="Upgrade to Pro";btn.disabled=false;} }
