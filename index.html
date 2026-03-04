@@ -568,7 +568,7 @@
   </nav>
 
   <!-- Hero -->
-
+  <div id="scanHeroSection">
   <div class="hero">
     <h1 class="hero-title" id="tHeroTitle">See risks before<br/>they become <em>losses.</em></h1>
     <p class="hero-sub" id="tHeroSub">Instant AI trust intelligence on any website -- so you know what you're dealing with before you click, pay, or partner.</p>
@@ -635,6 +635,8 @@
       </div>
     </div>
   </div>
+
+  </div><!-- /scanHeroSection -->
 
   <!-- How it works -->
   <div class="how-wrap" id="howSection">
@@ -1472,12 +1474,12 @@ function showTab(tab){
   };
 
   // All toggleable sections
-  var all = ["howSection","beforeAfterSection","realCasesSection","pricingSection","b2bSection","trustStrip"];
+  var all = ["scanHeroSection","howSection","beforeAfterSection","realCasesSection","onetimeScanSection","pricingSection","b2bSection","trustStrip"];
 
   if(tab === "scan"){
     all.forEach(function(id){
       var el = document.getElementById(id);
-      if(el) el.style.display = (id==="howSection"||id==="beforeAfterSection"||id==="realCasesSection") ? "" : "none";
+      if(el) el.style.display = (id==="scanHeroSection"||id==="howSection"||id==="beforeAfterSection"||id==="realCasesSection"||id==="onetimeScanSection") ? "" : "none";
     });
     // Keep scan results visible in scan tab
     ["reportSection","errorMsg","loadingMsg"].forEach(function(id){
@@ -1500,7 +1502,7 @@ function showTab(tab){
 
 // Init: hide pricing/b2b on load (scan is default)
 document.addEventListener("DOMContentLoaded", function(){
-  ["pricingSection","b2bSection","trustStrip"].forEach(function(id){
+  ["pricingSection","b2bSection","trustStrip","onetimeScanSection"].forEach(function(id){
     var el = document.getElementById(id);
     if(el) el.style.display = "none";
   });
