@@ -1156,7 +1156,10 @@ window.addEventListener("load",function(){
   var domainParam = p.get("domain");
   updateUI();
   if(domainParam){
-    window.history.replaceState({},"",location.pathname);
+    window.history.replaceState({}, "", "?domain=" + encodeURIComponent(domainParam.trim()));
+    document.title = "Is " + domainParam.trim() + " safe? — Signum";
+    var metaDesc = document.querySelector('meta[name="description"]');
+    if(metaDesc) metaDesc.setAttribute("content", "Check if " + domainParam.trim() + " is safe, legit or a scam. Free AI-powered trust scan by Signum.");
     setTimeout(function(){
       var inp = document.getElementById("urlInput");
       if(inp){ inp.value = domainParam.trim(); }
