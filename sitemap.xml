@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://signumaiapp.com/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Popular legitimate sites people verify -->
+  <url><loc>https://signumaiapp.com/?domain=amazon.com</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://signumaiapp.com/?domain=ebay.com</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://signumaiapp.com/?domain=aliexpress.com</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://signumaiapp.com/?domain=temu.com</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://signumaiapp.com/?domain=shein.com</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://signumaiapp.com/?domain=wish.com</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://signumaiapp.com/?domain=dhgate.com</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://signumaiapp.com/?domain=etsy.com</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Crypto/fintech often searched for scams -->
+  <url><loc>https://signumaiapp.com/?domain=binance.com</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://signumaiapp.com/?domain=coinbase.com</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://signumaiapp.com/?domain=kraken.com</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://signumaiapp.com/?domain=crypto.com</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- High scam-search volume brands -->
+  <url><loc>https://signumaiapp.com/?domain=nike.com</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://signumaiapp.com/?domain=adidas.com</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://signumaiapp.com/?domain=paypal.com</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://signumaiapp.com/?domain=apple.com</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://signumaiapp.com/?domain=microsoft.com</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Known suspicious/scam-adjacent -->
+  <url><loc>https://signumaiapp.com/?domain=1xbet.com</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://signumaiapp.com/?domain=bet365.com</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://signumaiapp.com/?domain=fiverr.com</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://signumaiapp.com/?domain=upwork.com</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+</urlset>
