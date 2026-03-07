@@ -565,7 +565,7 @@
     </div>
     <div class="nav-right">
       <div id="navAuth">
-        <button class="btn-sm btn-blue" onclick="openModal()">Sign in</button>
+        <button class="btn-sm btn-blue" onclick="if(window.openModal)openModal()">Sign in</button>
       </div>
     </div>
   </nav>
@@ -865,7 +865,7 @@
           <li class="muted"><span class="fi">-</span>Targets &amp; alerts</li>
           <li class="muted"><span class="fi">-</span>Priority support</li>
         </ul>
-        <button class="plan-cta outline" onclick="openModal()">Get started free</button>
+        <button class="plan-cta outline" onclick="if(window.openModal)openModal()">Get started free</button>
       </div>
       <div class="pricing-card pro">
         <div class="popular-badge">MOST POPULAR</div>
@@ -1220,7 +1220,7 @@ function updateUI(){
           '<div class="user-dropdown-item" onclick="openWatchlist()">🎯 Targets</div>'+
           '<div class="user-dropdown-item" onclick="openChpass()">🔑 Change password</div>'+
           (plan!=="pro"?'<div class="user-dropdown-item" onclick="upgradeToPro();closeDropdown()">⭐ Upgrade to Pro</div>':'')+
-          '<div class="user-dropdown-item" onclick="showApiKey();closeDropdown()">🔑 API Key</div>+
+          '<div class="user-dropdown-item" onclick="showApiKey();closeDropdown()">🔑 API Key</div>'+
           '<div class="user-dropdown-sep"></div>'+
           '<div class="user-dropdown-item danger" onclick="sbOut()">Sign out</div>'+
         '</div>'+
