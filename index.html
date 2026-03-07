@@ -106,6 +106,10 @@
     .search-btn:disabled { opacity: 0.35; cursor: not-allowed; box-shadow: none; }
     .search-hint { margin-top: 9px; text-align: center; font-size: 14px; color: #7a8aaa; font-family: 'DM Mono', monospace; }
 
+    /* -- SUGGESTION PILLS -- */
+    .suggestion-pill { background: none; border: 1px solid var(--border); border-radius: 100px; padding: 4px 12px; font-size: 12px; font-family: 'DM Mono', monospace; color: var(--text-faint); cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .suggestion-pill:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-glow); }
+
     /* -- HOW IT WORKS -- */
     .how-wrap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 44px; }
     @media(max-width:520px){ .how-wrap { grid-template-columns: 1fr; } }
@@ -529,7 +533,7 @@
 
       <!-- Step 1 -->
       <div id="ob-step-1">
-        <div style="font-size:32px;margin-bottom:12px;text-align:center;">🛡️</div>
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
         <div style="font-size:20px;font-weight:700;letter-spacing:-0.4px;margin-bottom:10px;text-align:center;">Welcome to Signum</div>
         <div style="font-size:14px;color:var(--text-muted);line-height:1.6;text-align:center;margin-bottom:24px;">
           You now have access to AI-powered trust intelligence on any website.<br/>Let us show you how it works.
@@ -539,7 +543,7 @@
 
       <!-- Step 2 -->
       <div id="ob-step-2" style="display:none;">
-        <div style="font-size:32px;margin-bottom:12px;text-align:center;">🔍</div>
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></div>
         <div style="font-size:20px;font-weight:700;letter-spacing:-0.4px;margin-bottom:10px;text-align:center;">Scan any website</div>
         <div style="font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:16px;">
           Paste any domain into the search box — a supplier you found online, an unfamiliar shop, a crypto platform — and get an instant AI verdict.
@@ -553,7 +557,7 @@
 
       <!-- Step 3 -->
       <div id="ob-step-3" style="display:none;">
-        <div style="font-size:32px;margin-bottom:12px;text-align:center;">🎯</div>
+        <div style="width:40px;height:40px;border-radius:10px;background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div>
         <div style="font-size:20px;font-weight:700;letter-spacing:-0.4px;margin-bottom:10px;text-align:center;">Track suspicious sites</div>
         <div style="font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:16px;">
           Add any domain to your Targets list. Signum will alert you if the risk score changes — perfect for monitoring suppliers or competitors.
@@ -575,7 +579,7 @@
   <!-- Referral Modal -->
   <div class="modal-bg" id="referralModal" onclick="if(event.target===this)closeReferral()" style="z-index:400;">
     <div class="modal" style="max-width:400px;padding:28px;">
-      <div style="font-size:24px;text-align:center;margin-bottom:8px;">🎁</div>
+      <div style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:var(--blue);margin-bottom:8px;text-transform:uppercase;">Invite & Earn</div>
       <div class="modal-title" style="text-align:center;">Invite friends, earn Pro</div>
       <div class="modal-sub" style="text-align:center;margin-bottom:20px;">Share your referral link. For every 3 friends who sign up, you get 1 month of Pro free.</div>
       <div class="referral-box">
@@ -591,9 +595,9 @@
         </div>
       </div>
       <div style="margin-top:16px;display:flex;gap:8px;">
-        <a id="referralShareWA" href="#" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text-muted);text-decoration:none;">💬 WhatsApp</a>
+        <a id="referralShareWA" href="#" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text-muted);text-decoration:none;">WhatsApp</a>
         <a id="referralShareTW" href="#" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text-muted);text-decoration:none;">𝕏 Twitter</a>
-        <a id="referralShareTG" href="#" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text-muted);text-decoration:none;">✈️ Telegram</a>
+        <a id="referralShareTG" href="#" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text-muted);text-decoration:none;">Telegram</a>
       </div>
       <button onclick="closeReferral()" style="width:100%;margin-top:12px;background:none;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text-muted);font-size:13px;cursor:pointer;">Close</button>
     </div>
@@ -617,11 +621,11 @@
       <div class="modal-msg" id="resetMsg"></div>
       <div class="pass-wrap">
         <input class="modal-input" type="password" id="resetPass" placeholder="New password (min 6 characters)" />
-        <button class="pass-eye" type="button" onclick="togglePass('resetPass',this)" tabindex="-1">👁</button>
+        <button class="pass-eye" type="button" onclick="togglePass('resetPass',this)" tabindex="-1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
       <div class="pass-wrap">
         <input class="modal-input" type="password" id="resetPass2" placeholder="Confirm new password" onkeydown="if(event.key==='Enter')doReset()" />
-        <button class="pass-eye" type="button" onclick="togglePass('resetPass2',this)" tabindex="-1">👁</button>
+        <button class="pass-eye" type="button" onclick="togglePass('resetPass2',this)" tabindex="-1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
       <button class="modal-submit" id="resetBtn" onclick="doReset()">Update password</button>
     </div>
@@ -637,11 +641,11 @@
       <input class="modal-input" type="email" id="mEmail" placeholder="Email address" autocomplete="email" />
       <div class="pass-wrap">
         <input class="modal-input" type="password" id="mPass" placeholder="Password" onkeydown="if(event.key==='Enter')doAuth()" />
-        <button class="pass-eye" type="button" onclick="togglePass('mPass',this)" tabindex="-1">👁</button>
+        <button class="pass-eye" type="button" onclick="togglePass('mPass',this)" tabindex="-1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
       <div class="pass-wrap" id="mConfirmWrap" style="display:none;">
         <input class="modal-input" type="password" id="mConfirm" placeholder="Confirm password" onkeydown="if(event.key==='Enter')doAuth()" />
-        <button class="pass-eye" type="button" onclick="togglePass('mConfirm',this)" tabindex="-1">👁</button>
+        <button class="pass-eye" type="button" onclick="togglePass('mConfirm',this)" tabindex="-1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
       <button class="modal-submit" id="mBtn" onclick="doAuth()">Sign in</button>
       <div class="modal-switch" id="mSwitch">Don't have an account? <a onclick="toggleMode()">Sign up free</a></div>
@@ -668,7 +672,7 @@
     <div class="watchlist-modal">
       <div class="history-drag-handle"></div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-        <div class="history-modal-title">🎯 Targets</div>
+        <div class="history-modal-title">Targets</div>
         <button onclick="closeWatchlist()" style="background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:18px;">✕</button>
       </div>
       <div class="history-modal-sub" id="watchlistSubtitle">Domains you're tracking</div>
@@ -685,11 +689,11 @@
       <div class="modal-msg" id="chpassMsg"></div>
       <div class="pass-wrap">
         <input class="modal-input" type="password" id="chpassNew" placeholder="New password (min 6 characters)" />
-        <button class="pass-eye" type="button" onclick="togglePass('chpassNew',this)" tabindex="-1">👁</button>
+        <button class="pass-eye" type="button" onclick="togglePass('chpassNew',this)" tabindex="-1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
       <div class="pass-wrap">
         <input class="modal-input" type="password" id="chpassConfirm" placeholder="Confirm new password" onkeydown="if(event.key==='Enter')doChangePass()" />
-        <button class="pass-eye" type="button" onclick="togglePass('chpassConfirm',this)" tabindex="-1">👁</button>
+        <button class="pass-eye" type="button" onclick="togglePass('chpassConfirm',this)" tabindex="-1"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </div>
       <button class="modal-submit" id="chpassBtn" onclick="doChangePass()">Update password</button>
     </div>
@@ -746,12 +750,17 @@
     </div>
   </div>
 
-  <!-- Use Cases -->
-  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:20px 0 32px;">
-    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;">🛒 Check if a shop is legit</div>
-    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;">🤝 Vet a new business partner</div>
-    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;">🔗 Verify a link before clicking</div>
-    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:5px 14px;font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;">💸 Spot scam investment sites</div>
+  <!-- Scan Suggestions (clickable — trigger scan) -->
+  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin:18px 0 0;">
+    <span style="font-size:11px;color:var(--text-faint);font-family:'DM Mono',monospace;align-self:center;margin-right:4px;">Try:</span>
+    <button onclick="quickScan('temu.com')" class="suggestion-pill">temu.com</button>
+    <button onclick="quickScan('shein.com')" class="suggestion-pill">shein.com</button>
+    <button onclick="quickScan('binance.com')" class="suggestion-pill">binance.com</button>
+    <button onclick="quickScan('aliexpress.com')" class="suggestion-pill">aliexpress.com</button>
+    <button onclick="quickScan('bybit.com')" class="suggestion-pill">bybit.com</button>
+    <button onclick="quickScan('robinhood.com')" class="suggestion-pill">robinhood.com</button>
+    <button onclick="quickScan('wish.com')" class="suggestion-pill">wish.com</button>
+    <button onclick="quickScan('cashapp.com')" class="suggestion-pill">cashapp.com</button>
   </div>
 
 
@@ -770,23 +779,17 @@
     </div>
   </div>
 
-  <!-- Trending Threats -->
-  <div id="trendingSection" style="margin:28px 0;">
-    <div style="background:linear-gradient(135deg,rgba(239,68,68,0.06),rgba(239,68,68,0.02));border:1px solid rgba(239,68,68,0.2);border-radius:14px;padding:20px 24px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span style="display:inline-flex;align-items:center;gap:6px;font-size:10px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:#ef4444;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);padding:3px 10px;border-radius:100px;text-transform:uppercase;">
-            <span style="width:6px;height:6px;border-radius:50%;background:#ef4444;display:inline-block;animation:pulse 2s infinite;"></span>
-            Live Threat Feed
-          </span>
-          <span style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;">last 7 days</span>
-        </div>
-        <span id="trendingUpdated" style="font-size:10px;color:var(--text-muted);font-family:'DM Mono',monospace;"></span>
+  <!-- Recent Activity -->
+  <div id="trendingSection" style="margin:24px 0 0;">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <span style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:var(--text-faint);text-transform:uppercase;">Recent Checks</span>
+        <span style="display:inline-flex;align-items:center;gap:5px;font-size:10px;font-family:'DM Mono',monospace;color:var(--text-faint);">
+          <span style="width:5px;height:5px;border-radius:50%;background:var(--green);display:inline-block;animation:blink 2.5s ease-in-out infinite;box-shadow:0 0 4px var(--green);"></span>
+          live
+        </span>
       </div>
-      <div id="trendingList" style="display:flex;flex-direction:column;gap:4px;">
-        <div style="color:var(--text-muted);font-size:12px;font-family:'DM Mono',monospace;padding:4px 0;">Loading...</div>
-      </div>
-      <div style="margin-top:12px;font-size:11px;color:var(--text-muted);">Click any domain to scan it instantly →</div>
+      <div id="trendingList" style="display:flex;flex-direction:column;gap:2px;"></div>
     </div>
   </div>
 
@@ -823,19 +826,16 @@
 
 
 
-  <!-- Popular Checks SEO Section -->
-  <div id="popularChecks" style="max-width:680px;margin:40px auto 0;padding:0 16px;">
-    <h2 style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:var(--text-faint);text-transform:uppercase;margin-bottom:12px;">Popular Trust Checks</h2>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;">
-      <a href="https://signumaiapp.com/is-temu.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text-muted);text-decoration:none;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Is Temu safe?</a>
-      <a href="https://signumaiapp.com/is-shein.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text-muted);text-decoration:none;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Is Shein safe?</a>
-      <a href="https://signumaiapp.com/is-binance.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text-muted);text-decoration:none;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Is Binance safe?</a>
-      <a href="https://signumaiapp.com/is-wish.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text-muted);text-decoration:none;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Is Wish safe?</a>
-      <a href="https://signumaiapp.com/is-aliexpress.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text-muted);text-decoration:none;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Is AliExpress safe?</a>
-      <a href="https://signumaiapp.com/is-bybit.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text-muted);text-decoration:none;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Is Bybit safe?</a>
-      <a href="https://signumaiapp.com/is-cashapp.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text-muted);text-decoration:none;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Is Cash App safe?</a>
-      <a href="https://signumaiapp.com/is-robinhood.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text-muted);text-decoration:none;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Is Robinhood safe?</a>
-    </div>
+  <!-- Popular Checks (SEO only — hidden, crawlable) -->
+  <div id="popularChecks" style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
+    <a href="https://signumaiapp.com/is-temu.com-safe">Is Temu safe?</a>
+    <a href="https://signumaiapp.com/is-shein.com-safe">Is Shein safe?</a>
+    <a href="https://signumaiapp.com/is-binance.com-safe">Is Binance safe?</a>
+    <a href="https://signumaiapp.com/is-wish.com-safe">Is Wish safe?</a>
+    <a href="https://signumaiapp.com/is-aliexpress.com-safe">Is AliExpress safe?</a>
+    <a href="https://signumaiapp.com/is-bybit.com-safe">Is Bybit safe?</a>
+    <a href="https://signumaiapp.com/is-cashapp.com-safe">Is Cash App safe?</a>
+    <a href="https://signumaiapp.com/is-robinhood.com-safe">Is Robinhood safe?</a>
   </div>
 
   <!-- How it works -->
@@ -890,21 +890,21 @@
         <div style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;color:#ef4444;letter-spacing:0.6px;margin-bottom:10px;">HIGH RISK · 91/100</div>
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">fake-amazon-refund.com</div>
         <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Domain registered 11 days before scan. 7/93 VirusTotal engines flagged phishing. Zero online presence. SSL issued same week.</div>
-        <div style="margin-top:10px;font-size:11px;color:#ef4444;font-weight:600;">⚠ User avoided €340 payment</div>
+        <div style="margin-top:10px;font-size:11px;color:#ef4444;font-weight:600;">Avoided €340 payment</div>
       </div>
 
       <div style="background:var(--surface);border:1px solid rgba(239,68,68,0.25);border-radius:12px;padding:18px;">
         <div style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;color:#ef4444;letter-spacing:0.6px;margin-bottom:10px;">HIGH RISK · 87/100</div>
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">uk-supplier-direct.shop</div>
         <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">IPQS flagged as phishing. AbuseIPDB: 34 abuse reports on server IP. No Trustpilot presence. Domain age: 3 weeks.</div>
-        <div style="margin-top:10px;font-size:11px;color:#ef4444;font-weight:600;">⚠ User avoided £1,200 wire transfer</div>
+        <div style="margin-top:10px;font-size:11px;color:#ef4444;font-weight:600;">Avoided £1,200 wire transfer</div>
       </div>
 
       <div style="background:var(--surface);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:18px;">
         <div style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;color:#f59e0b;letter-spacing:0.6px;margin-bottom:10px;">CAUTION · 62/100</div>
         <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">bestprice-electronics.net</div>
         <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Domain 4 months old. 5 IP changes in 90 days. Trustpilot: 1.8★ with fraud complaints. OTX: 2 threat pulses.</div>
-        <div style="margin-top:10px;font-size:11px;color:#f59e0b;font-weight:600;">⚠ User requested payment via bank first</div>
+        <div style="margin-top:10px;font-size:11px;color:#f59e0b;font-weight:600;">Requested payment via bank first</div>
       </div>
 
     </div>
@@ -931,10 +931,10 @@
           <div class="verdict-label" id="verdictLabel">--</div>
           <div class="verdict-summary" id="verdictSummary"></div>
           <button class="share-btn" onclick="shareReport()" id="tShareBtn">↗ Share report</button>
-          <button class="btn-watchlist" id="watchlistBtn" onclick="toggleWatchlistDomain()" style="display:none;">🎯 Track this domain</button>
-          <button class="btn-report" id="reportBtn" onclick="openReportModal()" style="display:none;">Report this site</button>
-          <button class="btn-download-report" id="downloadReportBtn" onclick="downloadReport()" style="display:none;">⬇ Download PDF Report</button>
-          <button class="btn-download-report" id="downloadReportFreeBtn" onclick="upgradeToPro()" style="display:none;opacity:0.6;border-style:dashed;">🔒 PDF Report <span style="font-size:10px;margin-left:3px;opacity:0.7;">Pro only</span></button>
+          <button class="btn-watchlist" id="watchlistBtn" onclick="toggleWatchlistDomain()" style="display:none;">Track this domain</button>
+          <button class="btn-report" id="reportBtn" onclick="openReportModal()" style="display:none;">Flag this site</button>
+          <button class="btn-download-report" id="downloadReportBtn" onclick="downloadReport()" style="display:none;">Download Report</button>
+          <button class="btn-download-report" id="downloadReportFreeBtn" onclick="upgradeToPro()" style="display:none;opacity:0.6;border-style:dashed;">PDF Report <span style="font-size:10px;margin-left:3px;opacity:0.6;font-family:'DM Mono',monospace;">Pro</span></button>
         <div id="scanCountWrap" style="margin-top:8px;font-size:12px;color:var(--text-faint);font-family:'DM Mono',monospace;display:none;">
           <span id="scanCountText"></span>
         </div>
@@ -980,7 +980,7 @@
         <div id="findingsList"></div>
       </div>
       <div class="lock-overlay" id="findingsOverlay" style="display:none;">
-        <div class="lock-icon">🔒</div>
+        <div class="lock-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#7a8aaa" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
         <div class="lock-title">See the Full Intelligence Report</div>
         <div class="lock-sub">Understand exactly why this site passed — or failed — every check.</div>
         <div class="lock-features">
@@ -1210,10 +1210,10 @@
       <div id="reportDomain" style="font-family:'DM Mono',monospace;font-size:13px;font-weight:600;color:var(--blue);margin-bottom:16px;padding:8px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;"></div>
       <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:10px;letter-spacing:0.3px;">WHAT'S THE ISSUE?</div>
       <div class="report-categories">
-        <div class="report-cat" onclick="selectCategory(this,'fake_shop')"><span class="report-cat-icon">🛒</span>Fake shop</div>
-        <div class="report-cat" onclick="selectCategory(this,'phishing')"><span class="report-cat-icon">🎣</span>Phishing</div>
-        <div class="report-cat" onclick="selectCategory(this,'scam')"><span class="report-cat-icon">💸</span>Scam / Ponzi</div>
-        <div class="report-cat" onclick="selectCategory(this,'malware')"><span class="report-cat-icon">🦠</span>Malware</div>
+        <div class="report-cat" onclick="selectCategory(this,'fake_shop')">Fake shop</div>
+        <div class="report-cat" onclick="selectCategory(this,'phishing')">Phishing</div>
+        <div class="report-cat" onclick="selectCategory(this,'scam')">Scam / Ponzi</div>
+        <div class="report-cat" onclick="selectCategory(this,'malware')">Malware</div>
         <div class="report-cat" onclick="selectCategory(this,'other')" style="grid-column:span 2;"><span class="report-cat-icon">⚠️</span>Other</div>
       </div>
       <textarea class="report-textarea" id="reportDetails" placeholder="Tell us what happened (optional) -- the more detail, the better we can protect others."></textarea>
@@ -1463,12 +1463,12 @@ function updateUI(){
           '</button>';
         })()+
         '<div class="user-dropdown" id="userDropdown">'+
-          '<div class="user-dropdown-item" onclick="openHistory()">📋 Scan history</div>'+
-          '<div class="user-dropdown-item" onclick="openWatchlist()">🎯 Targets</div>'+
-          '<div class="user-dropdown-item" onclick="openChpass()">🔑 Change password</div>'+
-          (plan!=="pro"?'<div class="user-dropdown-item" onclick="upgradeToPro();closeDropdown()">⭐ Upgrade to Pro</div>':'')+
-          '<div class="user-dropdown-item" onclick="showReferral();closeDropdown()">🎁 Invite & earn</div>'+
-          '<div class="user-dropdown-item" onclick="showApiKey();closeDropdown()">🔑 API Key</div>'+
+          '<div class="user-dropdown-item" onclick="openHistory()">Scan history</div>'+
+          '<div class="user-dropdown-item" onclick="openWatchlist()">Targets</div>'+
+          '<div class="user-dropdown-item" onclick="openChpass()">Change password</div>'+
+          (plan!=="pro"?'<div class="user-dropdown-item" onclick="upgradeToPro();closeDropdown()">Upgrade to Pro</div>':'')+
+          '<div class="user-dropdown-item" onclick="showReferral();closeDropdown()">Invite &amp; earn</div>'+
+          '<div class="user-dropdown-item" onclick="showApiKey();closeDropdown()">API Key</div>'+
           '<div class="user-dropdown-sep"></div>'+
           '<div class="user-dropdown-item danger" onclick="sbOut()">Sign out</div>'+
         '</div>'+
@@ -1594,8 +1594,10 @@ function openModal(m){ if(m) mode=m; document.getElementById("authModal").classL
 function closeModal(){ document.getElementById("authModal").classList.remove("open"); }
 function togglePass(id, btn){
   var inp = document.getElementById(id);
-  if(inp.type === "password"){ inp.type = "text"; btn.textContent = "🙈"; }
-  else { inp.type = "password"; btn.textContent = "👁"; }
+  var eyeSvg='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+  var eyeOffSvg='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+  if(inp.type === "password"){ inp.type = "text"; btn.innerHTML = eyeOffSvg; }
+  else { inp.type = "password"; btn.innerHTML = eyeSvg; }
 }
 function closeAnonModal(){ document.getElementById("anonModal").classList.remove("open"); }
 function setModalMode(m){
@@ -2022,10 +2024,11 @@ function loadScamAlerts(){
         var verdict = (a.verdict || "unknown").toLowerCase();
         var cls = score >= 70 ? "danger" : score >= 40 ? "caution" : "safe";
         var color = score >= 70 ? "#f87171" : score >= 40 ? "#fbbf24" : "#34d399";
-        var icon = score >= 70 ? "🔴" : score >= 40 ? "🟡" : "🟢";
+        var dotColor = score >= 70 ? "#ef4444" : score >= 40 ? "#eab308" : "#22c55e";
+        var icon = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + dotColor + ';flex-shrink:0;margin-top:3px;box-shadow:0 0 5px ' + dotColor + '40;"></span>';
         var headline = a.headline ? "<div style=\"font-size:11px;color:var(--text-muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;\">" + a.headline.substring(0,80) + (a.headline.length>80?"...":"") + "</div>" : "";
         rows += "<div class=\"threat-row " + cls + "\" style=\"cursor:pointer;\" onclick=\"document.getElementById('urlInput').value='" + a.domain + "';showTab('scan');setTimeout(runScan,300);\"><div style=\"display:flex;align-items:center;gap:10px;\">" +
-          "<span style=\"font-size:16px;\">" + icon + "</span>" +
+          "<span style=\"display:flex;align-items:center;\">" + icon + "</span>" +
           "<div style=\"flex:1;min-width:0;\">" +
           "<div style=\"font-size:13px;font-weight:600;color:var(--text);font-family:'DM Mono',monospace;\">" + a.domain + "</div>" +
           headline +
@@ -2043,37 +2046,42 @@ function loadScamAlerts(){
 }
 
 function loadTrendingThreats(){
-  fetch(BACKEND + "/trending-threats")
+  fetch(BACKEND + "/recent-activity")
   .then(function(r){ return r.json(); })
   .then(function(data){
     var list = document.getElementById("trendingList");
-    var updated = document.getElementById("trendingUpdated");
     if(!list) return;
-    var threats = data.threats || [];
-    if(threats.length === 0){
-      list.innerHTML = "<div style='color:var(--text-muted);font-size:13px;padding:10px 0;'>No high-risk domains flagged yet this week.</div>";
+    var items = data.items || [];
+    if(items.length === 0){
+      list.innerHTML = "<div style='color:var(--text-faint);font-size:12px;font-family:\"DM Mono\",monospace;padding:4px 0;'>No recent activity yet.</div>";
       return;
     }
-    if(updated) updated.textContent = "updated just now";
     var rows = "";
-    for(var i=0; i<threats.length; i++){
-      var t = threats[i];
-      var cls = t.verdict === "RED" ? "red" : "yellow";
-      var sc = t.count === 1 ? "1 scan" : t.count + " scans";
-      rows += "<div class='threat-row " + cls + "' data-domain='" + t.domain + "' onclick='scanFromTrending(this)'>";
-      rows += "<span class='threat-domain'>" + t.domain + "</span>";
-      rows += "<span class='threat-meta'>";
-      rows += "<span class='threat-score " + cls + "'>" + t.score + "/100</span>";
-      rows += "<span class='threat-count'>" + sc + "</span>";
-      rows += "</span>";
-      rows += "</div>";
+    for(var i=0; i<items.length; i++){
+      var t = items[i];
+      var color = t.verdict === "RED" ? "var(--red)" : t.verdict === "YELLOW" ? "var(--yellow)" : "var(--green)";
+      var label = t.verdict === "RED" ? "Danger" : t.verdict === "YELLOW" ? "Caution" : "Safe";
+      rows += "<div style='display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer;' onclick='quickScan(\""+t.domain+"\")'>";
+      rows += "<span style='font-size:13px;font-family:\"DM Mono\",monospace;color:var(--text-muted);'>"+t.domain+"</span>";
+      rows += "<span style='display:flex;align-items:center;gap:8px;flex-shrink:0;'>";
+      rows += "<span style='font-size:11px;font-family:\"DM Mono\",monospace;color:"+color+";'>"+t.score+"</span>";
+      rows += "<span style='font-size:10px;font-family:\"DM Mono\",monospace;color:"+color+";font-weight:600;letter-spacing:0.4px;'>"+label.toUpperCase()+"</span>";
+      rows += "</span></div>";
     }
-    list.innerHTML = rows;
+    // Remove last border
+    list.innerHTML = rows.replace(/border-bottom:1px solid var\(--border\);([^<]*<\/div>)$/, 'border-bottom:none;$1');
   })
   .catch(function(){
     var list = document.getElementById("trendingList");
     if(list) list.innerHTML = "";
   });
+}
+
+function quickScan(domain){
+  var inp = document.getElementById("urlInput");
+  if(inp){ inp.value = domain; }
+  window.scrollTo({top: 0, behavior: "smooth"});
+  runScan();
 }
 
 function scanFromTrending(el){
@@ -2135,13 +2143,13 @@ function renderReport(r){
   if(heroTitle && heroSub){
     var d = currentDomain || r.target;
     if(r.verdict === "GREEN"){
-      heroTitle.innerHTML = "✅ <em>" + d + "</em> looks safe";
+      heroTitle.innerHTML = "<span style=\"color:var(--green);font-size:0.85em;font-family:\'DM Mono\',monospace;font-weight:700;\">SAFE</span> — <em>" + d + "</em>";
       heroSub.textContent = "Score " + r.score + "/100 — No significant threats detected.";
     } else if(r.verdict === "RED"){
-      heroTitle.innerHTML = "🔴 <em>" + d + "</em> is high risk";
+      heroTitle.innerHTML = "<span style=\"color:var(--red);font-size:0.85em;font-family:\'DM Mono\',monospace;font-weight:700;\">DANGER</span> — <em>" + d + "</em>";
       heroSub.textContent = "Score " + r.score + "/100 — Avoid this site.";
     } else {
-      heroTitle.innerHTML = "⚠️ <em>" + d + "</em> needs review";
+      heroTitle.innerHTML = "<span style=\"color:var(--yellow);font-size:0.85em;font-family:\'DM Mono\',monospace;font-weight:700;\">CAUTION</span> — <em>" + d + "</em>";
       heroSub.textContent = "Score " + r.score + "/100 — Proceed with caution.";
     }
   }
@@ -2269,7 +2277,7 @@ function renderReport(r){
   var scText = document.getElementById("scanCountText");
   var scanCount = parseInt(r.scan_count) || 0;
   if(scanCount > 1){
-    scText.textContent = "🔍 Scanned " + scanCount + " times by Signum users";
+    scText.textContent = "Scanned " + scanCount + " times by Signum users";
     scWrap.style.display = "block";
   } else {
     scWrap.style.display = "none";
@@ -2579,8 +2587,8 @@ function checkWatchlistStatus(domain){
 function updateWatchlistBtn(){
   var btn=document.getElementById("watchlistBtn");
   if(!btn)return;
-  if(isWatching){btn.textContent="🎯 Tracking -- click to remove";btn.className="btn-watchlist watching";}
-  else{btn.textContent="🎯 Track this domain";btn.className="btn-watchlist";}
+  if(isWatching){btn.textContent="Tracking — click to remove";btn.className="btn-watchlist watching";}
+  else{btn.textContent="Track this domain";btn.className="btn-watchlist";}
 }
 
 function toggleWatchlistDomain(){
