@@ -503,6 +503,61 @@
 <body>
 <div class="page">
 
+
+  <!-- Onboarding Modal -->
+  <div class="modal-bg" id="onboardingModal" style="z-index:500;">
+    <div class="modal" style="max-width:420px;padding:32px 28px;position:relative;">
+      <!-- Step indicators -->
+      <div style="display:flex;gap:6px;justify-content:center;margin-bottom:28px;">
+        <div id="ob-dot-1" style="width:8px;height:8px;border-radius:50%;background:#3b82f6;transition:all 0.2s;"></div>
+        <div id="ob-dot-2" style="width:8px;height:8px;border-radius:50%;background:var(--border2);transition:all 0.2s;"></div>
+        <div id="ob-dot-3" style="width:8px;height:8px;border-radius:50%;background:var(--border2);transition:all 0.2s;"></div>
+      </div>
+
+      <!-- Step 1 -->
+      <div id="ob-step-1">
+        <div style="font-size:32px;margin-bottom:12px;text-align:center;">🛡️</div>
+        <div style="font-size:20px;font-weight:700;letter-spacing:-0.4px;margin-bottom:10px;text-align:center;">Welcome to Signum</div>
+        <div style="font-size:14px;color:var(--text-muted);line-height:1.6;text-align:center;margin-bottom:24px;">
+          You now have access to AI-powered trust intelligence on any website.<br/>Let us show you how it works.
+        </div>
+        <button class="modal-submit" onclick="obNext(2)">Get started →</button>
+      </div>
+
+      <!-- Step 2 -->
+      <div id="ob-step-2" style="display:none;">
+        <div style="font-size:32px;margin-bottom:12px;text-align:center;">🔍</div>
+        <div style="font-size:20px;font-weight:700;letter-spacing:-0.4px;margin-bottom:10px;text-align:center;">Scan any website</div>
+        <div style="font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:16px;">
+          Paste any domain into the search box — a supplier you found online, an unfamiliar shop, a crypto platform — and get an instant AI verdict.
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-family:'DM Mono',monospace;font-size:13px;color:var(--blue);margin-bottom:24px;">
+          example: fake-amazon-refund.com<br/>
+          <span style="color:var(--red);font-size:12px;">→ Score 91/100 — DANGER</span>
+        </div>
+        <button class="modal-submit" onclick="obNext(3)">Next →</button>
+      </div>
+
+      <!-- Step 3 -->
+      <div id="ob-step-3" style="display:none;">
+        <div style="font-size:32px;margin-bottom:12px;text-align:center;">🎯</div>
+        <div style="font-size:20px;font-weight:700;letter-spacing:-0.4px;margin-bottom:10px;text-align:center;">Track suspicious sites</div>
+        <div style="font-size:14px;color:var(--text-muted);line-height:1.6;margin-bottom:16px;">
+          Add any domain to your Targets list. Signum will alert you if the risk score changes — perfect for monitoring suppliers or competitors.
+        </div>
+        <div style="background:var(--green-bg);border:1px solid var(--green-border);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--green);margin-bottom:24px;">
+          ✓ You get 3 free scans per day<br/>
+          ✓ Unlimited with Pro — €3.99/month
+        </div>
+        <button class="modal-submit" onclick="obDone()">Start scanning →</button>
+      </div>
+
+      <div style="text-align:center;margin-top:12px;">
+        <button onclick="obDone()" style="background:none;border:none;color:var(--text-muted);font-size:12px;cursor:pointer;">Skip</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Anon Limit Modal -->
   <div class="modal-bg" id="anonModal">
     <div class="modal">
@@ -1475,10 +1530,36 @@ function doAuth(){
     if(d.refresh_token) sg_set("sg_refresh",d.refresh_token);
     // Reset anon scan counter on login
     anonScans=0; localStorage.setItem("sg_anon_scans","0");
-    fetchPlan(user.id); updateUI(); closeModal();
+    fetchPlan(user.id); updateUI(); closeModal(); maybeShowOnboarding();
   }).catch(function(){ btn.disabled=false; btn.textContent=mode==="signin"?"Sign in":"Create account"; showModalMsg("That email or password does not look right. Try again.","error"); });
 }
 function showModalMsg(t,type){ var el=document.getElementById("mMsg"); el.textContent=t; el.className="modal-msg "+type+" visible"; }
+
+
+// ── Onboarding ────────────────────────────────────────────────────────────────
+function obNext(step){
+  [1,2,3].forEach(function(s){
+    document.getElementById("ob-step-"+s).style.display = s===step ? "" : "none";
+    var dot = document.getElementById("ob-dot-"+s);
+    dot.style.background = s===step ? "#3b82f6" : (s<step ? "#22c55e" : "var(--border2)");
+  });
+}
+function obDone(){
+  document.getElementById("onboardingModal").classList.remove("open");
+  sg_set("sg_onboarded","1");
+  // Focus the search box
+  var inp = document.getElementById("urlInput");
+  if(inp) setTimeout(function(){ inp.focus(); }, 200);
+}
+function maybeShowOnboarding(){
+  if(!user) return;
+  var onboarded = sg_get("sg_onboarded");
+  if(!onboarded){
+    setTimeout(function(){
+      document.getElementById("onboardingModal").classList.add("open");
+    }, 800);
+  }
+}
 
 // -- Upgrade -------------------------------------------------------------------
 function upgradeToPro(){
@@ -1765,6 +1846,7 @@ function scanFromTrending(el){
 // Load trending on page load
 document.addEventListener("DOMContentLoaded", function(){
   setTimeout(loadTrendingThreats, 800);
+  if(user) maybeShowOnboarding();
 });
 
 function buyOneScan(){
