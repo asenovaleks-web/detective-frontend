@@ -1627,7 +1627,7 @@ function loadScamAlerts(){
         var color = score >= 70 ? "#f87171" : score >= 40 ? "#fbbf24" : "#34d399";
         var icon = score >= 70 ? "🔴" : score >= 40 ? "🟡" : "🟢";
         var headline = a.headline ? "<div style=\"font-size:11px;color:var(--text-muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;\">" + a.headline.substring(0,80) + (a.headline.length>80?"...":"") + "</div>" : "";
-        rows += "<div class=\"threat-row " + cls + "\" style=\"cursor:pointer;\" onclick=\"document.getElementById('urlInput').value='" + a.domain + "';showTab('scan');runScan();\"><div style=\"display:flex;align-items:center;gap:10px;\">" +
+        rows += "<div class=\"threat-row " + cls + "\" style=\"cursor:pointer;\" onclick=\"document.getElementById('urlInput').value='" + a.domain + "';showTab('scan');setTimeout(runScan,300);\"><div style=\"display:flex;align-items:center;gap:10px;\">" +
           "<span style=\"font-size:16px;\">" + icon + "</span>" +
           "<div style=\"flex:1;min-width:0;\">" +
           "<div style=\"font-size:13px;font-weight:600;color:var(--text);font-family:'DM Mono',monospace;\">" + a.domain + "</div>" +
