@@ -282,9 +282,9 @@
     .pricing-head { text-align: center; margin-bottom: 28px; }
     .pricing-title { font-size: 26px; font-weight: 600; letter-spacing: -0.6px; margin-bottom: 6px; }
     .pricing-sub { font-size: 14px; color: var(--text-muted); }
-    .pricing-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
-    @media(max-width:1100px){ .pricing-grid { grid-template-columns: repeat(2, 1fr); } }
+    .pricing-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     @media(max-width:560px){ .pricing-grid { grid-template-columns: 1fr; } }
+    @media(max-width:560px){ .pricing-card.pro { order: -1; } }
     .pricing-card.team { border-color: #818cf8; box-shadow: inset 0 0 24px rgba(129,140,248,0.08); }
     .team-badge { display: inline-block; background: linear-gradient(135deg,#6366f1,#818cf8); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; padding: 3px 12px; border-radius: 100px; white-space: nowrap; margin-bottom: 8px; }
     .pricing-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; }
@@ -991,6 +991,19 @@
     </div>
   </div>
 
+  <!-- Save nudge for anon users -->
+  <div id="saveNudge" style="display:none;text-align:center;padding:16px 0 0;">
+    <div style="display:inline-flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 18px;">
+      <div style="font-size:13px;color:var(--text-muted);">Sign in to save this scan and track this domain</div>
+      <button onclick="openModal()" style="background:var(--blue);color:#fff;border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;flex-shrink:0;">Sign in</button>
+    </div>
+  </div>
+
+  <!-- New scan CTA — shown after result -->
+  <div id="newScanCta" style="display:none;text-align:center;padding:24px 0 8px;">
+    <button onclick="resetToNewScan()" style="background:none;border:1px solid var(--border2);border-radius:8px;padding:10px 24px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text-muted);cursor:pointer;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text-muted)'">← Scan another domain</button>
+  </div>
+
   <!-- Pricing -->
   <div class="pricing" id="pricingSection">
     <div class="pricing-head">
@@ -1015,7 +1028,7 @@
         </ul>
         <button class="plan-cta outline" onclick="if(window.openModal)openModal()">Get started free</button>
       </div>
-      <div class="pricing-card pro">
+      <div class="pricing-card pro" style="order:-1;">
         <div class="popular-badge">MOST POPULAR</div>
         <div class="plan-name">Pro</div>
         <div class="plan-price">€3.99</div>
@@ -1171,10 +1184,10 @@
 
   <!-- Trust Strip -->
   <div class="trust-strip" id="trustStrip">
-    <div class="trust-item"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0;box-shadow:0 0 6px rgba(34,197,94,0.5);"></span><span id="tT1">Encrypted scanning</span></div>
-    <div class="trust-item"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0;box-shadow:0 0 6px rgba(34,197,94,0.5);"></span><span id="tT2">Privacy focused</span></div>
-    <div class="trust-item"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0;box-shadow:0 0 6px rgba(34,197,94,0.5);"></span><span id="tT3">Real-time analysis</span></div>
-    <div class="trust-item"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0;box-shadow:0 0 6px rgba(34,197,94,0.5);"></span><span id="tT4">Global threat coverage</span></div>
+    <div class="trust-item"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0;box-shadow:0 0 6px rgba(34,197,94,0.5);"></span><span id="tT1">No data stored or sold</span></div>
+    <div class="trust-item"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0;box-shadow:0 0 6px rgba(34,197,94,0.5);"></span><span id="tT2">12+ sources checked per scan</span></div>
+    <div class="trust-item"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0;box-shadow:0 0 6px rgba(34,197,94,0.5);"></span><span id="tT3">Results in under 15 seconds</span></div>
+    <div class="trust-item"><span style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;flex-shrink:0;box-shadow:0 0 6px rgba(34,197,94,0.5);"></span><span id="tT4">Free · No account required</span></div>
   </div>
 
 
@@ -1195,7 +1208,7 @@
         <div class="report-cat" onclick="selectCategory(this,'phishing')">Phishing</div>
         <div class="report-cat" onclick="selectCategory(this,'scam')">Scam / Ponzi</div>
         <div class="report-cat" onclick="selectCategory(this,'malware')">Malware</div>
-        <div class="report-cat" onclick="selectCategory(this,'other')" style="grid-column:span 2;"><span class="report-cat-icon">⚠️</span>Other</div>
+        <div class="report-cat" onclick="selectCategory(this,'other')" style="grid-column:span 2;">Other / Not listed</div>
       </div>
       <textarea class="report-textarea" id="reportDetails" placeholder="Tell us what happened (optional) -- the more detail, the better we can protect others."></textarea>
       <div class="report-msg" id="reportMsg"></div>
@@ -1235,11 +1248,11 @@
     <div style="font-size:13px;color:#8a9bc0;margin-bottom:10px;">The intelligence layer between you and the internet.</div>
     <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
       <a href="/contact.html" style="font-size:14px;color:#8a9bc0;text-decoration:none;" onclick="window.location.href='/contact.html';return false;">Contact</a>
-      <span style="color:var(--border2);">.</span>
+      <span style="color:var(--border2);">·</span>
       <a href="/privacy.html" style="font-size:14px;color:#7a8aaa;text-decoration:none;">Privacy Policy</a>
-      <span style="color:var(--border2);">.</span>
+      <span style="color:var(--border2);">·</span>
       <a href="/terms.html" style="font-size:14px;color:#8a9bc0;text-decoration:none;">Terms of Service</a>
-      <span style="color:var(--border2);">.</span>
+      <span style="color:var(--border2);">·</span>
       <span style="font-size:14px;color:#8a9bc0;">© 2026 Signum. All rights reserved.</span>
     </div>
   </footer>
@@ -1249,7 +1262,7 @@
   <!-- Share Modal -->
   <div class="share-modal" id="shareModal" onclick="if(event.target===this)closeShare()">
     <div class="share-sheet">
-      <div class="share-sheet-title" id="tShareTitle">⚠️ Help others stay safe</div>
+      <div class="share-sheet-title" id="tShareTitle">Share this result</div>
       <div class="share-sheet-sub" id="tShareSub">--</div>
       <div class="share-platforms">
         <a class="share-platform" id="shareWhatsApp" href="#" target="_blank" rel="noopener">
@@ -1796,6 +1809,8 @@ function runScan(){
   document.getElementById("reportSection").classList.remove("visible");
   document.getElementById("errorMsg").classList.remove("visible");
   var sp = document.getElementById("suggestionPills"); if(sp) sp.style.display="none";
+  var nsc = document.getElementById("newScanCta"); if(nsc) nsc.style.display="none";
+  var nudge = document.getElementById("saveNudge"); if(nudge) nudge.style.display="none";
   ["beforeAfterSection","realCasesSection","trendingSection"].forEach(function(id){
     var el = document.getElementById(id);
     if(el) el.style.display = "none";
@@ -2074,6 +2089,21 @@ function loadTrendingThreats(){
   });
 }
 
+function resetToNewScan(){
+  var inp = document.getElementById("urlInput");
+  if(inp){ inp.value = ""; inp.focus(); }
+  document.getElementById("reportSection").classList.remove("visible");
+  var nsc = document.getElementById("newScanCta"); if(nsc) nsc.style.display = "none";
+  var sp = document.getElementById("suggestionPills"); if(sp) sp.style.display = "";
+  ["beforeAfterSection","realCasesSection","trendingSection"].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.style.display = "";
+  });
+  var ht = document.getElementById("tHeroTitle");
+  if(ht) ht.innerHTML = "Is this site safe —<br/>or are you about to get <em>scammed?</em>";
+  var nudge = document.getElementById("saveNudge"); if(nudge) nudge.style.display = "none";
+  window.scrollTo({top: 0, behavior: "smooth"});
+}
+
 async function quickScan(domain){
   var inp = document.getElementById("urlInput");
   if(inp) inp.value = domain;
@@ -2331,6 +2361,10 @@ function renderReport(r){
   }
   document.getElementById("reportSection").classList.add("visible");
   document.getElementById("reportSection").scrollIntoView({behavior:"smooth"});
+  var nsc = document.getElementById("newScanCta"); if(nsc) nsc.style.display = "";
+  // Show save nudge for anon users
+  var nudge = document.getElementById("saveNudge");
+  if(nudge) nudge.style.display = (!token) ? "" : "none";
 }
 
 function toggleRaw(){

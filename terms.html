@@ -1,143 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Terms of Service — Signum</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%233b82f6'/><polyline points='6,22 12,14 18,18 26,8' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/></svg>"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --bg: #0b0f1a; --surface: #131c2e; --border: #1e2d4a; --border2: #2a3f5f;
-      --text: #e8edf5; --text-muted: #7a8aaa; --text-faint: #3d4f6e;
-      --blue: #3b82f6;
-    }
-    body { background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--text); min-height: 100vh; font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
-    .wrap { max-width: 740px; margin: 0 auto; padding: 0 24px 80px; }
-
-    nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; border-bottom: 1px solid var(--border); margin-bottom: 56px; }
-    .logo { display: flex; align-items: center; gap: 9px; font-size: 17px; font-weight: 600; letter-spacing: -0.4px; color: var(--text); text-decoration: none; }
-    .logo-icon { width: 28px; height: 28px; background: var(--blue); border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 16px rgba(59,130,246,0.4); }
-    .back { font-size: 13px; color: var(--text-muted); text-decoration: none; transition: color 0.15s; }
-    .back:hover { color: var(--blue); }
-
-    .doc-header { margin-bottom: 48px; }
-    .doc-label { font-size: 11px; font-family: 'DM Mono', monospace; font-weight: 600; letter-spacing: 0.8px; color: var(--blue); text-transform: uppercase; margin-bottom: 12px; }
-    h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.8px; margin-bottom: 12px; }
-    .doc-meta { font-size: 13px; color: var(--text-faint); font-family: 'DM Mono', monospace; }
-
-    h2 { font-size: 18px; font-weight: 700; color: var(--text); margin: 40px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
-    p { color: var(--text-muted); margin-bottom: 14px; }
-    ul { color: var(--text-muted); padding-left: 20px; margin-bottom: 14px; }
-    li { margin-bottom: 6px; }
-    a { color: var(--blue); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    strong { color: var(--text); font-weight: 600; }
-
-    .highlight { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin: 24px 0; }
-    .highlight p { margin: 0; }
-
-    footer { margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center; font-size: 12px; color: var(--text-faint); }
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0b0f1a;--surface:#131c2e;--border:#1e2d4a;--text:#e8edf5;--muted:#7a8aaa;--faint:#3d4f6e;--blue:#3b82f6}
+    body{background:var(--bg);font-family:"DM Sans",sans-serif;color:var(--text);min-height:100vh;line-height:1.75;-webkit-font-smoothing:antialiased}
+    .page{max-width:660px;margin:0 auto;padding:0 20px 80px}
+    nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border);margin-bottom:48px}
+    .logo{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:600;color:var(--text);text-decoration:none}
+    .logo-icon{width:26px;height:26px;background:var(--blue);border-radius:6px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(59,130,246,0.4)}
+    .logo-icon svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+    .back{font-size:13px;color:var(--muted);text-decoration:none;border:1px solid var(--border);border-radius:7px;padding:6px 14px;transition:all 0.15s}
+    .back:hover{border-color:var(--blue);color:var(--blue)}
+    .label{font-size:10px;font-family:"DM Mono",monospace;font-weight:700;letter-spacing:1px;color:var(--faint);text-transform:uppercase;margin-bottom:12px}
+    h1{font-size:clamp(24px,4vw,32px);font-weight:600;letter-spacing:-0.8px;margin-bottom:6px}
+    .updated{font-size:12px;font-family:"DM Mono",monospace;color:var(--faint);margin-bottom:36px}
+    h2{font-size:15px;font-weight:600;color:var(--text);margin:32px 0 10px}
+    p{font-size:15px;color:var(--muted);margin-bottom:12px}
+    ul{padding-left:18px;margin-bottom:12px}
+    li{font-size:15px;color:var(--muted);margin-bottom:6px}
+    a{color:var(--blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+    footer{margin-top:56px;padding-top:24px;border-top:1px solid var(--border);text-align:center;font-size:13px;color:var(--faint)}
+    footer a{color:var(--faint)}
+    footer a:hover{color:var(--blue)}
   </style>
 </head>
-<body>
-<div class="wrap">
-
+<body><div class="page">
   <nav>
-    <a href="/" class="logo">
-      <div class="logo-icon">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L14 5.5V10.5L8 14L2 10.5V5.5L8 2Z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/><circle cx="8" cy="8" r="2" fill="#fff"/></svg>
-      </div>
-      Signum
-    </a>
-    <a href="/" class="back">← Back to Signum</a>
+    <a href="/" class="logo"><div class="logo-icon"><svg viewBox="0 0 15 15"><polyline points="2,11 5,7 8,9 13,3"/></svg></div>Signum</a>
+    <a href="/" class="back">← Back</a>
   </nav>
+  <div class="label">Legal</div>
+  <h1>Terms of Service</h1>
+  <div class="updated">Last updated: January 2026</div>
 
-  <div class="doc-header">
-    <div class="doc-label">Legal</div>
-    <h1>Terms of Service</h1>
-    <div class="doc-meta">Last updated: February 28, 2026 · Effective: February 28, 2026</div>
-  </div>
+  <h2>1. Acceptance</h2>
+  <p>By using Signum ("the Service"), you agree to these Terms. If you do not agree, do not use the Service.</p>
 
-  <div class="highlight">
-    <p><strong>The short version:</strong> Use Signum lawfully and honestly. Don't abuse the platform. Our risk scores are informational — not guarantees. Pay for what you use. We can suspend accounts that violate these terms.</p>
-  </div>
+  <h2>2. What Signum does</h2>
+  <p>Signum provides domain trust and scam detection intelligence. Scan results are based on publicly available data and automated analysis. They are provided for informational purposes only and do not constitute legal, financial, or security advice.</p>
 
-  <h2>1. Acceptance of Terms</h2>
-  <p>By accessing or using Signum ("the Service") at <a href="https://signumaiapp.com">signumaiapp.com</a>, you agree to be bound by these Terms of Service. If you do not agree, do not use the Service.</p>
-  <p>We reserve the right to update these Terms at any time. Continued use of the Service after changes constitutes acceptance.</p>
+  <h2>3. Accuracy and limitations</h2>
+  <p>While we strive for accuracy, Signum does not guarantee that any scan result is complete, current, or error-free. A "Safe" verdict is not a guarantee that a site is free from risk. You are responsible for your own decisions based on the information provided.</p>
 
-  <h2>2. Description of Service</h2>
-  <p>Signum is a website trust intelligence platform that analyzes domains and provides risk scores, threat assessments, and intelligence reports. The Service is intended to help users make more informed decisions about websites and online entities.</p>
-  <p><strong>Important:</strong> Signum's assessments are informational only. They do not constitute legal, financial, or security advice. Risk scores are probabilistic estimates based on available data — not definitive determinations of safety or legality.</p>
-
-  <h2>3. User Accounts</h2>
-  <p>To access certain features, you must create an account. You agree to:</p>
+  <h2>4. Acceptable use</h2>
+  <p>You agree not to:</p>
   <ul>
-    <li>Provide accurate and complete registration information</li>
-    <li>Maintain the security of your password</li>
-    <li>Notify us immediately of any unauthorized access to your account</li>
-    <li>Be responsible for all activity that occurs under your account</li>
-  </ul>
-  <p>We reserve the right to suspend or terminate accounts that violate these Terms.</p>
-
-  <h2>4. Acceptable Use</h2>
-  <p>You agree not to use Signum to:</p>
-  <ul>
-    <li>Violate any applicable law or regulation</li>
-    <li>Harass, defame, or harm individuals or businesses without factual basis</li>
-    <li>Submit false or misleading site reports</li>
-    <li>Attempt to reverse-engineer, scrape, or extract data from the Service at scale</li>
-    <li>Circumvent rate limits, scan quotas, or other technical restrictions</li>
-    <li>Use the Service to facilitate fraud, phishing, or other malicious activity</li>
-    <li>Resell or redistribute the Service's outputs without permission</li>
+    <li>Use the Service to scan domains for malicious purposes</li>
+    <li>Attempt to reverse-engineer, scrape, or overload our systems</li>
+    <li>Misrepresent scan results or share them out of context to deceive others</li>
+    <li>Use the API in ways that exceed your plan's rate limits</li>
   </ul>
 
-  <h2>5. Subscriptions and Payments</h2>
-  <p>Signum offers free and paid subscription plans. Paid plans are billed monthly or annually as selected at checkout.</p>
-  <ul>
-    <li><strong>Free plan:</strong> Limited scans per day. No payment required.</li>
-    <li><strong>Pro plan (€3.99/month):</strong> Full AI analysis, unlimited scans, targets, and alerts.</li>
-    <li><strong>Team plan (€19.99/month):</strong> Up to 5 seats, shared targets, team history.</li>
-  </ul>
-  <p>All payments are processed by Stripe. By subscribing, you authorize us to charge your payment method on a recurring basis until you cancel.</p>
-  <p><strong>Cancellation:</strong> You may cancel at any time from your account settings. Access continues until the end of the current billing period. We do not offer refunds for partial periods.</p>
+  <h2>5. Accounts and subscriptions</h2>
+  <p>Free accounts are provided as-is with no guarantees of availability. Paid plans are billed monthly via Stripe. You may cancel at any time; cancellation takes effect at the end of the billing period. We do not offer refunds for partial months.</p>
 
-  <h2>6. Site Reports</h2>
-  <p>When you submit a site report, you represent that your report is made in good faith and based on genuine concern. We reserve the right to review, act on, or disregard reports at our discretion. We do not guarantee any action will be taken as a result of a report.</p>
-  <p>Submitting false, malicious, or defamatory reports is prohibited and may result in account suspension.</p>
+  <h2>6. Intellectual property</h2>
+  <p>All content, code, and branding on Signum is owned by Signum. Scan results returned via the API may be used within your own products in accordance with your plan, but may not be resold as a standalone intelligence service.</p>
 
-  <h2>7. Disclaimer of Warranties</h2>
-  <p>The Service is provided "as is" and "as available" without warranties of any kind, express or implied. We do not warrant that:</p>
-  <ul>
-    <li>The Service will be uninterrupted or error-free</li>
-    <li>Risk scores or assessments will be accurate or complete</li>
-    <li>The Service will meet your specific requirements</li>
-  </ul>
-  <p>Use of the Service is at your own risk. Signum is not liable for any decisions made based on its assessments.</p>
+  <h2>7. Limitation of liability</h2>
+  <p>To the maximum extent permitted by law, Signum is not liable for any indirect, incidental, or consequential damages arising from your use of the Service, including financial losses resulting from decisions made based on scan results.</p>
 
-  <h2>8. Limitation of Liability</h2>
-  <p>To the maximum extent permitted by law, Signum shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including loss of profits, data, or business opportunities, arising from your use of the Service.</p>
-  <p>Our total liability to you for any claims arising from these Terms or the Service shall not exceed the amount you paid us in the 12 months preceding the claim.</p>
+  <h2>8. Changes</h2>
+  <p>We may update these Terms from time to time. Continued use of the Service after changes constitutes acceptance. Material changes will be communicated via email to registered users.</p>
 
-  <h2>9. Intellectual Property</h2>
-  <p>All content, software, and technology comprising the Service is the property of Signum and protected by applicable intellectual property laws. You may not copy, reproduce, or distribute any part of the Service without our express written permission.</p>
-  <p>You retain ownership of any content you submit (such as site report details). By submitting content, you grant us a non-exclusive license to use it to operate and improve the Service.</p>
+  <h2>9. Contact</h2>
+  <p>Questions about these Terms? Contact us at <a href="mailto:legal@signumaiapp.com">legal@signumaiapp.com</a>.</p>
 
-  <h2>10. Termination</h2>
-  <p>We may suspend or terminate your access to the Service at any time, with or without notice, if we believe you have violated these Terms or for any other legitimate business reason. Upon termination, your right to use the Service ceases immediately.</p>
-
-  <h2>11. Governing Law</h2>
-  <p>These Terms are governed by and construed in accordance with the laws of the Republic of Bulgaria, without regard to conflict of law principles. Any disputes shall be subject to the exclusive jurisdiction of the courts located in Bulgaria.</p>
-
-  <h2>12. Contact</h2>
-  <p>For questions about these Terms, contact us at:<br>
-  <a href="mailto:hello@signumaiapp.com">hello@signumaiapp.com</a></p>
-
-  <footer>
-    <p>© 2026 Signum. All rights reserved. · <a href="/privacy.html">Privacy Policy</a> · <a href="/terms.html">Terms of Service</a> · <a href="/">Back to Signum</a></p>
-  </footer>
-
-</div>
-</body>
-</html>
+  <footer>© 2026 Signum · <a href="/privacy.html">Privacy</a> · <a href="/contact.html">Contact</a></footer>
+</div></body></html>
