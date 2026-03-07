@@ -176,6 +176,19 @@
     /* Share btn */
     .share-btn { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; background: none; border: 1px solid var(--border2); border-radius: 7px; padding: 7px 14px; font-size: 12px; font-family: 'DM Sans', sans-serif; color: var(--text-muted); cursor: pointer; transition: all 0.15s; font-weight: 500; }
     .share-btn:hover { border-color: var(--blue); color: var(--blue); }
+
+    /* Referral */
+    .referral-box { background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(139,92,246,0.08)); border: 1px solid rgba(59,130,246,0.25); border-radius: 12px; padding: 16px 18px; margin-top: 12px; }
+    .referral-box-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .referral-box-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 12px; line-height: 1.5; }
+    .referral-link-row { display: flex; gap: 6px; align-items: center; }
+    .referral-link-input { flex: 1; background: var(--surface2); border: 1px solid var(--border); border-radius: 7px; padding: 7px 10px; font-size: 12px; color: var(--text-muted); font-family: 'DM Mono', monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .referral-copy-btn { background: var(--blue); color: #fff; border: none; border-radius: 7px; padding: 7px 12px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; transition: opacity 0.15s; }
+    .referral-copy-btn:hover { opacity: 0.85; }
+    .referral-stats { display: flex; gap: 16px; margin-top: 10px; }
+    .referral-stat { font-size: 12px; color: var(--text-muted); }
+    .referral-stat strong { color: var(--blue); font-size: 15px; display: block; }
+
     .share-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 300; display: none; align-items: flex-end; justify-content: center; padding: 20px; }
     .share-modal.open { display: flex; }
     @media(min-width:520px){ .share-modal { align-items: center; } }
@@ -555,6 +568,34 @@
       <div style="text-align:center;margin-top:12px;">
         <button onclick="obDone()" style="background:none;border:none;color:var(--text-muted);font-size:12px;cursor:pointer;">Skip</button>
       </div>
+    </div>
+  </div>
+
+
+  <!-- Referral Modal -->
+  <div class="modal-bg" id="referralModal" onclick="if(event.target===this)closeReferral()" style="z-index:400;">
+    <div class="modal" style="max-width:400px;padding:28px;">
+      <div style="font-size:24px;text-align:center;margin-bottom:8px;">🎁</div>
+      <div class="modal-title" style="text-align:center;">Invite friends, earn Pro</div>
+      <div class="modal-sub" style="text-align:center;margin-bottom:20px;">Share your referral link. For every 3 friends who sign up, you get 1 month of Pro free.</div>
+      <div class="referral-box">
+        <div class="referral-box-title">Your referral link</div>
+        <div class="referral-box-sub">Every signup via your link is tracked automatically.</div>
+        <div class="referral-link-row">
+          <div class="referral-link-input" id="referralLinkDisplay"></div>
+          <button class="referral-copy-btn" id="referralCopyBtn" onclick="copyReferralLink()">Copy</button>
+        </div>
+        <div class="referral-stats">
+          <div class="referral-stat"><strong id="referralCount">—</strong>Signups</div>
+          <div class="referral-stat"><strong id="referralMonths">—</strong>Months earned</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;display:flex;gap:8px;">
+        <a id="referralShareWA" href="#" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text-muted);text-decoration:none;">💬 WhatsApp</a>
+        <a id="referralShareTW" href="#" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text-muted);text-decoration:none;">𝕏 Twitter</a>
+        <a id="referralShareTG" href="#" target="_blank" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:9px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:12px;color:var(--text-muted);text-decoration:none;">✈️ Telegram</a>
+      </div>
+      <button onclick="closeReferral()" style="width:100%;margin-top:12px;background:none;border:1px solid var(--border);border-radius:8px;padding:9px;color:var(--text-muted);font-size:13px;cursor:pointer;">Close</button>
     </div>
   </div>
 
@@ -1326,6 +1367,7 @@ function updateUI(){
           '<div class="user-dropdown-item" onclick="openWatchlist()">🎯 Targets</div>'+
           '<div class="user-dropdown-item" onclick="openChpass()">🔑 Change password</div>'+
           (plan!=="pro"?'<div class="user-dropdown-item" onclick="upgradeToPro();closeDropdown()">⭐ Upgrade to Pro</div>':'')+
+          '<div class="user-dropdown-item" onclick="showReferral();closeDropdown()">🎁 Invite & earn</div>'+
           '<div class="user-dropdown-item" onclick="showApiKey();closeDropdown()">🔑 API Key</div>'+
           '<div class="user-dropdown-sep"></div>'+
           '<div class="user-dropdown-item danger" onclick="sbOut()">Sign out</div>'+
@@ -1531,10 +1573,76 @@ function doAuth(){
     // Reset anon scan counter on login
     anonScans=0; localStorage.setItem("sg_anon_scans","0");
     fetchPlan(user.id); updateUI(); closeModal(); maybeShowOnboarding();
+    // Track referral — if someone signed up via ref link, credit the referrer
+    if(mode==="signup"){
+      var storedRef = sg_get("sg_ref");
+      if(storedRef && user && user.id){
+        fetch(SB_URL+"/rest/v1/rpc/increment_referral", {
+          method: "POST",
+          headers: {"apikey": SB_KEY, "Content-Type": "application/json"},
+          body: JSON.stringify({referral_code: storedRef})
+        }).catch(function(){});
+        sg_set("sg_ref", ""); // Clear after use
+      }
+    }
   }).catch(function(){ btn.disabled=false; btn.textContent=mode==="signin"?"Sign in":"Create account"; showModalMsg("That email or password does not look right. Try again.","error"); });
 }
 function showModalMsg(t,type){ var el=document.getElementById("mMsg"); el.textContent=t; el.className="modal-msg "+type+" visible"; }
 
+
+
+// ── Referral ─────────────────────────────────────────────────────────────────
+function getReferralCode(){
+  if(!user) return null;
+  // Use first 8 chars of user ID as referral code
+  return user.id.replace(/-/g,"").substring(0,8).toUpperCase();
+}
+function getReferralLink(){
+  var code = getReferralCode();
+  return "https://signumaiapp.com/?ref=" + code;
+}
+function showReferral(){
+  if(!user){ openModal(); return; }
+  var link = getReferralLink();
+  document.getElementById("referralLinkDisplay").textContent = link;
+  var msg = encodeURIComponent("Check any website before you pay — is it legit or a scam? I use Signum: " + link);
+  document.getElementById("referralShareWA").href = "https://wa.me/?text=" + msg;
+  document.getElementById("referralShareTW").href = "https://twitter.com/intent/tweet?text=" + msg;
+  document.getElementById("referralShareTG").href = "https://t.me/share/url?url=" + encodeURIComponent(link) + "&text=" + encodeURIComponent("Check any website before you pay — is it legit or a scam? I use Signum");
+  // Fetch referral count from Supabase
+  fetch(SB_URL+"/rest/v1/profiles?select=referral_count&id=eq."+user.id, {
+    headers: {"apikey": SB_KEY, "Authorization": "Bearer "+token}
+  }).then(function(r){ return r.json(); }).then(function(d){
+    var count = (d && d[0] && d[0].referral_count) || 0;
+    document.getElementById("referralCount").textContent = count;
+    document.getElementById("referralMonths").textContent = Math.floor(count/3);
+  }).catch(function(){ 
+    document.getElementById("referralCount").textContent = "0";
+    document.getElementById("referralMonths").textContent = "0";
+  });
+  document.getElementById("referralModal").classList.add("open");
+}
+function closeReferral(){
+  document.getElementById("referralModal").classList.remove("open");
+}
+function copyReferralLink(){
+  var link = getReferralLink();
+  var btn = document.getElementById("referralCopyBtn");
+  navigator.clipboard.writeText(link).then(function(){
+    btn.textContent = "Copied!";
+    setTimeout(function(){ btn.textContent = "Copy"; }, 2000);
+  }).catch(function(){
+    btn.textContent = "Copied!";
+    setTimeout(function(){ btn.textContent = "Copy"; }, 2000);
+  });
+}
+// Track referral on signup — read ?ref= param
+function trackReferral(){
+  var params = new URLSearchParams(window.location.search);
+  var ref = params.get("ref");
+  if(ref) sg_set("sg_ref", ref);
+}
+trackReferral();
 
 // ── Onboarding ────────────────────────────────────────────────────────────────
 function obNext(step){
