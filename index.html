@@ -1519,10 +1519,11 @@ function showTab(tab){
       var el = document.getElementById(id);
       if(el) el.style.display = (id==="scanHeroSection"||id==="howSection"||id==="beforeAfterSection"||id==="realCasesSection"||id==="onetimeScanSection") ? "" : "none";
     });
-    // Keep scan results visible in scan tab
-    ["reportSection","errorMsg","loadingMsg"].forEach(function(id){
-      // don't hide these — they manage their own display
-    });
+    // Restore reportSection — let CSS class control visibility
+    var rep = document.getElementById("reportSection");
+    if(rep) rep.style.display = "";
+    var err = document.getElementById("errorMsg");
+    if(err) err.style.display = "";
   } else {
     // Hide scan results when leaving scan tab
     ["reportSection","errorMsg","loadingMsg"].forEach(function(id){
