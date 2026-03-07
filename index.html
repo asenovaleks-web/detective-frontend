@@ -275,9 +275,9 @@
     .pricing-head { text-align: center; margin-bottom: 28px; }
     .pricing-title { font-size: 26px; font-weight: 600; letter-spacing: -0.6px; margin-bottom: 6px; }
     .pricing-sub { font-size: 14px; color: var(--text-muted); }
-    .pricing-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .pricing-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
     @media(max-width:1100px){ .pricing-grid { grid-template-columns: repeat(2, 1fr); } }
-    @media(max-width:560px){ .pricing-grid { grid-template-columns: 1fr; }
+    @media(max-width:560px){ .pricing-grid { grid-template-columns: 1fr; } }
     .pricing-card.team { border-color: #818cf8; box-shadow: inset 0 0 24px rgba(129,140,248,0.08); }
     .team-badge { display: inline-block; background: linear-gradient(135deg,#6366f1,#818cf8); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; padding: 3px 12px; border-radius: 100px; white-space: nowrap; margin-bottom: 8px; }
     .pricing-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; }
@@ -301,7 +301,7 @@
 
     /* -- MODAL -- */
     .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
-    .modal-bg.open { display: flex !important; }
+    .modal-bg.open { display: flex; }
     .modal { background: var(--surface2); border: 1px solid var(--border2); border-radius: 16px; padding: 32px; width: 100%; max-width: 380px; box-shadow: 0 32px 80px rgba(0,0,0,0.5); position: relative; animation: mIn 0.2s ease; }
     @keyframes mIn { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:none} }
     .modal-x { position: absolute; top: 14px; right: 14px; background: none; border: none; color: var(--text-faint); font-size: 18px; cursor: pointer; width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
@@ -458,7 +458,6 @@
       .history-item { flex-wrap: wrap; gap: 6px; }
       .history-date { width: 100%; }
       /* Pricing */
-      .pricing-grid { grid-template-columns: 1fr; }
       .pricing { margin-top: 40px; padding-top: 36px; }
       /* Share */
       .share-platforms { grid-template-columns: repeat(3, 1fr); }
@@ -519,7 +518,7 @@
 
 
   <!-- Onboarding Modal -->
-  <div class="modal-bg" id="onboardingModal" style="display:none;z-index:500;">
+  <div class="modal-bg" id="onboardingModal" style="z-index:500;">
     <div class="modal" style="max-width:420px;padding:32px 28px;position:relative;">
       <!-- Step indicators -->
       <div style="display:flex;gap:6px;justify-content:center;margin-bottom:28px;">
@@ -574,7 +573,7 @@
 
 
   <!-- Referral Modal -->
-  <div class="modal-bg" id="referralModal" onclick="if(event.target===this)closeReferral()" style="display:none;z-index:400;">
+  <div class="modal-bg" id="referralModal" onclick="if(event.target===this)closeReferral()" style="z-index:400;">
     <div class="modal" style="max-width:400px;padding:28px;">
       <div style="font-size:24px;text-align:center;margin-bottom:8px;">🎁</div>
       <div class="modal-title" style="text-align:center;">Invite friends, earn Pro</div>
@@ -601,7 +600,7 @@
   </div>
 
   <!-- Anon Limit Modal -->
-  <div class="modal-bg" style="display:none;" id="anonModal">
+  <div class="modal-bg" id="anonModal">
     <div class="modal">
       <div class="modal-title">Free account required</div>
       <div class="modal-sub" style="margin-bottom:20px;">You've used your free scan. Create a free account to scan any website -- no credit card needed.</div>
@@ -611,7 +610,7 @@
   </div>
 
   <!-- Password Reset Modal -->
-  <div class="modal-bg" style="display:none;" id="resetModal">
+  <div class="modal-bg" id="resetModal">
     <div class="modal">
       <div class="modal-title">Set new password</div>
       <div class="modal-sub">Enter your new password below.</div>
@@ -629,7 +628,7 @@
   </div>
 
   <!-- Modal -->
-  <div class="modal-bg" style="display:none;" id="authModal">
+  <div class="modal-bg" id="authModal">
     <div class="modal">
       <button class="modal-x" onclick="closeModal()">✕</button>
       <div class="modal-title" id="mTitle">Sign in</div>
