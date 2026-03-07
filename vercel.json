@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/is-:domain-safe",
+      "destination": "https://detective-app-production-7080.up.railway.app/is-:domain-safe"
+    },
+    {
+      "source": "/sitemap-domains.xml",
+      "destination": "https://detective-app-production-7080.up.railway.app/sitemap-domains.xml"
+    }
+  ]
+}
