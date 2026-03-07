@@ -558,10 +558,10 @@
       Signum
     </a>
     <div class="nav-tabs" id="navTabs">
-      <button class="nav-tab active" onclick="showTab('scan')" id="tab-scan">Scan</button>
-      <button class="nav-tab" onclick="showTab('pricing')" id="tab-pricing">Pricing</button>
-      <button class="nav-tab" onclick="showTab('business')" id="tab-business">For Business</button>
-      <button class="nav-tab" onclick="showTab('alerts')" id="tab-alerts">⚠ Scam Alerts</button>
+      <button class="nav-tab active" onclick="if(window.showTab)showTab('scan')" id="tab-scan">Scan</button>
+      <button class="nav-tab" onclick="if(window.showTab)showTab('pricing')" id="tab-pricing">Pricing</button>
+      <button class="nav-tab" onclick="if(window.showTab)showTab('business')" id="tab-business">For Business</button>
+      <button class="nav-tab" onclick="if(window.showTab)showTab('alerts')" id="tab-alerts">⚠ Scam Alerts</button>
     </div>
     <div class="nav-right">
       <div id="navAuth">
