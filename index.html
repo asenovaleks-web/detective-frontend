@@ -561,6 +561,7 @@
       <button class="nav-tab active" onclick="showTab('scan')" id="tab-scan">Scan</button>
       <button class="nav-tab" onclick="showTab('pricing')" id="tab-pricing">Pricing</button>
       <button class="nav-tab" onclick="showTab('business')" id="tab-business">For Business</button>
+      <button class="nav-tab" onclick="showTab('alerts')" id="tab-alerts">⚠ Scam Alerts</button>
     </div>
     <div class="nav-right">
       <div id="navAuth">
@@ -657,6 +658,18 @@
   </div>
 
   </div><!-- /scanHeroSection -->
+
+  <!-- Scam Alerts Section -->
+  <div id="scamAlertsSection" style="display:none; max-width:680px; margin:32px auto; padding:0 16px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <h2 style="font-size:18px;font-weight:700;letter-spacing:-0.4px;color:var(--text);">⚠ Recent Scam Alerts</h2>
+      <span id="alertsUpdated" style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;"></span>
+    </div>
+    <div id="alertsList" style="display:flex;flex-direction:column;gap:8px;">
+      <div style="color:var(--text-muted);font-size:14px;text-align:center;padding:32px;">Loading alerts...</div>
+    </div>
+  </div>
+
 
   <!-- How it works -->
   <div class="how-wrap" id="howSection">
@@ -1484,7 +1497,7 @@ function showMsg(id, msg){
 
 function showTab(tab){
   // Update active tab
-  ["scan","pricing","business"].forEach(function(t){
+  ["scan","pricing","business","alerts"].forEach(function(t){
     var el = document.getElementById("tab-"+t);
     if(el) el.classList.toggle("active", t===tab);
   });
@@ -1493,11 +1506,12 @@ function showTab(tab){
   var sections = {
     "scan":     ["howSection","beforeAfterSection","realCasesSection"],
     "pricing":  ["pricingSection","trustStrip"],
-    "business": ["b2bSection"]
+    "business": ["b2bSection"],
+    "alerts":   ["scamAlertsSection"]
   };
 
   // All toggleable sections
-  var all = ["scanHeroSection","howSection","beforeAfterSection","realCasesSection","onetimeScanSection","pricingSection","b2bSection","trustStrip"];
+  var all = ["scanHeroSection","howSection","beforeAfterSection","realCasesSection","onetimeScanSection","pricingSection","b2bSection","trustStrip","scamAlertsSection"];
 
   if(tab === "scan"){
     all.forEach(function(id){
@@ -1517,7 +1531,8 @@ function showTab(tab){
     all.forEach(function(id){
       var el = document.getElementById(id);
       if(!el) return;
-      var show = sections[tab] && sections[tab].indexOf(id) >= 0;
+      if(tab==="alerts") setTimeout(loadScamAlerts, 100);
+  var show = sections[tab] && sections[tab].indexOf(id) >= 0;
       el.style.display = show ? "" : "none";
     });
   }
@@ -1577,6 +1592,44 @@ function downloadReport(){
       alert("Could not generate report: " + err.message);
     }
   });
+}
+
+
+function loadScamAlerts(){
+  fetch(BACKEND + "/scam-alerts?limit=20")
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var list = document.getElementById("alertsList");
+      var updated = document.getElementById("alertsUpdated");
+      if(updated) updated.textContent = "Updated " + new Date().toLocaleTimeString();
+      if(!data.alerts || data.alerts.length === 0){
+        list.innerHTML = "<div style=\"color:var(--text-muted);font-size:14px;text-align:center;padding:32px;\">No alerts yet — scanner runs every 6 hours.</div>";
+        return;
+      }
+      var rows = "";
+      data.alerts.forEach(function(a){
+        var score = a.risk_score || 0;
+        var verdict = (a.verdict || "unknown").toLowerCase();
+        var cls = score >= 70 ? "danger" : score >= 40 ? "caution" : "safe";
+        var color = score >= 70 ? "#f87171" : score >= 40 ? "#fbbf24" : "#34d399";
+        var icon = score >= 70 ? "🔴" : score >= 40 ? "🟡" : "🟢";
+        var headline = a.headline ? "<div style=\"font-size:11px;color:var(--text-muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;\">" + a.headline.substring(0,80) + (a.headline.length>80?"...":"") + "</div>" : "";
+        rows += "<div class=\"threat-row " + cls + "\" style=\"cursor:pointer;\" onclick=\"document.getElementById('urlInput').value='" + a.domain + "';showTab('scan');runScan();\"><div style=\"display:flex;align-items:center;gap:10px;\">" +
+          "<span style=\"font-size:16px;\">" + icon + "</span>" +
+          "<div style=\"flex:1;min-width:0;\">" +
+          "<div style=\"font-size:13px;font-weight:600;color:var(--text);font-family:'DM Mono',monospace;\">" + a.domain + "</div>" +
+          headline +
+          "</div>" +
+          "<div style=\"text-align:right;flex-shrink:0;\">" +
+          "<div style=\"font-size:14px;font-weight:700;color:" + color + ";\">" + score + "</div>" +
+          "<div style=\"font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;\">" + verdict + "</div>" +
+          "</div></div></div>";
+      });
+      list.innerHTML = rows;
+    })
+    .catch(function(){ 
+      document.getElementById("alertsList").innerHTML = "<div style=\"color:var(--text-muted);font-size:14px;text-align:center;padding:32px;\">Could not load alerts.</div>";
+    });
 }
 
 function loadTrendingThreats(){
