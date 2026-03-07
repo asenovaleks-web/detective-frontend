@@ -1814,7 +1814,10 @@ function runScan(){
   }
   document.getElementById("reportSection").classList.remove("visible");
   document.getElementById("errorMsg").classList.remove("visible");
-  document.getElementById("howSection").style.display="none";
+  ["howSection","beforeAfterSection","realCasesSection","trendingSection"].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.style.display = "none";
+  });
   var sw=document.getElementById("statusWrap"), st=document.getElementById("statusText");
   sw.classList.add("visible");
   var steps=["Looking up this domain...","Checking who owns it and when it appeared...","Searching threat databases...","Looking for red flags in the infrastructure...","Checking if anyone has reported this site...","Scanning for malware and phishing signals...","Looking for reviews and reputation history...","Cross-checking against global scam lists...","Taking a closer look at the live site...","Our AI is reading all the signals...","Putting it all together..."], i=0;
@@ -1873,10 +1876,21 @@ function showTab(tab){
   var all = ["scanHeroSection","howSection","beforeAfterSection","realCasesSection","onetimeScanSection","pricingSection","b2bSection","trustStrip","scamAlertsSection","apiSection"];
 
   if(tab === "scan"){
+    var hasResult = document.getElementById("reportSection").classList.contains("visible");
     all.forEach(function(id){
       var el = document.getElementById(id);
-      if(el) el.style.display = (id==="scanHeroSection"||id==="howSection"||id==="beforeAfterSection"||id==="realCasesSection"||id==="onetimeScanSection") ? "" : "none";
+      if(!el) return;
+      if(id === "scanHeroSection") { el.style.display = ""; return; }
+      if(id === "onetimeScanSection") { el.style.display = (isPro || hasResult) ? "none" : ""; return; }
+      // howSection, beforeAfterSection, realCasesSection, trendingSection — only show if no scan result
+      if(id === "howSection" || id === "beforeAfterSection" || id === "realCasesSection") {
+        el.style.display = hasResult ? "none" : "";
+        return;
+      }
+      el.style.display = "none";
     });
+    var trend = document.getElementById("trendingSection");
+    if(trend) trend.style.display = hasResult ? "none" : "";
     // Restore reportSection — let CSS class control visibility
     var rep = document.getElementById("reportSection");
     if(rep) rep.style.display = "";
@@ -2077,10 +2091,31 @@ function loadTrendingThreats(){
   });
 }
 
-function quickScan(domain){
+async function quickScan(domain){
   var inp = document.getElementById("urlInput");
-  if(inp){ inp.value = domain; }
+  if(inp) inp.value = domain;
   window.scrollTo({top: 0, behavior: "smooth"});
+  // Try SEO cache first (no auth needed) — instant for pre-scanned domains
+  try {
+    var r = await fetch(BACKEND + "/is-" + domain + "-safe", {headers:{"Accept":"application/json"}});
+    if(r.ok){
+      var cached = await r.json();
+      if(cached && cached.score !== undefined){ renderReport(cached); return; }
+    }
+  } catch(e){}
+  // Try user scan-result cache
+  if(token){
+    try {
+      var r2 = await fetch(BACKEND + "/scan-result?domain=" + encodeURIComponent(domain), {
+        headers:{"Authorization":"Bearer "+token}
+      });
+      if(r2.ok){
+        var cached2 = await r2.json();
+        if(cached2 && cached2.score !== undefined){ renderReport(cached2); return; }
+      }
+    } catch(e){}
+  }
+  // No cache — full scan
   runScan();
 }
 
