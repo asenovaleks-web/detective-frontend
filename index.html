@@ -276,7 +276,8 @@
     .pricing-title { font-size: 26px; font-weight: 600; letter-spacing: -0.6px; margin-bottom: 6px; }
     .pricing-sub { font-size: 14px; color: var(--text-muted); }
     .pricing-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-    @media(max-width:840px){ .pricing-grid { grid-template-columns: 1fr; } }
+    @media(max-width:1100px){ .pricing-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media(max-width:560px){ .pricing-grid { grid-template-columns: 1fr; }
     .pricing-card.team { border-color: #818cf8; box-shadow: inset 0 0 24px rgba(129,140,248,0.08); }
     .team-badge { display: inline-block; background: linear-gradient(135deg,#6366f1,#818cf8); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.8px; padding: 3px 12px; border-radius: 100px; white-space: nowrap; margin-bottom: 8px; }
     .pricing-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 24px; }
@@ -998,7 +999,7 @@
       <p class="pricing-sub">More than peace of mind.</p>
     </div>
     <div class="pricing-grid">
-      <div class="pricing-card">
+      <div class="pricing-card" style="border-color:#475569;">
         <div class="plan-name">Free</div>
         <div class="plan-price">€0</div>
         <div class="plan-period">forever</div>
@@ -1057,7 +1058,7 @@
         </ul>
         <button class="plan-cta" style="width:100%;padding:12px;border-radius:8px;border:1px solid #818cf8;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(129,140,248,0.1));color:#a5b4fc;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s;" onclick="openTeamContact()">Get Team access →</button>
       </div>
-    </div>
+ 
       <div class="pricing-card" style="border-color:#10b981;box-shadow:inset 0 0 24px rgba(16,185,129,0.08);">
         <div class="team-badge" style="background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.3);color:#10b981;">FOR DEVELOPERS</div>
         <div class="plan-name">API</div>
@@ -1078,6 +1079,7 @@
         </ul>
         <button class="plan-cta" style="width:100%;padding:12px;border-radius:8px;border:1px solid #10b981;background:linear-gradient(135deg,rgba(16,185,129,0.15),rgba(16,185,129,0.08));color:#6ee7b7;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s;" onclick="showTab('api')">View API docs →</button>
       </div>
+   </div>
     <div class="pricing-note">Cancel anytime . Billed monthly . No hidden fees . Team plan billed annually</div>
   </div>
 
