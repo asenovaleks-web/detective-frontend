@@ -707,7 +707,7 @@
       <button class="nav-tab active" onclick="if(window.showTab)showTab('scan')" id="tab-scan">Scan</button>
       <button class="nav-tab" onclick="if(window.showTab)showTab('pricing')" id="tab-pricing">Pricing</button>
       <button class="nav-tab" onclick="if(window.showTab)showTab('business')" id="tab-business">For Business</button>
-      <button class="nav-tab" onclick="if(window.showTab)showTab('alerts')" id="tab-alerts">⚠ Scam Alerts</button>
+      <button class="nav-tab" onclick="if(window.showTab)showTab('alerts')" id="tab-alerts">Scam Alerts</button>
       <button class="nav-tab" onclick="if(window.showTab)showTab('api')" id="tab-api">API</button>
     </div>
     <button class="mobile-menu-btn" onclick="toggleMobileNav()">☰ Menu</button>
@@ -721,24 +721,27 @@
   <!-- Hero -->
   <div id="scanHeroSection">
   <div class="hero">
-    <h1 class="hero-title" id="tHeroTitle">Before you pay —<br/>know if the site is <em>real.</em></h1>
-    <p class="hero-sub" id="tHeroSub">$10B lost to online scams last year. Signum scans any website in seconds and tells you exactly what you're dealing with.</p>
-    <div id="statsBar" style="display:flex;justify-content:center;gap:20px;margin-top:24px;flex-wrap:wrap;">
+    <h1 class="hero-title" id="tHeroTitle">Is this site safe —<br/>or are you about to get <em>scammed?</em></h1>
+    <p class="hero-sub" id="tHeroSub">Paste any URL. Get an AI-powered trust verdict in seconds. Know before you click, pay, or share your data.</p>
+    <div id="statsBar" style="display:flex;justify-content:center;gap:28px;margin-top:28px;flex-wrap:wrap;">
       <div style="text-align:center;">
-        <div style="font-size:22px;font-weight:700;color:#e2e8f0;letter-spacing:-0.5px;">$10B+</div>
-        <div style="font-size:12px;color:#8a9bc0;margin-top:2px;">lost to scams yearly</div>
+        <div style="font-size:24px;font-weight:700;color:var(--text);letter-spacing:-0.8px;">$10.3B</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;font-family:'DM Mono',monospace;">lost to online scams in 2023</div>
       </div>
+      <div style="width:1px;background:var(--border);flex-shrink:0;"></div>
       <div style="text-align:center;">
-        <div style="font-size:22px;font-weight:700;color:#e2e8f0;letter-spacing:-0.5px;">12+</div>
-        <div style="font-size:12px;color:#8a9bc0;margin-top:2px;">threat sources checked</div>
+        <div style="font-size:24px;font-weight:700;color:var(--text);letter-spacing:-0.8px;">12+</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;font-family:'DM Mono',monospace;">threat databases checked</div>
       </div>
+      <div style="width:1px;background:var(--border);flex-shrink:0;"></div>
       <div style="text-align:center;">
-        <div style="font-size:22px;font-weight:700;color:#e2e8f0;letter-spacing:-0.5px;">&lt;15s</div>
-        <div style="font-size:12px;color:#8a9bc0;margin-top:2px;">average scan time</div>
+        <div style="font-size:24px;font-weight:700;color:var(--text);letter-spacing:-0.8px;">&lt;15s</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;font-family:'DM Mono',monospace;">average scan time</div>
       </div>
+      <div style="width:1px;background:var(--border);flex-shrink:0;"></div>
       <div style="text-align:center;">
-        <div style="font-size:22px;font-weight:700;color:#e2e8f0;letter-spacing:-0.5px;">Free</div>
-        <div style="font-size:12px;color:#8a9bc0;margin-top:2px;">no account needed</div>
+        <div style="font-size:24px;font-weight:700;color:var(--green);letter-spacing:-0.8px;">Free</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;font-family:'DM Mono',monospace;">no account needed</div>
       </div>
     </div>
   </div>
@@ -761,7 +764,7 @@
       <input class="search-input" type="text" id="urlInput" placeholder="e.g. amazon.com" onkeydown="if(event.key==='Enter')runScan()" />
       <button class="search-btn" id="scanBtn" onclick="runScan()">Analyze</button>
     </div>
-    <div class="search-hint" id="tHint">Free to try . No account required . Results in seconds</div>
+    <div class="search-hint" id="tHint">Free · No account needed · Results in seconds</div>
     <div class="status-wrap" id="statusWrap" style="margin-top:12px;margin-bottom:0;">
       <div class="status-inner"><div class="spinner"></div><div class="status-text" id="statusText">Initializing...</div></div>
     </div>
@@ -790,11 +793,11 @@
   <!-- One-Time Scan CTA (always visible) -->
   <div id="onetimeScanSection" style="margin:32px 0;">
     <div style="background:linear-gradient(135deg,rgba(245,158,11,0.06),rgba(245,158,11,0.02));border:1px solid rgba(245,158,11,0.2);border-radius:14px;padding:24px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
-      <div style="flex:1;min-width:200px;">
-        <div style="display:inline-flex;align-items:center;gap:6px;font-size:10px;font-family:'DM Mono',monospace;font-weight:600;letter-spacing:0.8px;color:#f59e0b;margin-bottom:8px;">ONE-TIME REPORT</div>
-        <div style="font-size:17px;font-weight:700;margin-bottom:4px;">Just need one check?</div>
-        <div style="font-size:13px;color:var(--text-muted);">Full 2-page PDF report · No account · Delivered instantly</div>
-      </div>
+        <div style="flex:1;min-width:200px;">
+          <div style="display:inline-flex;align-items:center;gap:6px;font-size:10px;font-family:'DM Mono',monospace;font-weight:600;letter-spacing:0.8px;color:#f59e0b;margin-bottom:8px;text-transform:uppercase;">One-Time Report</div>
+          <div style="font-size:17px;font-weight:700;margin-bottom:4px;">Just need one deep scan?</div>
+          <div style="font-size:13px;color:var(--text-muted);">Full 2-page PDF report · Instant delivery · No account required</div>
+        </div>
       <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
         <input type="text" id="onetimeDomain" placeholder="e.g. suspicious-shop.com" style="width:220px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='var(--border2)'"/>
         <div style="text-align:center;">
@@ -810,7 +813,7 @@
   <!-- Scam Alerts Section -->
   <div id="scamAlertsSection" style="display:none; max-width:680px; margin:32px auto; padding:0 16px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-      <h2 style="font-size:18px;font-weight:700;letter-spacing:-0.4px;color:var(--text);">⚠ Recent Scam Alerts</h2>
+      <h2 style="font-size:18px;font-weight:700;letter-spacing:-0.4px;color:var(--text);">Recent Scam Alerts</h2>
       <span id="alertsUpdated" style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;"></span>
     </div>
     <div id="alertsList" style="display:flex;flex-direction:column;gap:8px;">
@@ -822,16 +825,16 @@
 
   <!-- Popular Checks SEO Section -->
   <div id="popularChecks" style="max-width:680px;margin:40px auto 0;padding:0 16px;">
-    <h2 style="font-size:14px;font-weight:700;letter-spacing:0.5px;color:#475569;margin-bottom:14px;">POPULAR TRUST CHECKS</h2>
+    <h2 style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:var(--text-faint);text-transform:uppercase;margin-bottom:12px;">Popular Trust Checks</h2>
     <div style="display:flex;flex-wrap:wrap;gap:8px;">
-      <a href="https://detective-app-production-7080.up.railway.app/is-temu.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text-muted);text-decoration:none;">Is Temu safe?</a>
-      <a href="https://detective-app-production-7080.up.railway.app/is-shein.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text-muted);text-decoration:none;">Is Shein safe?</a>
-      <a href="https://detective-app-production-7080.up.railway.app/is-binance.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text-muted);text-decoration:none;">Is Binance safe?</a>
-      <a href="https://detective-app-production-7080.up.railway.app/is-wish.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text-muted);text-decoration:none;">Is Wish safe?</a>
-      <a href="https://detective-app-production-7080.up.railway.app/is-aliexpress.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text-muted);text-decoration:none;">Is AliExpress safe?</a>
-      <a href="https://detective-app-production-7080.up.railway.app/is-bybit.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text-muted);text-decoration:none;">Is Bybit safe?</a>
-      <a href="https://detective-app-production-7080.up.railway.app/is-cashapp.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text-muted);text-decoration:none;">Is Cash App safe?</a>
-      <a href="https://detective-app-production-7080.up.railway.app/is-robinhood.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text-muted);text-decoration:none;">Is Robinhood safe?</a>
+      <a href="https://signumaiapp.com/is-temu.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text-muted);text-decoration:none;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Is Temu safe?</a>
+      <a href="https://signumaiapp.com/is-shein.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text-muted);text-decoration:none;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Is Shein safe?</a>
+      <a href="https://signumaiapp.com/is-binance.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text-muted);text-decoration:none;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Is Binance safe?</a>
+      <a href="https://signumaiapp.com/is-wish.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text-muted);text-decoration:none;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Is Wish safe?</a>
+      <a href="https://signumaiapp.com/is-aliexpress.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text-muted);text-decoration:none;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Is AliExpress safe?</a>
+      <a href="https://signumaiapp.com/is-bybit.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text-muted);text-decoration:none;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Is Bybit safe?</a>
+      <a href="https://signumaiapp.com/is-cashapp.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text-muted);text-decoration:none;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Is Cash App safe?</a>
+      <a href="https://signumaiapp.com/is-robinhood.com-safe" style="font-size:13px;padding:6px 12px;background:var(--surface);border:1px solid var(--border);border-radius:100px;color:var(--text-muted);text-decoration:none;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">Is Robinhood safe?</a>
     </div>
   </div>
 
@@ -839,18 +842,18 @@
   <div class="how-wrap" id="howSection">
     <div class="how-step">
       <div class="how-num">01</div>
-      <div class="how-title" id="tH1">Scan any domain</div>
-      <div class="how-sub" id="tH1s">Any site, any time. A shop you found online, a link someone sent you, a vendor you're about to pay.</div>
+      <div class="how-title" id="tH1">Paste any URL</div>
+      <div class="how-sub" id="tH1s">A shop you found on social media, a link someone sent you, a vendor asking for payment. Anything.</div>
     </div>
     <div class="how-step">
       <div class="how-num">02</div>
-      <div class="how-title" id="tH2">Deep intelligence</div>
-      <div class="how-sub" id="tH2s">We run every scan through multiple threat databases, AI analysis, and live infrastructure checks -- so you get the full picture instantly.</div>
+      <div class="how-title" id="tH2">We run 12+ checks</div>
+      <div class="how-sub" id="tH2s">Threat databases, WHOIS records, SSL certificates, IP reputation, VirusTotal, AI analysis — all in parallel.</div>
     </div>
     <div class="how-step">
       <div class="how-num">03</div>
-      <div class="how-title" id="tH3">Know in seconds</div>
-      <div class="how-sub" id="tH3s">Safe, caution, or danger -- with the reasoning behind it. No technical knowledge needed.</div>
+      <div class="how-title" id="tH3">You get a verdict</div>
+      <div class="how-sub" id="tH3s">Safe, Caution, or Danger — with the exact reasons. No guesswork. No technical knowledge needed.</div>
     </div>
   </div>
 
@@ -858,20 +861,20 @@
   <div style="margin:48px 0;display:grid;grid-template-columns:1fr 1fr;gap:12px;" id="beforeAfterSection">
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;">
       <div style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:var(--text-faint);margin-bottom:16px;">WITHOUT SIGNUM</div>
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#ef4444;font-size:18px;">✗</span> Unknown risk -- trust your gut</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#ef4444;font-size:18px;">✗</span> Manual Google search -- 20 minutes</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#ef4444;font-size:18px;">✗</span> Trust your gut — and hope for the best</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#ef4444;font-size:18px;">✗</span> 20 minutes of inconclusive Googling</div>
         <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#ef4444;font-size:18px;">✗</span> No visibility into threat history</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#ef4444;font-size:18px;">✗</span> Find out too late -- after the loss</div>
-      </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#ef4444;font-size:18px;">✗</span> Find out you were scammed — after the fact</div>
+        </div>
     </div>
     <div style="background:var(--surface);border:1px solid rgba(59,130,246,0.3);border-radius:12px;padding:24px;box-shadow:0 0 20px rgba(59,130,246,0.06);">
       <div style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:var(--blue);margin-bottom:16px;">WITH SIGNUM</div>
       <div style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#22c55e;font-size:18px;">✓</span> Full risk picture -- AI-powered</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#22c55e;font-size:18px;">✓</span> Results in seconds -- not hours</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#22c55e;font-size:18px;">✓</span> 12 intelligence sources checked</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#22c55e;font-size:18px;">✓</span> Know before you click, pay, or partner</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#22c55e;font-size:18px;">✓</span> Full risk picture — AI-powered verdict</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#22c55e;font-size:18px;">✓</span> Verdict in &lt;15 seconds, not &lt;15 hours</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#22c55e;font-size:18px;">✓</span> 12 intelligence sources, checked in parallel</div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#22c55e;font-size:18px;">✓</span> Know before you click, pay, or share data</div>
       </div>
     </div>
   </div>
@@ -929,7 +932,7 @@
           <div class="verdict-summary" id="verdictSummary"></div>
           <button class="share-btn" onclick="shareReport()" id="tShareBtn">↗ Share report</button>
           <button class="btn-watchlist" id="watchlistBtn" onclick="toggleWatchlistDomain()" style="display:none;">🎯 Track this domain</button>
-          <button class="btn-report" id="reportBtn" onclick="openReportModal()" style="display:none;">⚑ Report this site</button>
+          <button class="btn-report" id="reportBtn" onclick="openReportModal()" style="display:none;">Report this site</button>
           <button class="btn-download-report" id="downloadReportBtn" onclick="downloadReport()" style="display:none;">⬇ Download PDF Report</button>
           <button class="btn-download-report" id="downloadReportFreeBtn" onclick="upgradeToPro()" style="display:none;opacity:0.6;border-style:dashed;">🔒 PDF Report <span style="font-size:10px;margin-left:3px;opacity:0.7;">Pro only</span></button>
         <div id="scanCountWrap" style="margin-top:8px;font-size:12px;color:var(--text-faint);font-family:'DM Mono',monospace;display:none;">
@@ -978,16 +981,16 @@
       </div>
       <div class="lock-overlay" id="findingsOverlay" style="display:none;">
         <div class="lock-icon">🔒</div>
-        <div class="lock-title">Unlock Full Intelligence Report</div>
-        <div class="lock-sub">See exactly why this site is risky -- or safe.</div>
+        <div class="lock-title">See the Full Intelligence Report</div>
+        <div class="lock-sub">Understand exactly why this site passed — or failed — every check.</div>
         <div class="lock-features">
-          <div class="lock-feature">Complete AI threat analysis</div>
-          <div class="lock-feature">20 intelligence source breakdown</div>
-          <div class="lock-feature">Malicious code scanner</div>
-          <div class="lock-feature">Scan history &amp; targets</div>
+          <div class="lock-feature">Full AI threat narrative</div>
+          <div class="lock-feature">12+ source breakdown with details</div>
+          <div class="lock-feature">Raw WHOIS, IP & malware data</div>
+          <div class="lock-feature">Scan history & domain tracking</div>
         </div>
-        <button class="lock-btn" onclick="upgradeToPro()">Upgrade to Pro -- €3.99/month</button>
-        <div style="font-size:13px;color:#8a9bc0;font-weight:500;margin-top:6px;">Cheaper than being scammed . Cancel anytime</div>
+        <button class="lock-btn" onclick="upgradeToPro()">Unlock Pro — €3.99/month</button>
+        <div style="font-size:12px;color:#8a9bc0;font-weight:500;margin-top:6px;">Cheaper than being scammed · Cancel anytime</div>
       </div>
     </div>
 
@@ -1202,7 +1205,7 @@
     <div class="report-modal">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
         <div>
-          <div class="report-modal-title">⚑ Report this site</div>
+          <div class="report-modal-title">Report this site</div>
           <div class="report-modal-sub">Help protect others. Reports go directly to our team for review.</div>
         </div>
         <button onclick="closeReportModal()" style="background:none;border:none;cursor:pointer;color:var(--text-faint);font-size:18px;padding:4px;">✕</button>
@@ -1251,7 +1254,7 @@
       </div>
       <span style="font-size:14px;font-weight:600;color:var(--text-muted);">Signum</span>
     </div>
-    <div style="font-size:14px;color:#8a9bc0;margin-bottom:10px;">Building the global trust infrastructure of the internet.</div>
+    <div style="font-size:13px;color:#8a9bc0;margin-bottom:10px;">The intelligence layer between you and the internet.</div>
     <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
       <a href="/contact.html" style="font-size:14px;color:#8a9bc0;text-decoration:none;" onclick="window.location.href='/contact.html';return false;">Contact</a>
       <span style="color:var(--border2);">.</span>
@@ -1956,13 +1959,35 @@ function downloadReport(){
 
 function showApiKey(){
   if(!user) return;
-  fetch(BACKEND+"/api-key", {headers:{"Authorization":"Bearer "+(localStorage.getItem("sg_token")||"")}})
+  fetch(BACKEND+"/api-key", {headers:{"Authorization":"Bearer "+(sg_get("sg_token")||"")}})
     .then(function(r){ return r.json(); })
     .then(function(d){
       var key = d.api_key || "Not available";
-      alert("Your API Key:\n\n" + key + "\n\nUse this with POST /api/check to integrate Signum.");
+      // Show in a proper UI overlay instead of alert()
+      var existing = document.getElementById("apiKeyOverlay");
+      if(existing) existing.remove();
+      var overlay = document.createElement("div");
+      overlay.id = "apiKeyOverlay";
+      overlay.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(8px);z-index:400;display:flex;align-items:center;justify-content:center;padding:20px;";
+      overlay.innerHTML = '<div style="background:var(--surface2);border:1px solid var(--border2);border-radius:16px;padding:28px;width:100%;max-width:420px;box-shadow:0 32px 80px rgba(0,0,0,0.5);">'+
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">'+
+          '<div style="font-size:16px;font-weight:600;color:var(--text);">Your API Key</div>'+
+          '<button onclick="document.getElementById(\'apiKeyOverlay\').remove()" style="background:none;border:none;color:var(--text-faint);font-size:18px;cursor:pointer;width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;">✕</button>'+
+        '</div>'+
+        '<p style="font-size:13px;color:var(--text-muted);margin-bottom:20px;">Use this key with <code style="font-family:\'DM Mono\',monospace;background:var(--surface);padding:2px 6px;border-radius:4px;font-size:12px;">POST /api/check</code> to integrate Signum.</p>'+
+        '<div style="display:flex;gap:8px;">'+
+          '<input id="apiKeyValue" readonly value="'+key+'" style="flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--text-muted);font-family:\'DM Mono\',monospace;outline:none;" />'+
+          '<button onclick="navigator.clipboard.writeText(\''+key+'\').then(function(){var b=document.getElementById(\'apiCopyBtn\');b.textContent=\'Copied!\';setTimeout(function(){b.textContent=\'Copy\';},2000);})" id="apiCopyBtn" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:\'DM Sans\',sans-serif;">Copy</button>'+
+        '</div>'+
+        '<div style="margin-top:16px;font-size:12px;color:var(--text-faint);">Keep this secret. Do not expose it in client-side code.</div>'+
+      '</div>';
+      overlay.addEventListener("click", function(e){ if(e.target===overlay) overlay.remove(); });
+      document.body.appendChild(overlay);
     })
-    .catch(function(){ alert("Could not load API key."); });
+    .catch(function(){ 
+      var msg = document.getElementById("successMsg");
+      if(msg){ msg.textContent = "Could not load API key. Try again."; msg.classList.add("visible"); setTimeout(function(){ msg.classList.remove("visible"); }, 4000); }
+    });
 }
 
 
@@ -2730,11 +2755,11 @@ if(typeof Tawk_API !== 'undefined'){
   <!-- Mobile Nav Drawer -->
   <div class="mobile-nav-drawer" id="mobileNavDrawer">
     <div style="width:40px;height:4px;background:var(--border2);border-radius:4px;margin:0 auto 16px;"></div>
-    <button class="mobile-nav-item" onclick="showTab('scan');closeMobileNav()">🔍 Scan</button>
-    <button class="mobile-nav-item" onclick="showTab('alerts');closeMobileNav()">⚠️ Scam Alerts</button>
-    <button class="mobile-nav-item" onclick="showTab('pricing');closeMobileNav()">💳 Pricing</button>
-    <button class="mobile-nav-item" onclick="showTab('business');closeMobileNav()">🏢 For Business</button>
-    <button class="mobile-nav-item" onclick="showTab('api');closeMobileNav()">🔌 API</button>
+    <button class="mobile-nav-item" onclick="showTab('scan');closeMobileNav()">Scan</button>
+    <button class="mobile-nav-item" onclick="showTab('alerts');closeMobileNav()">Scam Alerts</button>
+    <button class="mobile-nav-item" onclick="showTab('pricing');closeMobileNav()">Pricing</button>
+    <button class="mobile-nav-item" onclick="showTab('business');closeMobileNav()">For Business</button>
+    <button class="mobile-nav-item" onclick="showTab('api');closeMobileNav()">API</button>
   </div>
 </body>
 </html>
