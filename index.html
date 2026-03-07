@@ -837,14 +837,6 @@
     <a href="https://signumaiapp.com/is-cashapp.com-safe">Is Cash App safe?</a>
     <a href="https://signumaiapp.com/is-robinhood.com-safe">Is Robinhood safe?</a>
   </div>
-
-  <!-- How it works -->
-  <div class="how-wrap" id="howSection">
-    <div class="how-step">
-      <div class="how-num">01</div>
-      <div class="how-title" id="tH1">Paste any URL</div>
-      <div class="how-sub" id="tH1s">A shop you found on social media, a link someone sent you, a vendor asking for payment. Anything.</div>
-    </div>
     <div class="how-step">
       <div class="how-num">02</div>
       <div class="how-title" id="tH2">We run 12+ checks</div>
@@ -1814,7 +1806,7 @@ function runScan(){
   }
   document.getElementById("reportSection").classList.remove("visible");
   document.getElementById("errorMsg").classList.remove("visible");
-  ["howSection","beforeAfterSection","realCasesSection","trendingSection"].forEach(function(id){
+  ["beforeAfterSection","realCasesSection","trendingSection"].forEach(function(id){
     var el = document.getElementById(id);
     if(el) el.style.display = "none";
   });
@@ -1865,7 +1857,7 @@ function showTab(tab){
 
   // Sections mapping
   var sections = {
-    "scan":     ["howSection","beforeAfterSection","realCasesSection"],
+    "scan":     ["beforeAfterSection","realCasesSection"],
     "pricing":  ["pricingSection","trustStrip"],
     "business": ["b2bSection"],
     "alerts":   ["scamAlertsSection"],
@@ -1873,7 +1865,7 @@ function showTab(tab){
   };
 
   // All toggleable sections
-  var all = ["scanHeroSection","howSection","beforeAfterSection","realCasesSection","onetimeScanSection","pricingSection","b2bSection","trustStrip","scamAlertsSection","apiSection"];
+  var all = ["scanHeroSection","beforeAfterSection","realCasesSection","onetimeScanSection","pricingSection","b2bSection","trustStrip","scamAlertsSection","apiSection"];
 
   if(tab === "scan"){
     var hasResult = document.getElementById("reportSection").classList.contains("visible");
@@ -1883,7 +1875,7 @@ function showTab(tab){
       if(id === "scanHeroSection") { el.style.display = ""; return; }
       if(id === "onetimeScanSection") { el.style.display = (isPro || hasResult) ? "none" : ""; return; }
       // howSection, beforeAfterSection, realCasesSection, trendingSection — only show if no scan result
-      if(id === "howSection" || id === "beforeAfterSection" || id === "realCasesSection") {
+      if(id === "beforeAfterSection" || id === "realCasesSection") {
         el.style.display = hasResult ? "none" : "";
         return;
       }
