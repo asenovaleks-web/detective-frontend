@@ -1446,6 +1446,12 @@ function runScan(){
   var url=document.getElementById("urlInput").value.trim();
   if(!url) return;
 
+  // Reset hero to default state
+  var heroTitle = document.getElementById("tHeroTitle");
+  var heroSub = document.getElementById("tHeroSub");
+  if(heroTitle) heroTitle.innerHTML = "Before you pay —<br/>know if the site is <em>real.</em>";
+  if(heroSub) heroSub.textContent = "$10B lost to online scams last year. Signum scans any website in seconds and tells you exactly what you're dealing with.";
+
   // Enforce anon limit -- 1 free scan without account
   if(!user){
     if(anonScans >= 1){
@@ -1731,6 +1737,23 @@ function renderReport(r){
     if(rawTarget && !rawTarget.startsWith("http")) rawTarget = "https://"+rawTarget;
     currentDomain = new URL(rawTarget).hostname.replace(/^www\./, "");
   } catch(e){ currentDomain = rawTarget.split("/")[0].split("?")[0]; }
+
+  // ── Update hero state based on verdict ──────────────────────────────
+  var heroTitle = document.getElementById("tHeroTitle");
+  var heroSub = document.getElementById("tHeroSub");
+  if(heroTitle && heroSub){
+    var d = currentDomain || r.target;
+    if(r.verdict === "GREEN"){
+      heroTitle.innerHTML = "✅ <em>" + d + "</em> looks safe";
+      heroSub.textContent = "Score " + r.score + "/100 — No significant threats detected.";
+    } else if(r.verdict === "RED"){
+      heroTitle.innerHTML = "🔴 <em>" + d + "</em> is high risk";
+      heroSub.textContent = "Score " + r.score + "/100 — Avoid this site.";
+    } else {
+      heroTitle.innerHTML = "⚠️ <em>" + d + "</em> needs review";
+      heroSub.textContent = "Score " + r.score + "/100 — Proceed with caution.";
+    }
+  }
   var card=document.getElementById("verdictCard");
   card.className="verdict-card "+r.verdict;
   // Force colors via JS to ensure cross-platform consistency (iOS/Android)
