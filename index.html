@@ -59,7 +59,16 @@
     .nav-tab { background: none; border: none; padding: 6px 12px; font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-radius: 7px; transition: all 0.15s; font-family: "DM Sans", sans-serif; white-space: nowrap; }
     .nav-tab:hover { color: var(--text); background: var(--surface2); }
     .nav-tab.active { color: var(--blue); background: var(--blue-glow); }
-    @media(max-width:640px){ .nav-tabs { display: none; } }
+    @media(max-width:640px){ 
+      .nav-tabs { display: flex !important; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; max-width: calc(100vw - 120px); }
+      .nav-tabs::-webkit-scrollbar { display: none; }
+      .mobile-menu-btn { display: none !important; }
+    }
+    .mobile-menu-btn { display: none; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; color: var(--text-muted); font-size: 13px; align-items: center; gap: 6px; }
+    .mobile-nav-drawer { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border2); padding: 12px 16px 28px; z-index: 200; border-radius: 16px 16px 0 0; box-shadow: 0 -8px 32px rgba(0,0,0,0.4); }
+    .mobile-nav-drawer.open { display: block; animation: slideUp 0.2s ease; }
+    .mobile-nav-item { display: block; width: 100%; text-align: left; background: none; border: none; padding: 14px 12px; font-size: 15px; font-family: 'DM Sans', sans-serif; color: var(--text); cursor: pointer; border-radius: 8px; transition: background 0.15s; }
+    .mobile-nav-item:hover { background: var(--surface2); }
 
     .btn-sm { padding: 7px 16px; border-radius: 7px; font-size: 13px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.15s; border: none; }
     .btn-outline { background: none; border: 1px solid var(--border2) !important; color: var(--text-muted); }
@@ -416,7 +425,7 @@
       .user-dropdown { right: 0; min-width: 165px; }
       /* Hero */
       .hero-title { letter-spacing: -0.8px; }
-      .hero-sub { font-size: 19px; }
+      .hero-sub { font-size: 16px; max-width: 100%; }
       /* Search */
       .search-box { padding: 6px 6px 6px 14px; }
       .search-input { font-size: 16px; }
@@ -445,6 +454,47 @@
       /* How it works - already handles via 520px query */
       /* Plan banner */
       .plan-banner { flex-direction: column; align-items: flex-start; }
+      /* Stats bar */
+      #statsBar { gap: 16px !important; }
+      #statsBar > div { min-width: 60px; }
+      /* Nav tabs — horizontal scroll on mobile */
+      .nav-tabs { overflow-x: auto; display: flex !important; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 2px; }
+      .nav-tabs::-webkit-scrollbar { display: none; }
+      .nav-tab { white-space: nowrap; flex-shrink: 0; font-size: 12px; padding: 5px 10px; }
+      /* Scam alerts */
+      #scamAlertsSection { padding: 0 8px !important; }
+      /* Search box full width */
+      .search-box { border-radius: 12px; }
+      /* Findings */
+      .finding-row { flex-wrap: wrap; }
+      /* Report actions */
+      #reportActions { flex-wrap: wrap; gap: 6px; }
+      #reportActions button { font-size: 12px; padding: 7px 10px; }
+      /* Raw data grid */
+      .data-grid { grid-template-columns: 1fr !important; }
+
+      /* Hero state text */
+      #tHeroTitle { font-size: clamp(22px, 5vw, 32px) !important; }
+      #tHeroSub { font-size: 15px !important; padding: 0 4px; }
+      /* Stats bar */
+      #statsBar { gap: 12px !important; flex-wrap: wrap; justify-content: center; }
+      #statsBar > div { min-width: 70px; flex: 0 0 auto; }
+      #statsBar > div > div:first-child { font-size: 18px !important; }
+      /* Verdict card on mobile */
+      .score-ring-wrap { width: 80px !important; height: 80px !important; }
+      /* Report action buttons — 2 per row */
+      #reportActions { display: grid !important; grid-template-columns: 1fr 1fr; gap: 6px; }
+      #reportActions button { font-size: 11px !important; padding: 8px 6px !important; text-align: center; justify-content: center; }
+      /* Findings text */
+      .finding-text { font-size: 13px; line-height: 1.5; }
+      /* Narrative */
+      #narrativeText { font-size: 14px !important; line-height: 1.6; }
+      /* Scan diff */
+      .diff-row { flex-wrap: wrap; gap: 4px; }
+      /* Auth modal full screen on mobile */
+      .modal { width: 100% !important; max-width: 100% !important; border-radius: 16px 16px 0 0 !important; position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; margin: 0 !important; }
+      .modal-bg { align-items: flex-end !important; }
+
     }
   </style>
   <meta name="google-site-verification" content="Pi19gFU4MVmfH3XuIVHUd4B5uxS2M28SoHoVTDr9HXk" />
@@ -563,6 +613,7 @@
       <button class="nav-tab" onclick="if(window.showTab)showTab('business')" id="tab-business">For Business</button>
       <button class="nav-tab" onclick="if(window.showTab)showTab('alerts')" id="tab-alerts">⚠ Scam Alerts</button>
     </div>
+    <button class="mobile-menu-btn" onclick="toggleMobileNav()">☰ Menu</button>
     <div class="nav-right">
       <div id="navAuth">
         <button class="btn-sm btn-blue" onclick="if(window.openModal)openModal()">Sign in</button>
@@ -575,7 +626,7 @@
   <div class="hero">
     <h1 class="hero-title" id="tHeroTitle">Before you pay —<br/>know if the site is <em>real.</em></h1>
     <p class="hero-sub" id="tHeroSub">$10B lost to online scams last year. Signum scans any website in seconds and tells you exactly what you're dealing with.</p>
-    <div style="display:flex;justify-content:center;gap:32px;margin-top:24px;flex-wrap:wrap;">
+    <div id="statsBar" style="display:flex;justify-content:center;gap:20px;margin-top:24px;flex-wrap:wrap;">
       <div style="text-align:center;">
         <div style="font-size:22px;font-weight:700;color:#e2e8f0;letter-spacing:-0.5px;">$10B+</div>
         <div style="font-size:12px;color:#8a9bc0;margin-top:2px;">lost to scams yearly</div>
@@ -1615,6 +1666,24 @@ function showApiKey(){
     .catch(function(){ alert("Could not load API key."); });
 }
 
+
+function toggleMobileNav(){
+  var d = document.getElementById("mobileNavDrawer");
+  if(d) d.classList.toggle("open");
+}
+function closeMobileNav(){
+  var d = document.getElementById("mobileNavDrawer");
+  if(d) d.classList.remove("open");
+}
+// Close drawer on outside click
+document.addEventListener("click", function(e){
+  var drawer = document.getElementById("mobileNavDrawer");
+  var btn = document.querySelector(".mobile-menu-btn");
+  if(drawer && drawer.classList.contains("open") && !drawer.contains(e.target) && btn && !btn.contains(e.target)){
+    drawer.classList.remove("open");
+  }
+});
+
 function loadScamAlerts(){
   fetch(BACKEND + "/scam-alerts?limit=20")
     .then(function(r){ return r.json(); })
@@ -2357,5 +2426,14 @@ if(typeof Tawk_API !== 'undefined'){
   Tawk_API.onChatEnded    = function(){ document.getElementById('sg-chat-btn').style.display='flex'; Tawk_API.hideWidget(); };
 }
 </script>
+
+  <!-- Mobile Nav Drawer -->
+  <div class="mobile-nav-drawer" id="mobileNavDrawer">
+    <div style="width:40px;height:4px;background:var(--border2);border-radius:4px;margin:0 auto 16px;"></div>
+    <button class="mobile-nav-item" onclick="showTab('scan');closeMobileNav()">🔍 Scan</button>
+    <button class="mobile-nav-item" onclick="showTab('alerts');closeMobileNav()">⚠️ Scam Alerts</button>
+    <button class="mobile-nav-item" onclick="showTab('pricing');closeMobileNav()">💳 Pricing</button>
+    <button class="mobile-nav-item" onclick="showTab('business');closeMobileNav()">🏢 For Business</button>
+  </div>
 </body>
 </html>
