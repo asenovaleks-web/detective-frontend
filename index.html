@@ -44,13 +44,15 @@
       --r: 10px;
     }
     body { background: var(--bg); font-family: 'DM Sans', sans-serif; color: var(--text); min-height: 100vh; font-size: 18px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    body::before { content:''; position:fixed; inset:0; background:radial-gradient(ellipse 80% 50% at 50% -10%, rgba(59,130,246,0.07) 0%, transparent 70%); pointer-events:none; z-index:0; }
+    .page { position:relative; z-index:1; }
     .page { max-width: 680px; margin: 0 auto; padding: 0 16px 80px; }
 
 
 
 
     /* -- NAV -- */
-    nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--border); margin-bottom: 36px; position: sticky; top: 0; z-index: 100; background: var(--bg); }
+    nav { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--border); margin-bottom: 36px; position: sticky; top: 0; z-index: 100; background: rgba(11,15,26,0.85); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
     .logo { display: flex; align-items: center; gap: 9px; font-size: 17px; font-weight: 600; letter-spacing: -0.4px; color: var(--text); text-decoration: none; }
     .logo-icon { width: 28px; height: 28px; background: var(--blue); border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 16px rgba(59,130,246,0.4); }
     .logo-icon svg { width: 15px; height: 15px; stroke: #fff; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
@@ -78,13 +80,13 @@
     .nav-email { font-size: 13px; color: #8a9bc0; font-family: 'DM Mono', monospace; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
     /* -- HERO -- */
-    .hero { margin-bottom: 32px; text-align: center; padding: 0 4px; }
+    .hero { margin-bottom: 0; text-align: center; padding: 0 4px; }
     .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border2); border-radius: 100px; padding: 5px 14px; font-size: 12px; color: #8a9bc0; margin-bottom: 24px; font-family: 'DM Mono', monospace; }
     .badge-dot { width: 6px; height: 6px; background: var(--green); border-radius: 50%; animation: blink 2.5s ease-in-out infinite; flex-shrink: 0; box-shadow: 0 0 6px var(--green); }
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
     .hero-title { font-size: clamp(28px, 5vw, 42px); font-weight: 600; letter-spacing: -1.2px; line-height: 1.12; color: var(--text); margin-bottom: 14px; }
     .hero-title em { color: var(--blue); font-style: normal; }
-    .hero-sub { font-size: 21px; color: var(--text-muted); max-width: 460px; margin: 0 auto; line-height: 1.65; }
+    .hero-sub { font-size: 18px; color: var(--text-muted); max-width: 480px; margin: 0 auto; line-height: 1.6; }
 
     /* -- BANNERS -- */
     .plan-banner { display: none; align-items: center; justify-content: space-between; gap: 12px; border-radius: var(--r); padding: 11px 16px; margin-bottom: 16px; font-size: 13px; flex-wrap: wrap; }
@@ -96,7 +98,7 @@
     .btn-upgrade:hover { opacity: 0.85; }
 
     /* -- SEARCH -- */
-    .search-wrap { margin-bottom: 32px; }
+    .search-wrap { margin-bottom: 0; }
     .search-box { display: flex; gap: 8px; background: var(--surface); border: 1.5px solid var(--border2); border-radius: var(--r); padding: 7px 7px 7px 18px; box-shadow: 0 4px 24px rgba(0,0,0,0.3), 0 0 0 1px rgba(59,130,246,0); transition: all 0.2s; }
     .search-box:focus-within { border-color: var(--blue); box-shadow: 0 4px 24px rgba(0,0,0,0.3), 0 0 0 3px var(--blue-glow); }
     .search-input { flex: 1; background: none; border: none; outline: none; font-size: 15px; font-family: 'DM Sans', sans-serif; color: var(--text); min-width: 0; }
@@ -114,6 +116,7 @@
     .how-wrap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 44px; }
     @media(max-width:520px){ .how-wrap { grid-template-columns: 1fr; } }
     @media(max-width:560px){ #beforeAfterSection { grid-template-columns: 1fr !important; } }
+    @media(max-width:480px){ #statsBar { display:flex !important; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; border-radius:10px; } #statsBar::-webkit-scrollbar{display:none} }
     @media(max-width:680px){ #realCasesSection .cases-grid { grid-template-columns: 1fr !important; } }
     .how-step { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r); padding: 18px; }
     .how-num { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--blue); margin-bottom: 8px; font-weight: 500; }
@@ -153,7 +156,7 @@
     .verdict-card.YELLOW .score-ring-fill { stroke: var(--yellow) !important; }
     .verdict-card.RED .score-ring-fill { stroke: var(--red) !important; }
     .score-center { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-    .score-num { font-size: 22px; font-weight: 700; letter-spacing: -1px; line-height: 1; }
+    .score-num { font-size: 22px; font-weight: 700; letter-spacing: -1.5px; line-height: 1; font-family: "DM Mono", monospace; }
     .verdict-card.GREEN .score-num { color: var(--green) !important; }
     .verdict-card.YELLOW .score-num { color: var(--yellow) !important; }
     .verdict-card.RED .score-num { color: var(--red) !important; }
@@ -163,11 +166,11 @@
     .verdict-card.GREEN .verdict-label { color: var(--green) !important; }
     .verdict-card.YELLOW .verdict-label { color: var(--yellow) !important; }
     .verdict-card.RED .verdict-label { color: var(--red) !important; }
-    .verdict-summary { font-size: 19px; color: var(--text-muted); line-height: 1.55; }
+    .verdict-summary { font-size: 16px; color: var(--text-muted); line-height: 1.55; }
 
     /* Dashboard signals */
     .dashboard { background: rgba(0,0,0,0.2); border-radius: 8px; padding: 16px; border: 1px solid rgba(255,255,255,0.05); }
-    .dashboard-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; font-size: 18px; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .dashboard-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; font-size: 14px; color: var(--text-muted); border-bottom: 1px solid rgba(255,255,255,0.04); }
     .dashboard-row:last-child { border-bottom: none; }
     .dash-icon { font-size: 13px; flex-shrink: 0; width: 20px; display:inline-flex; align-items:center; justify-content:center; }
     .confidence-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
@@ -725,42 +728,27 @@
   <!-- Hero -->
   <div id="scanHeroSection">
   <div class="hero">
+    <div class="hero-badge" style="margin-bottom:20px;"><span class="badge-dot"></span>AI-powered · 12 threat sources · Free to use</div>
     <h1 class="hero-title" id="tHeroTitle">Is this site safe —<br/>or are you about to get <em>scammed?</em></h1>
-    <p class="hero-sub" id="tHeroSub">Paste any URL. Get an AI-powered trust verdict in seconds. Know before you click, pay, or share your data.</p>
-    <div id="statsBar" style="display:flex;justify-content:center;gap:28px;margin-top:28px;flex-wrap:wrap;">
-      <div style="text-align:center;">
-        <div style="font-size:24px;font-weight:700;color:var(--text);letter-spacing:-0.8px;">$10.3B</div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;font-family:'DM Mono',monospace;">lost to online scams in 2023</div>
+    <p class="hero-sub" id="tHeroSub">Paste any URL. Know in seconds if it's safe — before you click, pay, or share your data.</p>
+    <div id="statsBar" style="display:inline-flex;gap:0;margin-top:28px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+      <div style="text-align:center;padding:14px 22px;border-right:1px solid var(--border);">
+        <div style="font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.8px;">$10.3B</div>
+        <div style="font-size:10px;color:var(--text-faint);margin-top:3px;font-family:'DM Mono',monospace;letter-spacing:0.3px;">lost to scams in 2023</div>
       </div>
-      <div style="width:1px;background:var(--border);flex-shrink:0;"></div>
-      <div style="text-align:center;">
-        <div style="font-size:24px;font-weight:700;color:var(--text);letter-spacing:-0.8px;">12+</div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;font-family:'DM Mono',monospace;">threat databases checked</div>
+      <div style="text-align:center;padding:14px 22px;border-right:1px solid var(--border);">
+        <div style="font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.8px;">12+</div>
+        <div style="font-size:10px;color:var(--text-faint);margin-top:3px;font-family:'DM Mono',monospace;letter-spacing:0.3px;">threat sources</div>
       </div>
-      <div style="width:1px;background:var(--border);flex-shrink:0;"></div>
-      <div style="text-align:center;">
-        <div style="font-size:24px;font-weight:700;color:var(--text);letter-spacing:-0.8px;">&lt;15s</div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;font-family:'DM Mono',monospace;">average scan time</div>
+      <div style="text-align:center;padding:14px 22px;border-right:1px solid var(--border);">
+        <div style="font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.8px;">&lt;15s</div>
+        <div style="font-size:10px;color:var(--text-faint);margin-top:3px;font-family:'DM Mono',monospace;letter-spacing:0.3px;">avg scan time</div>
       </div>
-      <div style="width:1px;background:var(--border);flex-shrink:0;"></div>
-      <div style="text-align:center;">
-        <div style="font-size:24px;font-weight:700;color:var(--green);letter-spacing:-0.8px;">Free</div>
-        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;font-family:'DM Mono',monospace;">no account needed</div>
+      <div style="text-align:center;padding:14px 22px;">
+        <div style="font-size:20px;font-weight:700;color:var(--green);letter-spacing:-0.8px;">Free</div>
+        <div style="font-size:10px;color:var(--text-faint);margin-top:3px;font-family:'DM Mono',monospace;letter-spacing:0.3px;">no account needed</div>
       </div>
     </div>
-  </div>
-
-  <!-- Scan Suggestions (clickable — trigger scan) -->
-  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin:18px 0 0;">
-    <span style="font-size:11px;color:var(--text-faint);font-family:'DM Mono',monospace;align-self:center;margin-right:4px;">Try:</span>
-    <button onclick="quickScan('temu.com')" class="suggestion-pill">temu.com</button>
-    <button onclick="quickScan('shein.com')" class="suggestion-pill">shein.com</button>
-    <button onclick="quickScan('binance.com')" class="suggestion-pill">binance.com</button>
-    <button onclick="quickScan('aliexpress.com')" class="suggestion-pill">aliexpress.com</button>
-    <button onclick="quickScan('bybit.com')" class="suggestion-pill">bybit.com</button>
-    <button onclick="quickScan('robinhood.com')" class="suggestion-pill">robinhood.com</button>
-    <button onclick="quickScan('wish.com')" class="suggestion-pill">wish.com</button>
-    <button onclick="quickScan('cashapp.com')" class="suggestion-pill">cashapp.com</button>
   </div>
 
 
@@ -768,19 +756,29 @@
   <div class="msg success" id="successMsg"></div>
 
   <!-- Search -->
-  <div class="search-wrap">
+  <div class="search-wrap" style="margin-top:28px;">
     <div class="search-box">
       <input class="search-input" type="text" id="urlInput" placeholder="e.g. amazon.com" onkeydown="if(event.key==='Enter')runScan()" />
-      <button class="search-btn" id="scanBtn" onclick="runScan()">Analyze</button>
+      <button class="search-btn" id="scanBtn" onclick="runScan()">Analyze →</button>
     </div>
     <div class="search-hint" id="tHint">Free · No account needed · Results in seconds</div>
+    <!-- Scan Suggestions -->
+    <div id="suggestionPills" style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:14px;">
+      <span style="font-size:10px;color:var(--text-faint);font-family:'DM Mono',monospace;align-self:center;margin-right:2px;letter-spacing:0.3px;">Try:</span>
+      <button onclick="quickScan('temu.com')" class="suggestion-pill">temu.com</button>
+      <button onclick="quickScan('shein.com')" class="suggestion-pill">shein.com</button>
+      <button onclick="quickScan('binance.com')" class="suggestion-pill">binance.com</button>
+      <button onclick="quickScan('aliexpress.com')" class="suggestion-pill">aliexpress.com</button>
+      <button onclick="quickScan('bybit.com')" class="suggestion-pill">bybit.com</button>
+      <button onclick="quickScan('wish.com')" class="suggestion-pill">wish.com</button>
+    </div>
     <div class="status-wrap" id="statusWrap" style="margin-top:12px;margin-bottom:0;">
       <div class="status-inner"><div class="spinner"></div><div class="status-text" id="statusText">Initializing...</div></div>
     </div>
   </div>
 
   <!-- Recent Activity -->
-  <div id="trendingSection" style="margin:24px 0 0;">
+  <div id="trendingSection" style="margin:20px 0 0;">
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
         <span style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:var(--text-faint);text-transform:uppercase;">Recent Checks</span>
@@ -793,20 +791,20 @@
     </div>
   </div>
 
-  <!-- One-Time Scan CTA (always visible) -->
+  <!-- One-Time Scan CTA -->
   <div id="onetimeScanSection" style="margin:32px 0;">
-    <div style="background:linear-gradient(135deg,rgba(245,158,11,0.06),rgba(245,158,11,0.02));border:1px solid rgba(245,158,11,0.2);border-radius:14px;padding:24px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
-        <div style="flex:1;min-width:200px;">
-          <div style="display:inline-flex;align-items:center;gap:6px;font-size:10px;font-family:'DM Mono',monospace;font-weight:600;letter-spacing:0.8px;color:#f59e0b;margin-bottom:8px;text-transform:uppercase;">One-Time Report</div>
-          <div style="font-size:17px;font-weight:700;margin-bottom:4px;">Just need one deep scan?</div>
-          <div style="font-size:13px;color:var(--text-muted);">Full 2-page PDF report · Instant delivery · No account required</div>
+    <div style="background:var(--surface);border:1px solid rgba(245,158,11,0.2);border-radius:12px;padding:24px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px;flex-wrap:wrap;">
+        <div>
+          <div style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:#f59e0b;margin-bottom:6px;text-transform:uppercase;">One-Time Report</div>
+          <div style="font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px;">Just need one deep scan?</div>
+          <div style="font-size:13px;color:var(--text-muted);">Full PDF report · Instant delivery · No account required</div>
         </div>
-      <div style="display:flex;align-items:center;gap:12px;flex-shrink:0;">
-        <input type="text" id="onetimeDomain" placeholder="e.g. suspicious-shop.com" style="width:220px;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='var(--border2)'"/>
-        <div style="text-align:center;">
-          <button onclick="buyOneScan()" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-size:14px;font-weight:700;padding:10px 20px;border-radius:8px;border:none;cursor:pointer;white-space:nowrap;">€4.99 →</button>
-          <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">one-time</div>
-        </div>
+        <div style="font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.5px;flex-shrink:0;">€4.99</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="onetimeDomain" placeholder="e.g. suspicious-shop.com" style="flex:1;background:var(--bg2);border:1px solid var(--border2);border-radius:8px;padding:10px 14px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;min-width:0;" onfocus="this.style.borderColor='#f59e0b'" onblur="this.style.borderColor='var(--border2)'"/>
+        <button onclick="buyOneScan()" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#000;font-size:14px;font-weight:700;padding:10px 20px;border-radius:8px;border:none;cursor:pointer;white-space:nowrap;flex-shrink:0;">Get Report →</button>
       </div>
     </div>
   </div>
@@ -840,51 +838,52 @@
   </div>
 
   <!-- Before / After -->
-  <div style="margin:48px 0;display:grid;grid-template-columns:1fr 1fr;gap:12px;" id="beforeAfterSection">
+  <div id="beforeAfterSection" style="margin:40px 0;">
+  <div style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:1px;color:var(--text-faint);margin-bottom:14px;text-transform:uppercase;">The difference</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
     <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;">
       <div style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:var(--text-faint);margin-bottom:16px;">WITHOUT SIGNUM</div>
-        <div style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#ef4444;font-size:18px;">✗</span> Trust your gut — and hope for the best</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#ef4444;font-size:18px;">✗</span> 20 minutes of inconclusive Googling</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#ef4444;font-size:18px;">✗</span> No visibility into threat history</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#ef4444;font-size:18px;">✗</span> Find out you were scammed — after the fact</div>
+        <div style="display:flex;flex-direction:column;gap:11px;">
+        <div style="display:flex;align-items:baseline;gap:9px;font-size:14px;color:var(--text-muted);line-height:1.4;"><span style="color:#ef4444;font-size:14px;flex-shrink:0;margin-top:1px;">✗</span>Trust your gut and hope for the best</div>
+        <div style="display:flex;align-items:baseline;gap:9px;font-size:14px;color:var(--text-muted);line-height:1.4;"><span style="color:#ef4444;font-size:14px;flex-shrink:0;margin-top:1px;">✗</span>20 minutes of inconclusive Googling</div>
+        <div style="display:flex;align-items:baseline;gap:9px;font-size:14px;color:var(--text-muted);line-height:1.4;"><span style="color:#ef4444;font-size:14px;flex-shrink:0;margin-top:1px;">✗</span>No visibility into threat history</div>
+        <div style="display:flex;align-items:baseline;gap:9px;font-size:14px;color:var(--text-muted);line-height:1.4;"><span style="color:#ef4444;font-size:14px;flex-shrink:0;margin-top:1px;">✗</span>Find out you were scammed, after the fact</div>
         </div>
     </div>
     <div style="background:var(--surface);border:1px solid rgba(59,130,246,0.3);border-radius:12px;padding:24px;box-shadow:0 0 20px rgba(59,130,246,0.06);">
       <div style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:var(--blue);margin-bottom:16px;">WITH SIGNUM</div>
-      <div style="display:flex;flex-direction:column;gap:10px;">
-        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#22c55e;font-size:18px;">✓</span> Full risk picture — AI-powered verdict</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#22c55e;font-size:18px;">✓</span> Verdict in &lt;15 seconds, not &lt;15 hours</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#22c55e;font-size:18px;">✓</span> 12 intelligence sources, checked in parallel</div>
-        <div style="display:flex;align-items:center;gap:10px;font-size:17px;color:var(--text-muted);"><span style="color:#22c55e;font-size:18px;">✓</span> Know before you click, pay, or share data</div>
+      <div style="display:flex;flex-direction:column;gap:11px;">
+        <div style="display:flex;align-items:baseline;gap:9px;font-size:14px;color:var(--text-muted);line-height:1.4;"><span style="color:#22c55e;font-size:14px;flex-shrink:0;margin-top:1px;">✓</span>Full risk picture — AI-powered verdict</div>
+        <div style="display:flex;align-items:baseline;gap:9px;font-size:14px;color:var(--text-muted);line-height:1.4;"><span style="color:#22c55e;font-size:14px;flex-shrink:0;margin-top:1px;">✓</span>Verdict in &lt;15 seconds, not &lt;15 hours</div>
+        <div style="display:flex;align-items:baseline;gap:9px;font-size:14px;color:var(--text-muted);line-height:1.4;"><span style="color:#22c55e;font-size:14px;flex-shrink:0;margin-top:1px;">✓</span>12 intelligence sources checked in parallel</div>
+        <div style="display:flex;align-items:baseline;gap:9px;font-size:14px;color:var(--text-muted);line-height:1.4;"><span style="color:#22c55e;font-size:14px;flex-shrink:0;margin-top:1px;">✓</span>Know before you click, pay, or share data</div>
       </div>
     </div>
   </div>
-
-
+  </div>
 
   <!-- Real Cases Section -->
-  <div id="realCasesSection" style="margin:0 0 48px;">
-    <div style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:var(--text-faint);margin-bottom:16px;text-align:center;">EXAMPLE SCANS</div>
+  <div id="realCasesSection" style="margin:0 0 40px;">
+    <div style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:1px;color:var(--text-faint);margin-bottom:14px;text-transform:uppercase;">Real scans · Real outcomes</div>
     <div class="cases-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
 
       <div style="background:var(--surface);border:1px solid rgba(239,68,68,0.25);border-radius:12px;padding:18px;">
         <div style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;color:#ef4444;letter-spacing:0.6px;margin-bottom:10px;">HIGH RISK · 91/100</div>
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">fake-amazon-refund.com</div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">fake-amazon-refund.com</div>
         <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Domain registered 11 days before scan. 7/93 VirusTotal engines flagged phishing. Zero online presence. SSL issued same week.</div>
         <div style="margin-top:10px;font-size:11px;color:#ef4444;font-weight:600;">Avoided €340 payment</div>
       </div>
 
       <div style="background:var(--surface);border:1px solid rgba(239,68,68,0.25);border-radius:12px;padding:18px;">
         <div style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;color:#ef4444;letter-spacing:0.6px;margin-bottom:10px;">HIGH RISK · 87/100</div>
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">uk-supplier-direct.shop</div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">uk-supplier-direct.shop</div>
         <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">IPQS flagged as phishing. AbuseIPDB: 34 abuse reports on server IP. No Trustpilot presence. Domain age: 3 weeks.</div>
         <div style="margin-top:10px;font-size:11px;color:#ef4444;font-weight:600;">Avoided £1,200 wire transfer</div>
       </div>
 
       <div style="background:var(--surface);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:18px;">
         <div style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;color:#f59e0b;letter-spacing:0.6px;margin-bottom:10px;">CAUTION · 62/100</div>
-        <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">bestprice-electronics.net</div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">bestprice-electronics.net</div>
         <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Domain 4 months old. 5 IP changes in 90 days. Trustpilot: 1.8★ with fraud complaints. OTX: 2 threat pulses.</div>
         <div style="margin-top:10px;font-size:11px;color:#f59e0b;font-weight:600;">Requested payment via bank first</div>
       </div>
@@ -1796,6 +1795,7 @@ function runScan(){
   }
   document.getElementById("reportSection").classList.remove("visible");
   document.getElementById("errorMsg").classList.remove("visible");
+  var sp = document.getElementById("suggestionPills"); if(sp) sp.style.display="none";
   ["beforeAfterSection","realCasesSection","trendingSection"].forEach(function(id){
     var el = document.getElementById(id);
     if(el) el.style.display = "none";
@@ -1859,6 +1859,7 @@ function showTab(tab){
 
   if(tab === "scan"){
     var hasResult = document.getElementById("reportSection").classList.contains("visible");
+    var sp = document.getElementById("suggestionPills"); if(sp) sp.style.display = hasResult ? "none" : "";
     all.forEach(function(id){
       var el = document.getElementById(id);
       if(!el) return;
@@ -2057,7 +2058,7 @@ function loadTrendingThreats(){
       var t = items[i];
       var color = t.verdict === "RED" ? "var(--red)" : t.verdict === "YELLOW" ? "var(--yellow)" : "var(--green)";
       var label = t.verdict === "RED" ? "Danger" : t.verdict === "YELLOW" ? "Caution" : "Safe";
-      rows += "<div style='display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);cursor:pointer;' onclick='quickScan(\""+t.domain+"\")'>";
+      rows += "<div style='display:flex;align-items:center;justify-content:space-between;padding:8px 4px;border-bottom:1px solid var(--border);cursor:pointer;border-radius:6px;transition:background 0.12s;' onmouseover=\"this.style.background='rgba(59,130,246,0.05)'\" onmouseout=\"this.style.background='none'\" onclick='quickScan(\""+t.domain+"\")'>";
       rows += "<span style='font-size:13px;font-family:\"DM Mono\",monospace;color:var(--text-muted);'>"+t.domain+"</span>";
       rows += "<span style='display:flex;align-items:center;gap:8px;flex-shrink:0;'>";
       rows += "<span style='font-size:11px;font-family:\"DM Mono\",monospace;color:"+color+";'>"+t.score+"</span>";
