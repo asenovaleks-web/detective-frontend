@@ -1141,7 +1141,7 @@
     <div style="background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(59,130,246,0.08));border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:24px;text-align:center;">
       <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;margin-bottom:8px;">Ready to integrate?</div>
       <div style="font-size:14px;color:var(--text-muted);margin-bottom:18px;">Get your API key from your account dashboard after upgrading to API plan.</div>
-      <button class="modal-submit" style="max-width:240px;margin:0 auto;" onclick="if(!user){openModal();}else{showApiKey();}">Get API key →</button>
+      <button class="modal-submit" style="max-width:240px;margin:0 auto;" onclick="if(!user){openModal();}else if(plan!=='api'){upgradeToApi();}else{showApiKey();}">Get API key →</button>
     </div>
   </div>
 
@@ -1754,6 +1754,15 @@ function maybeShowOnboarding(){
   }
 }
 
+
+function upgradeToApi(){
+  if(!user||!token||token==="null"){ openModal(); return; }
+  fetch(BACKEND+"/create-checkout-session",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_token:token,user_email:user.email,plan:"api"})})
+  .then(function(r){return r.json();}).then(function(d){
+    if(d.checkout_url){ window.location.href=d.checkout_url; }
+    else{ alert("Could not start checkout."); }
+  }).catch(function(){ alert("Could not start checkout."); });
+}
 // -- Upgrade -------------------------------------------------------------------
 function upgradeToPro(){
   if(!user||!token||token==="null"){ openModal(); return; }
