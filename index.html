@@ -866,29 +866,8 @@
   <!-- Real Cases Section -->
   <div id="realCasesSection" style="margin:0 0 40px;">
     <div style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:1px;color:var(--text-faint);margin-bottom:14px;text-transform:uppercase;">Real scans · Real outcomes</div>
-    <div class="cases-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
-
-      <div style="background:var(--surface);border:1px solid rgba(239,68,68,0.25);border-radius:12px;padding:18px;">
-        <div style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;color:#ef4444;letter-spacing:0.6px;margin-bottom:10px;">HIGH RISK · 91/100</div>
-        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">fake-amazon-refund.com</div>
-        <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Domain registered 11 days before scan. 7/93 VirusTotal engines flagged phishing. Zero online presence. SSL issued same week.</div>
-        <div style="margin-top:10px;font-size:11px;color:#ef4444;font-weight:600;">Avoided €340 payment</div>
-      </div>
-
-      <div style="background:var(--surface);border:1px solid rgba(239,68,68,0.25);border-radius:12px;padding:18px;">
-        <div style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;color:#ef4444;letter-spacing:0.6px;margin-bottom:10px;">HIGH RISK · 87/100</div>
-        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">uk-supplier-direct.shop</div>
-        <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">IPQS flagged as phishing. AbuseIPDB: 34 abuse reports on server IP. No Trustpilot presence. Domain age: 3 weeks.</div>
-        <div style="margin-top:10px;font-size:11px;color:#ef4444;font-weight:600;">Avoided £1,200 wire transfer</div>
-      </div>
-
-      <div style="background:var(--surface);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:18px;">
-        <div style="font-size:10px;font-family:'DM Mono',monospace;font-weight:700;color:#f59e0b;letter-spacing:0.6px;margin-bottom:10px;">CAUTION · 62/100</div>
-        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">bestprice-electronics.net</div>
-        <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Domain 4 months old. 5 IP changes in 90 days. Trustpilot: 1.8★ with fraud complaints. OTX: 2 threat pulses.</div>
-        <div style="margin-top:10px;font-size:11px;color:#f59e0b;font-weight:600;">Requested payment via bank first</div>
-      </div>
-
+    <div class="cases-grid" id="realCasesGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;">
+      <div style="grid-column:1/-1;text-align:center;padding:20px;color:var(--text-faint);font-size:12px;font-family:'DM Mono',monospace;">Loading recent scans...</div>
     </div>
   </div>
 
@@ -2060,6 +2039,39 @@ function loadScamAlerts(){
     });
 }
 
+function loadRealCases(){
+  var grid = document.getElementById("realCasesGrid");
+  if(!grid) return;
+  fetch(BACKEND + "/recent-activity")
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+    var items = (data.items || []).filter(function(t){ return t.verdict === "RED" || t.verdict === "YELLOW"; }).slice(0,3);
+    if(items.length === 0){
+      grid.innerHTML = "<div style='grid-column:1/-1;text-align:center;padding:20px;color:var(--text-faint);font-size:12px;font-family:"DM Mono",monospace;'>No flagged domains scanned yet.</div>";
+      return;
+    }
+    var html = "";
+    for(var i=0; i<items.length; i++){
+      var t = items[i];
+      var isRed = t.verdict === "RED";
+      var color = isRed ? "#ef4444" : "#f59e0b";
+      var borderColor = isRed ? "rgba(239,68,68,0.25)" : "rgba(245,158,11,0.25)";
+      var label = isRed ? "HIGH RISK" : "CAUTION";
+      var scanUrl = "https://signumaiapp.com/?domain=" + t.domain;
+      html += "<div style='background:var(--surface);border:1px solid "+borderColor+";border-radius:12px;padding:18px;cursor:pointer;transition:border-color 0.15s;' onclick='quickScan(""+t.domain+"")'>";
+      html += "<div style='font-size:10px;font-family:"DM Mono",monospace;font-weight:700;color:"+color+";letter-spacing:0.6px;margin-bottom:10px;'>"+label+" · "+t.score+"/100</div>";
+      html += "<div style='font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;word-break:break-all;'>"+t.domain+"</div>";
+      html += "<div style='margin-top:10px;font-size:11px;color:"+color+";font-weight:600;font-family:"DM Mono",monospace;'>Scanned by Signum users →</div>";
+      html += "</div>";
+    }
+    grid.innerHTML = html;
+  })
+  .catch(function(){
+    var grid = document.getElementById("realCasesGrid");
+    if(grid) grid.innerHTML = "";
+  });
+}
+
 function loadTrendingThreats(){
   fetch(BACKEND + "/recent-activity")
   .then(function(r){ return r.json(); })
@@ -2145,6 +2157,7 @@ function scanFromTrending(el){
 // Load trending on page load
 document.addEventListener("DOMContentLoaded", function(){
   setTimeout(loadTrendingThreats, 800);
+  setTimeout(loadRealCases, 600);
   if(user) maybeShowOnboarding();
 });
 
