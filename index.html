@@ -519,9 +519,8 @@
       /* Stats bar */
       #statsBar { gap: 16px !important; }
       #statsBar > div { min-width: 60px; }
-      /* Nav tabs — horizontal scroll on mobile */
-      .nav-tabs { overflow-x: auto; display: flex !important; -webkit-overflow-scrolling: touch; scrollbar-width: none; padding-bottom: 2px; }
-      .nav-tabs::-webkit-scrollbar { display: none; }
+      /* Nav tabs — hidden on mobile (bottom bar replaces them) */
+      .nav-tabs { display: none !important; }
       .nav-tab { white-space: nowrap; flex-shrink: 0; font-size: 12px; padding: 5px 10px; }
       /* Scam alerts */
       #scamAlertsSection { padding: 0 8px !important; }
