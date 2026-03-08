@@ -61,12 +61,51 @@
     .nav-tab { background: none; border: none; padding: 6px 12px; font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-radius: 7px; transition: all 0.15s; font-family: "DM Sans", sans-serif; white-space: nowrap; }
     .nav-tab:hover { color: var(--text); background: var(--surface2); }
     .nav-tab.active { color: var(--blue); background: var(--blue-glow); }
-    @media(max-width:640px){ 
-      .nav-tabs { display: flex !important; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; max-width: calc(100vw - 120px); }
-      .nav-tabs::-webkit-scrollbar { display: none; }
+    .mobile-menu-btn { display: none; }
+    @media(max-width:640px){
+      /* Top nav: logo + sign in only */
+      .nav-tabs { display: none !important; }
       .mobile-menu-btn { display: none !important; }
+      /* Bottom tab bar */
+      .bottom-tab-bar { display: flex !important; }
+      /* Push page content above bottom bar */
+      body { padding-bottom: 60px; }
+      /* Hide email in nav on mobile */
+      .nav-email { display: none !important; }
     }
-    .mobile-menu-btn { display: none; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 6px 10px; cursor: pointer; color: var(--text-muted); font-size: 13px; align-items: center; gap: 6px; }
+    /* Bottom tab bar — hidden on desktop */
+    .bottom-tab-bar {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(11,15,26,0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+      z-index: 150;
+      padding: 0;
+      height: 56px;
+    }
+    .bottom-tab-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--text-faint);
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: "DM Sans", sans-serif;
+      padding: 6px 0 4px;
+      transition: color 0.15s;
+      text-decoration: none;
+    }
+    .bottom-tab-item.active { color: var(--blue); }
+    .bottom-tab-item svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
     .mobile-nav-drawer { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--surface); border-top: 1px solid var(--border2); padding: 12px 16px 28px; z-index: 200; border-radius: 16px 16px 0 0; box-shadow: 0 -8px 32px rgba(0,0,0,0.4); }
     .mobile-nav-drawer.open { display: block; animation: slideUp 0.2s ease; }
     .mobile-nav-item { display: block; width: 100%; text-align: left; background: none; border: none; padding: 14px 12px; font-size: 15px; font-family: 'DM Sans', sans-serif; color: var(--text); cursor: pointer; border-radius: 8px; transition: background 0.15s; }
@@ -991,7 +1030,7 @@
       <p class="pricing-sub">More than peace of mind.</p>
     </div>
     <div class="pricing-grid">
-      <div class="pricing-card" style="border-color:#475569;">
+      <div class="pricing-card" style="border-color:#475569;order:1;">
         <div class="plan-name">Free</div>
         <div class="plan-price">€0</div>
         <div class="plan-period">forever</div>
@@ -1836,9 +1875,14 @@ function showMsg(id, msg){
 }
 
 function showTab(tab){
-  // Update active tab
+  // Update active tab (desktop)
   ["scan","pricing","business","alerts","api"].forEach(function(t){
     var el = document.getElementById("tab-"+t);
+    if(el) el.classList.toggle("active", t===tab);
+  });
+  // Update bottom tab bar (mobile)
+  ["scan","pricing","alerts","business","api"].forEach(function(t){
+    var el = document.getElementById("btab-"+t);
     if(el) el.classList.toggle("active", t===tab);
   });
 
@@ -2830,5 +2874,30 @@ if(typeof Tawk_API !== 'undefined'){
     <button class="mobile-nav-item" onclick="showTab('business');closeMobileNav()">For Business</button>
     <button class="mobile-nav-item" onclick="showTab('api');closeMobileNav()">API</button>
   </div>
+
+  <!-- Bottom Tab Bar (mobile only) -->
+  <div class="bottom-tab-bar" id="bottomTabBar">
+    <button class="bottom-tab-item active" id="btab-scan" onclick="showTab('scan')">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+      Scan
+    </button>
+    <button class="bottom-tab-item" id="btab-pricing" onclick="showTab('pricing')">
+      <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      Pricing
+    </button>
+    <button class="bottom-tab-item" id="btab-alerts" onclick="showTab('alerts')">
+      <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Alerts
+    </button>
+    <button class="bottom-tab-item" id="btab-business" onclick="showTab('business')">
+      <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
+      Business
+    </button>
+    <button class="bottom-tab-item" id="btab-api" onclick="showTab('api')">
+      <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+      API
+    </button>
+  </div>
+
 </body>
 </html>
