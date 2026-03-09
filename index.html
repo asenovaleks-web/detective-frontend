@@ -2417,7 +2417,12 @@ function renderReport(r){
     if(dlFreeBtn){ dlFreeBtn.style.display = "none"; }
   }
   document.getElementById("reportSection").classList.add("visible");
-  document.getElementById("reportSection").scrollIntoView({behavior:"smooth"});
+  // Hide hero sections when result is shown
+  ["beforeAfterSection","realCasesSection","trendingSection","onetimeScanSection","suggestionPills"].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.style.display = "none";
+  });
+  window.scrollTo({top: 0, behavior: "smooth"});
   var nsc = document.getElementById("newScanCta"); if(nsc) nsc.style.display = "";
   // Show save nudge for anon users
   var nudge = document.getElementById("saveNudge");
