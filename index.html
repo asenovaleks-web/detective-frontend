@@ -935,6 +935,7 @@
           <button class="share-btn" onclick="shareReport()" id="tShareBtn">↗ Share report</button>
           <button class="btn-watchlist" id="watchlistBtn" onclick="toggleWatchlistDomain()" style="display:none;">Track this domain</button>
           <button class="btn-report" id="reportBtn" onclick="openReportModal()" style="display:none;">Flag this site</button>
+          <div id="userReportBadge" style="display:none;margin-top:6px;font-size:11px;color:var(--red);font-family:'DM Mono',monospace;opacity:0.85;">⚑ <span id="userReportCount">0</span> Signum users reported this site</div>
           <button class="btn-download-report" id="downloadReportBtn" onclick="downloadReport()" style="display:none;">Download Report</button>
           <button class="btn-download-report" id="downloadReportFreeBtn" onclick="upgradeToPro()" style="display:none;opacity:0.6;border-style:dashed;">PDF Report <span style="font-size:10px;margin-left:3px;opacity:0.6;font-family:'DM Mono',monospace;">Pro</span></button>
         <div id="scanCountWrap" style="margin-top:8px;font-size:12px;color:var(--text-faint);font-family:'DM Mono',monospace;display:none;">
@@ -2391,6 +2392,26 @@ function renderReport(r){
   // Show watchlist btn for logged-in users
   var rBtn = document.getElementById("reportBtn");
   if(rBtn) rBtn.style.display = user ? "inline-flex" : "none";
+
+  // Fetch user report count for this domain
+  (async function(){
+    try {
+      var badge = document.getElementById("userReportBadge");
+      var countEl = document.getElementById("userReportCount");
+      if(!badge || !countEl) return;
+      badge.style.display = "none";
+      var d = r.target || currentDomain || "";
+      if(!d) return;
+      var rc = await fetch(BACKEND+"/report-count?domain="+encodeURIComponent(d));
+      if(rc.ok){
+        var rd = await rc.json();
+        if(rd.count >= 1){
+          countEl.textContent = rd.count;
+          badge.style.display = "block";
+        }
+      }
+    } catch(e){}
+  })();
   var wBtn = document.getElementById("watchlistBtn");
   if(wBtn){
     if(user && plan==="pro"){
