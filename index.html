@@ -74,7 +74,7 @@
       /* Hide email in nav on mobile */
       .nav-email { display: none !important; }
       /* Ensure last section never hidden behind bottom bar */
-      #apiSection, #pricingSection, #scamAlertsSection, #b2bSection, #scanHeroSection { padding-bottom: 80px !important; }
+      #apiSection, #pricingSection, #scamAlertsSection, #b2bSection, #scanHeroSection, #emailSection { padding-bottom: 80px !important; }
     }
     /* Bottom tab bar — hidden on desktop */
     .bottom-tab-bar {
@@ -555,6 +555,36 @@
       /* Auth modal full screen on mobile */
       .modal { width: 100% !important; max-width: 100% !important; border-radius: 16px 16px 0 0 !important; position: fixed !important; bottom: 0 !important; left: 0 !important; right: 0 !important; margin: 0 !important; }
       .modal-bg { align-items: flex-end !important; }
+
+      /* Email Check tab mobile */
+      #emailSection { padding: 24px 16px 80px !important; }
+      #emailSection textarea { font-size: 16px !important; min-height: 140px !important; }
+      #emailSection h2 { font-size: 22px !important; }
+
+      /* Verdict card buttons — stack vertically */
+      .verdict-meta { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
+      #reportActions { display: flex !important; flex-wrap: wrap; gap: 6px; }
+      .btn-watchlist, .btn-report, .btn-download-report, .share-btn { margin-left: 0 !important; margin-top: 6px !important; font-size: 12px !important; padding: 7px 12px !important; }
+
+      /* Warning banners */
+      #aiWarningBanner, #communityFlagBanner { padding: 12px 14px !important; }
+
+      /* Score ring smaller on very small screens */
+      @media (max-width: 380px) {
+        .score-ring-wrap { width: 70px !important; height: 70px !important; }
+        .score-num { font-size: 20px !important; }
+      }
+
+      /* Email header parsed rows */
+      #emailParsedRows div { flex-direction: column !important; gap: 2px !important; }
+      #emailParsedRows span:first-child { min-width: unset !important; font-weight: 600; }
+
+      /* Findings on mobile */
+      .finding-row { align-items: flex-start !important; }
+      .finding-icon { flex-shrink: 0; margin-top: 2px; }
+
+      /* tawk.to chat above bottom bar — already set but ensure */
+      .tawk-min-container, .tawk-button { bottom: 68px !important; }
 
     }
   </style>
@@ -3090,17 +3120,17 @@ if(typeof Tawk_API !== 'undefined'){
       <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
       Scan
     </button>
-    <button class="bottom-tab-item" id="btab-pricing" onclick="showTab('pricing')">
-      <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-      Pricing
-    </button>
     <button class="bottom-tab-item" id="btab-alerts" onclick="showTab('alerts')">
       <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       Alerts
     </button>
-    <button class="bottom-tab-item" id="btab-business" onclick="showTab('business')">
-      <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
-      Business
+    <button class="bottom-tab-item" id="btab-email" onclick="showTab('email')">
+      <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Email
+    </button>
+    <button class="bottom-tab-item" id="btab-pricing" onclick="showTab('pricing')">
+      <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      Pricing
     </button>
     <button class="bottom-tab-item" id="btab-api" onclick="showTab('api')">
       <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
