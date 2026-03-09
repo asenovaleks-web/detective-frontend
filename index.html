@@ -942,6 +942,18 @@
         </div>
       </div>
 
+      <!-- Plain-language warning banner (RED/YELLOW) -->
+      <div id="aiWarningBanner" style="display:none;margin-bottom:10px;padding:14px 16px;border-radius:10px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);font-family:'DM Sans',sans-serif;">
+        <div style="font-size:13px;font-weight:700;color:#ef4444;margin-bottom:4px;" id="aiWarningTitle">⚠️ This site shows signs of a scam</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.5;" id="aiWarningText">Do not enter your payment details, email address, or any personal information on this site.</div>
+      </div>
+
+      <!-- Community flag banner (shown when 5+ users reported) -->
+      <div id="communityFlagBanner" style="display:none;margin-bottom:10px;padding:14px 16px;border-radius:10px;background:rgba(239,68,68,0.06);border:1px solid rgba(239,68,68,0.2);font-family:'DM Sans',sans-serif;">
+        <div style="font-size:13px;font-weight:700;color:#ef4444;margin-bottom:4px;">🚩 Community warning</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.5;"><span id="communityFlagCount">0</span> Signum users have flagged this site as dangerous. Exercise extreme caution.</div>
+      </div>
+
       <!-- Security Dashboard -->
       <div class="dashboard" id="dashboardWrap">
         <div class="confidence-row">
@@ -1830,6 +1842,10 @@ function runScan(){
   }
   document.getElementById("reportSection").classList.remove("visible");
   document.getElementById("errorMsg").classList.remove("visible");
+  // Hide warning banners from previous scan
+  var _wb = document.getElementById("aiWarningBanner"); if(_wb) _wb.style.display="none";
+  var _cb = document.getElementById("communityFlagBanner"); if(_cb) _cb.style.display="none";
+  var _ub = document.getElementById("userReportBadge"); if(_ub) _ub.style.display="none";
   var sp = document.getElementById("suggestionPills"); if(sp) sp.style.display="none";
   var nsc = document.getElementById("newScanCta"); if(nsc) nsc.style.display="none";
   var nudge = document.getElementById("saveNudge"); if(nudge) nudge.style.display="none";
@@ -2274,6 +2290,29 @@ function renderReport(r){
   document.getElementById("verdictLabel").textContent=verdictLabels[r.verdict]||r.verdict;
   document.getElementById("verdictSummary").textContent=r.verdict_summary;
 
+  // Plain-language warning banner
+  var warnBanner = document.getElementById("aiWarningBanner");
+  var warnTitle = document.getElementById("aiWarningTitle");
+  var warnText = document.getElementById("aiWarningText");
+  if(warnBanner){
+    if(r.verdict === "RED"){
+      warnBanner.style.display = "block";
+      warnBanner.style.background = "rgba(239,68,68,0.08)";
+      warnBanner.style.borderColor = "rgba(239,68,68,0.25)";
+      warnTitle.textContent = "⚠️ This site is most likely a scam";
+      warnText.textContent = "Do not enter payment details, your email address, or any personal information. Leave this site immediately.";
+    } else if(r.verdict === "YELLOW"){
+      warnBanner.style.display = "block";
+      warnBanner.style.background = "rgba(234,179,8,0.07)";
+      warnBanner.style.borderColor = "rgba(234,179,8,0.25)";
+      warnTitle.style.color = "#eab308";
+      warnTitle.textContent = "⚠️ Proceed with caution";
+      warnText.textContent = "Before you share any money, email, or personal details — search for independent reviews and verify this company through official channels, not their own website.";
+    } else {
+      warnBanner.style.display = "none";
+    }
+  }
+
   // Confidence level -- from backend data_confidence field
   var confMap = {"high":"high","medium":"med","low":"low"};
   var conf = confMap[r.data_confidence] || "med";
@@ -2406,6 +2445,17 @@ function renderReport(r){
         if(rd.count >= 1){
           countEl.textContent = rd.count;
           badge.style.display = "block";
+        }
+        // Community flag banner — show at 5+ reports
+        var flagBanner = document.getElementById("communityFlagBanner");
+        var flagCount = document.getElementById("communityFlagCount");
+        if(flagBanner && flagCount){
+          if(rd.count >= 5){
+            flagCount.textContent = rd.count;
+            flagBanner.style.display = "block";
+          } else {
+            flagBanner.style.display = "none";
+          }
         }
       }
     } catch(e){}
