@@ -1253,64 +1253,87 @@ Subject: Your account needs attention
     <div id="emailErrorMsg" style="display:none;margin-top:12px;color:var(--red);font-size:13px;"></div>
   </div>
 
-  <div id="apiSection" style="display:none;max-width:780px;margin:0 auto;padding:32px 16px 80px;">
+  <div id="apiSection" style="display:none;max-width:760px;margin:0 auto;padding:32px 16px 80px;">
+
+    <!-- Header -->
     <div style="display:inline-flex;align-items:center;gap:6px;font-size:11px;font-family:'DM Mono',monospace;font-weight:600;letter-spacing:0.8px;color:#10b981;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);padding:4px 12px;border-radius:100px;margin-bottom:20px;">DEVELOPER API</div>
     <h2 style="font-size:clamp(24px,4vw,36px);font-weight:700;letter-spacing:-0.8px;margin-bottom:10px;">Build trust intelligence<br/>into your product</h2>
-    <p style="font-size:16px;color:var(--text-muted);margin-bottom:32px;line-height:1.7;">One POST request. Get a full domain trust score, verdict, and findings — ready for your app, browser extension, or internal tool.</p>
+    <p style="font-size:16px;color:var(--text-muted);margin-bottom:32px;line-height:1.7;">One POST request. Full domain risk score, verdict, and findings — ready to integrate into any app, workflow, or internal tool.</p>
+
+    <!-- Use cases -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:28px;">
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;">
+        <div style="font-size:18px;margin-bottom:8px;">🔌</div>
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;">Browser extensions</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Check domains as users browse in real time.</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;">
+        <div style="font-size:18px;margin-bottom:8px;">🛒</div>
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;">E-commerce platforms</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Vet seller domains before transactions complete.</div>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;">
+        <div style="font-size:18px;margin-bottom:8px;">🏢</div>
+        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:4px;">Internal tools</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.5;">Automate vendor vetting in your procurement workflow.</div>
+      </div>
+    </div>
 
     <!-- Endpoint -->
-    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px;">
+    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:12px;">
       <div style="font-size:11px;font-family:'DM Mono',monospace;color:#10b981;letter-spacing:0.5px;margin-bottom:10px;">ENDPOINT</div>
       <code style="font-family:'DM Mono',monospace;font-size:14px;color:var(--text);">POST https://signumaiapp.com/api/check</code>
     </div>
 
-    <!-- Request -->
-    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px;">
-      <div style="font-size:11px;font-family:'DM Mono',monospace;color:#10b981;letter-spacing:0.5px;margin-bottom:12px;">REQUEST</div>
-      <pre style="font-family:'DM Mono',monospace;font-size:13px;color:#e2e8f0;line-height:1.7;margin:0;white-space:pre-wrap;">{
+    <!-- Request / Response tabs -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;">
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;">
+        <div style="font-size:11px;font-family:'DM Mono',monospace;color:#10b981;letter-spacing:0.5px;margin-bottom:12px;">REQUEST</div>
+        <pre style="font-family:'DM Mono',monospace;font-size:12px;color:#e2e8f0;line-height:1.7;margin:0;white-space:pre-wrap;">{
   "domain": "amazon.com",
-  "api_key": "your-api-key-here"
+  "api_key": "sk_your_key"
 }</pre>
-    </div>
-
-    <!-- Response -->
-    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:20px;">
-      <div style="font-size:11px;font-family:'DM Mono',monospace;color:#10b981;letter-spacing:0.5px;margin-bottom:12px;">RESPONSE</div>
-      <pre style="font-family:'DM Mono',monospace;font-size:13px;color:#e2e8f0;line-height:1.7;margin:0;white-space:pre-wrap;">{
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;">
+        <div style="font-size:11px;font-family:'DM Mono',monospace;color:#10b981;letter-spacing:0.5px;margin-bottom:12px;">RESPONSE</div>
+        <pre style="font-family:'DM Mono',monospace;font-size:12px;color:#e2e8f0;line-height:1.7;margin:0;white-space:pre-wrap;">{
   "domain": "amazon.com",
   "score": 12,
   "verdict": "GREEN",
-  "verdict_summary": "Established platform with strong trust signals.",
-  "findings": [
-    { "tag": "OK", "icon": "✅", "text": "Domain registered 27 years ago..." },
-    ...
-  ],
-  "scan_url": "https://signumaiapp.com/?domain=amazon.com",
-  "cached": false
+  "summary": "Trusted platform.",
+  "findings": [...]
 }</pre>
+      </div>
     </div>
 
-    <!-- Rate limits -->
-    <div style="background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-bottom:28px;">
-      <div style="font-size:11px;font-family:'DM Mono',monospace;color:#10b981;letter-spacing:0.5px;margin-bottom:12px;">RATE LIMITS</div>
-      <table style="width:100%;font-size:13px;border-collapse:collapse;">
-        <tr style="color:var(--text-muted);font-size:11px;letter-spacing:0.3px;">
-          <th style="text-align:left;padding:6px 0;border-bottom:1px solid var(--border);">Plan</th>
-          <th style="text-align:left;padding:6px 0;border-bottom:1px solid var(--border);">Requests/min</th>
-          <th style="text-align:left;padding:6px 0;border-bottom:1px solid var(--border);">Scans/month</th>
-        </tr>
-        <tr><td style="padding:8px 0;color:var(--text-muted);">Free</td><td style="padding:8px 0;color:var(--text-faint);">—</td><td style="padding:8px 0;color:var(--text-faint);">—</td></tr>
-        <tr><td style="padding:8px 0;color:var(--text-muted);">Pro</td><td style="padding:8px 0;color:var(--text-faint);">—</td><td style="padding:8px 0;color:var(--text-faint);">—</td></tr>
-        <tr><td style="padding:8px 0;color:#10b981;font-weight:600;">API</td><td style="padding:8px 0;">60</td><td style="padding:8px 0;">1,000</td></tr>
-      </table>
+    <!-- Pricing + limits -->
+    <div style="background:linear-gradient(135deg,rgba(16,185,129,0.06),rgba(59,130,246,0.06));border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:24px;margin-bottom:20px;">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+        <div>
+          <div style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:#10b981;margin-bottom:8px;">API PLAN</div>
+          <div style="font-size:28px;font-weight:700;color:var(--text);letter-spacing:-0.5px;">€29.99<span style="font-size:14px;font-weight:400;color:var(--text-muted);">/month</span></div>
+          <div style="font-size:13px;color:var(--text-muted);margin-top:4px;">Cancel anytime · Instant API key</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:8px;"><span style="color:#10b981;font-weight:700;">✓</span> 1,000 scans / month</div>
+          <div style="font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:8px;"><span style="color:#10b981;font-weight:700;">✓</span> 60 requests / minute</div>
+          <div style="font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:8px;"><span style="color:#10b981;font-weight:700;">✓</span> Full findings + AI verdict</div>
+          <div style="font-size:13px;color:var(--text-muted);display:flex;align-items:center;gap:8px;"><span style="color:#10b981;font-weight:700;">✓</span> Priority support</div>
+        </div>
+      </div>
+      <div style="margin-top:20px;">
+        <button class="modal-submit" style="width:100%;background:linear-gradient(135deg,#059669,#10b981);" onclick="if(!user){openModal();}else if(plan!=='api'){upgradeToApi();}else{showApiKey();}">
+          <span id="apiCtaLabel">Get API key — €29.99/month →</span>
+        </button>
+        <div style="text-align:center;margin-top:10px;font-size:12px;color:var(--text-faint);">Already on API plan? Your key is in the account menu.</div>
+      </div>
     </div>
 
-    <!-- Get API key CTA -->
-    <div style="background:linear-gradient(135deg,rgba(16,185,129,0.08),rgba(59,130,246,0.08));border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:24px;text-align:center;">
-      <div style="font-size:18px;font-weight:700;letter-spacing:-0.3px;margin-bottom:8px;">Ready to integrate?</div>
-      <div style="font-size:14px;color:var(--text-muted);margin-bottom:18px;">Get your API key from your account dashboard after upgrading to API plan.</div>
-      <button class="modal-submit" style="max-width:240px;margin:0 auto;" onclick="if(!user){openModal();}else if(plan!=='api'){upgradeToApi();}else{showApiKey();}">Get API key →</button>
+    <!-- Need more? -->
+    <div style="text-align:center;padding:16px;font-size:13px;color:var(--text-muted);">
+      Need higher limits or custom integration? <a href="mailto:hello@signumaiapp.com" style="color:#10b981;text-decoration:none;font-weight:600;">Contact us →</a>
     </div>
+
   </div>
 
   <!-- B2B Section -->
@@ -1627,6 +1650,13 @@ function updateUI(){
       '</div>';
   } else {
     navAuth.innerHTML='<button class="btn-sm btn-blue" onclick="openModal()">'+"Sign in"+'</button>';
+  }
+  // Update API CTA label based on plan
+  var apiCta = document.getElementById("apiCtaLabel");
+  if(apiCta){
+    if(!user) apiCta.textContent = "Get API key — €29.99/month →";
+    else if(plan === "api") apiCta.textContent = "View your API key →";
+    else apiCta.textContent = "Upgrade to API — €29.99/month →";
   }
 }
 
