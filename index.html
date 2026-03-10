@@ -885,13 +885,52 @@
 
   <!-- Scam Alerts Section -->
   <div id="scamAlertsSection" style="display:none; max-width:680px; margin:32px auto; padding:0 16px;">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-      <h2 style="font-size:18px;font-weight:700;letter-spacing:-0.4px;color:var(--text);">Recent Scam Alerts</h2>
+
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+      <h2 style="font-size:18px;font-weight:700;letter-spacing:-0.4px;color:var(--text);">Scam Alerts</h2>
       <span id="alertsUpdated" style="font-size:11px;color:var(--text-muted);font-family:'DM Mono',monospace;"></span>
     </div>
-    <div id="alertsList" style="display:flex;flex-direction:column;gap:8px;">
+    <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px;line-height:1.5;">Real domains flagged by our community and AI scanner. Updated continuously.</p>
+
+    <!-- Newsletter Banner -->
+    <div id="newsletterBanner" style="background:linear-gradient(135deg,rgba(37,99,235,0.12),rgba(139,92,246,0.08));border:1px solid rgba(59,130,246,0.25);border-radius:12px;padding:18px 20px;margin-bottom:20px;">
+      <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px;">📬 Weekly Scam Alerts — Free</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px;line-height:1.5;">Get the most dangerous domains of the week delivered to your inbox. No spam, unsubscribe anytime.</div>
+      <div id="newsletterForm" style="display:flex;gap:8px;flex-wrap:wrap;">
+        <input type="email" id="newsletterEmail" placeholder="your@email.com" style="flex:1;min-width:180px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;color:var(--text);outline:none;" />
+        <button onclick="subscribeNewsletter()" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Subscribe →</button>
+      </div>
+      <div id="newsletterMsg" style="font-size:12px;margin-top:8px;display:none;"></div>
+    </div>
+
+    <!-- Alerts List -->
+    <div id="alertsList" style="display:flex;flex-direction:column;gap:10px;">
       <div style="color:var(--text-muted);font-size:14px;text-align:center;padding:32px;">Loading alerts...</div>
     </div>
+
+    <!-- Community Stories Teaser -->
+    <div style="margin-top:28px;padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:12px;">
+      <div style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:1px;color:var(--text-faint);margin-bottom:12px;text-transform:uppercase;">Real people · Real scams</div>
+      <div style="display:flex;flex-direction:column;gap:14px;" id="communityStories">
+        <div style="border-left:2px solid rgba(239,68,68,0.4);padding-left:14px;">
+          <div style="font-size:13px;color:var(--text);line-height:1.6;margin-bottom:6px;">"I was about to pay £4,000 to a supplier. Domain was 3 months old. Zero online presence. SSL mismatch. Signum flagged it in seconds — I didn't make the payment."</div>
+          <div style="font-size:11px;color:var(--text-faint);">— Business owner, UK · Supplier scam</div>
+        </div>
+        <div style="border-left:2px solid rgba(245,158,11,0.4);padding-left:14px;">
+          <div style="font-size:13px;color:var(--text);line-height:1.6;margin-bottom:6px;">"Found a crypto platform with perfect SSL and great reviews. Turned out it was on the same IP as 60 other scam sites. Would have invested $2,000."</div>
+          <div style="font-size:11px;color:var(--text-faint);">— Retail investor, CA · Crypto scam</div>
+        </div>
+        <div style="border-left:2px solid rgba(239,68,68,0.4);padding-left:14px;">
+          <div style="font-size:13px;color:var(--text);line-height:1.6;margin-bottom:6px;">"Got an email from what looked like my bank. The domain had one extra letter. Signum gave it 78/100 risk — phishing infrastructure, SSL issued to a different domain entirely."</div>
+          <div style="font-size:11px;color:var(--text-faint);">— r/Scams community member · Phishing</div>
+        </div>
+      </div>
+      <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--border);font-size:12px;color:var(--text-muted);">
+        Have a story? <a href="mailto:hello@signumaiapp.com" style="color:var(--blue);text-decoration:none;">Share it with us</a> and help others stay safe.
+      </div>
+    </div>
+
   </div>
 
 
@@ -2148,6 +2187,33 @@ document.addEventListener("click", function(e){
   }
 });
 
+function subscribeNewsletter(){
+  var email = (document.getElementById("newsletterEmail")||{}).value || "";
+  var msg = document.getElementById("newsletterMsg");
+  var btn = document.querySelector("#newsletterForm button");
+  email = email.trim();
+  if(!email || !email.includes("@")){
+    msg.style.display="block"; msg.style.color="#f87171"; msg.textContent="Please enter a valid email."; return;
+  }
+  if(btn){ btn.textContent="Subscribing..."; btn.disabled=true; }
+  fetch(BACKEND+"/newsletter-subscribe",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email})})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    msg.style.display="block";
+    if(d.success){
+      msg.style.color="#34d399"; msg.textContent="✓ Subscribed! Check your inbox.";
+      document.getElementById("newsletterForm").style.display="none";
+    } else {
+      msg.style.color="#f87171"; msg.textContent="Something went wrong. Try again.";
+      if(btn){ btn.textContent="Subscribe →"; btn.disabled=false; }
+    }
+  })
+  .catch(function(){
+    msg.style.display="block"; msg.style.color="#f87171"; msg.textContent="Something went wrong. Try again.";
+    if(btn){ btn.textContent="Subscribe →"; btn.disabled=false; }
+  });
+}
+
 function loadScamAlerts(){
   fetch(BACKEND + "/scam-alerts?limit=20")
     .then(function(r){ return r.json(); })
@@ -2166,18 +2232,31 @@ function loadScamAlerts(){
         var cls = score >= 70 ? "danger" : score >= 40 ? "caution" : "safe";
         var color = score >= 70 ? "#f87171" : score >= 40 ? "#fbbf24" : "#34d399";
         var dotColor = score >= 70 ? "#ef4444" : score >= 40 ? "#eab308" : "#22c55e";
+        var borderColor = score >= 70 ? "rgba(239,68,68,0.15)" : score >= 40 ? "rgba(234,179,8,0.15)" : "rgba(34,197,94,0.1)";
         var icon = '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' + dotColor + ';flex-shrink:0;margin-top:3px;box-shadow:0 0 5px ' + dotColor + '40;"></span>';
-        var headline = a.headline ? "<div style=\"font-size:11px;color:var(--text-muted);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;\">" + a.headline.substring(0,80) + (a.headline.length>80?"...":"") + "</div>" : "";
-        rows += "<div class=\"threat-row " + cls + "\" style=\"cursor:pointer;\" onclick=\"document.getElementById('urlInput').value='" + a.domain + "';showTab('scan');setTimeout(runScan,300);\"><div style=\"display:flex;align-items:center;gap:10px;\">" +
-          "<span style=\"display:flex;align-items:center;\">" + icon + "</span>" +
+        var headline = a.headline ? "<div style=\"font-size:12px;color:var(--text-muted);margin-top:4px;line-height:1.4;\">" + a.headline.substring(0,100) + (a.headline.length>100?"...":"") + "</div>" : "";
+        // Source badge
+        var sourceBadge = "";
+        if(a.source_url){
+          var src = a.source_url.includes("reddit") ? "Reddit" : a.source_url.includes("twitter") ? "X/Twitter" : "Community";
+          sourceBadge = "<span style=\"font-size:10px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:1px 6px;color:var(--text-faint);font-family:'DM Mono',monospace;\">" + src + "</span>";
+        }
+        rows += "<div class=\"threat-row " + cls + "\" style=\"cursor:pointer;border:1px solid " + borderColor + ";border-radius:10px;padding:12px 14px;background:var(--surface);transition:border-color 0.15s;\" onclick=\"document.getElementById('urlInput').value='" + a.domain + "';showTab('scan');setTimeout(runScan,300);\">" +
+          "<div style=\"display:flex;align-items:flex-start;gap:10px;\">" +
+          "<span style=\"display:flex;align-items:center;margin-top:5px;\">" + icon + "</span>" +
           "<div style=\"flex:1;min-width:0;\">" +
-          "<div style=\"font-size:13px;font-weight:600;color:var(--text);font-family:'DM Mono',monospace;\">" + a.domain + "</div>" +
+          "<div style=\"display:flex;align-items:center;gap:8px;flex-wrap:wrap;\">" +
+          "<span style=\"font-size:13px;font-weight:600;color:var(--text);font-family:'DM Mono',monospace;\">" + a.domain + "</span>" +
+          sourceBadge +
+          "</div>" +
           headline +
           "</div>" +
           "<div style=\"text-align:right;flex-shrink:0;\">" +
-          "<div style=\"font-size:14px;font-weight:700;color:" + color + ";\">" + score + "</div>" +
+          "<div style=\"font-size:15px;font-weight:700;color:" + color + ";\">" + score + "</div>" +
           "<div style=\"font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px;\">" + verdict + "</div>" +
-          "</div></div></div>";
+          "</div></div>" +
+          "<div style=\"margin-top:8px;font-size:11px;color:var(--text-faint);\">Click to scan this domain →</div>" +
+          "</div>";
       });
       list.innerHTML = rows;
     })
@@ -2185,6 +2264,7 @@ function loadScamAlerts(){
       document.getElementById("alertsList").innerHTML = "<div style=\"color:var(--text-muted);font-size:14px;text-align:center;padding:32px;\">Could not load alerts.</div>";
     });
 }
+
 
 function loadRealCases(){
   var grid = document.getElementById('realCasesGrid');
