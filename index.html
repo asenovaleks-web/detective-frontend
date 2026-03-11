@@ -591,6 +591,29 @@
     }
   </style>
   <meta name="google-site-verification" content="Pi19gFU4MVmfH3XuIVHUd4B5uxS2M28SoHoVTDr9HXk" />
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Signum",
+    "description": "AI-powered website trust scanner. Check if any domain is safe, suspicious, or a scam in seconds.",
+    "url": "https://www.signumaiapp.com",
+    "applicationCategory": "SecurityApplication",
+    "operatingSystem": "Web",
+    "offers": [
+      {"@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "EUR"},
+      {"@type": "Offer", "name": "Pro", "price": "3.99", "priceCurrency": "EUR", "billingIncrement": "P1M"},
+      {"@type": "Offer", "name": "Team", "price": "19.99", "priceCurrency": "EUR", "billingIncrement": "P1M"}
+    ],
+    "creator": {
+      "@type": "Person",
+      "name": "Aleks Asenov",
+      "url": "https://www.linkedin.com/in/alanxo"
+    },
+    "featureList": ["Domain risk scoring", "AI threat analysis", "SSL inspection", "Phishing detection", "Email header analysis", "Chrome extension"]
+  }
+  </script>
   <!-- Privacy-friendly analytics by Plausible -->
   <script async src="https://plausible.io/js/pa-RJ0o2a3Oxi4PDeY7gAIAB.js"></script>
   <script>
@@ -598,6 +621,37 @@
     plausible.init()
   </script>
   <script defer src="/_vercel/insights/script.js"></script>
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml"/>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Signum",
+    "url": "https://www.signumaiapp.com",
+    "description": "AI-powered website trust intelligence. Check any domain for scams, phishing, and fraud in seconds.",
+    "applicationCategory": "SecurityApplication",
+    "operatingSystem": "Web",
+    "offers": [
+      {"@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "EUR"},
+      {"@type": "Offer", "name": "Pro", "price": "3.99", "priceCurrency": "EUR", "billingIncrement": "P1M"},
+      {"@type": "Offer", "name": "Team", "price": "19.99", "priceCurrency": "EUR", "billingIncrement": "P1M"},
+      {"@type": "Offer", "name": "API", "price": "29.99", "priceCurrency": "EUR", "billingIncrement": "P1M"}
+    ],
+    "publisher": {
+      "@type": "Organization",
+      "name": "Signum",
+      "url": "https://www.signumaiapp.com",
+      "email": "hello@signumaiapp.com"
+    },
+    "featureList": [
+      "AI-powered domain trust scoring",
+      "15+ threat intelligence sources",
+      "Email header analysis",
+      "Real-time scam alerts",
+      "Domain monitoring and watchlist"
+    ]
+  }
+  </script>
 </head>
 <body>
 <div class="page">
@@ -1200,7 +1254,7 @@
           <li><span class="fi">✓</span>Team scan history</li>
           <li><span class="fi">✓</span>Unlimited scans</li>
           <li><span class="fi">✓</span>Instant threat alerts for team</li>
-          <li><span class="fi">✓</span>Dedicated account manager</li>
+          <li><span class="fi">✓</span>Priority email support</li>
           <li><span class="fi">✓</span>Priority support &amp; onboarding</li>
         </ul>
         <button class="plan-cta" style="width:100%;padding:12px;border-radius:8px;border:1px solid #818cf8;background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(129,140,248,0.1));color:#a5b4fc;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s;" onclick="openTeamContact()">Get Team access →</button>
@@ -1508,6 +1562,8 @@ Subject: Your account needs attention
       <a href="/terms.html" style="font-size:14px;color:#8a9bc0;text-decoration:none;">Terms of Service</a>
       <span style="color:var(--border2);">·</span>
       <a href="/affiliates.html" style="font-size:14px;color:#f59e0b;text-decoration:none;font-weight:500;">Affiliates</a>
+      <span style="color:var(--border2);">·</span>
+      <a href="https://www.signumaiapp.com/scam-alerts-page" target="_blank" style="font-size:14px;color:#8a9bc0;text-decoration:none;">Scam Database</a>
       <span style="color:var(--border2);">·</span>
       <span style="font-size:14px;color:#8a9bc0;">© 2026 Signum. All rights reserved.</span>
     </div>
@@ -3169,10 +3225,10 @@ async function submitTeamContact(){
       msg.style.color="var(--green)";msg.textContent="✓ Request sent! We'll be in touch within 24 hours.";
       setTimeout(closeTeamContact,2500);
     } else {
-      msg.style.color="var(--red)";msg.textContent="Something went wrong on our end. Email us at hello@signumaiapp.com and we'll sort it out.";
+      msg.style.color="var(--red)";msg.textContent="Something went wrong on our end. Email us at <a href="mailto:hello@signumaiapp.com" style="color:var(--blue, #3b82f6);text-decoration:none;">hello@signumaiapp.com</a> and we'll sort it out.";
     }
   }catch(e){
-    msg.style.color="var(--red)";msg.textContent="Something went wrong on our end. Email us at hello@signumaiapp.com and we'll sort it out.";
+    msg.style.color="var(--red)";msg.textContent="Something went wrong on our end. Email us at <a href="mailto:hello@signumaiapp.com" style="color:var(--blue, #3b82f6);text-decoration:none;">hello@signumaiapp.com</a> and we'll sort it out.";
   }
 }
 
@@ -3182,6 +3238,10 @@ var isWatching = false;
 
 function openWatchlist(){
   closeDropdown();
+  if(!isPro){
+    showMsg("successMsg", "Targets & alerts are a <a href='#' onclick='showTab(\"pricing\");return false;' style='color:#60a5fa;text-decoration:underline;'>Pro feature</a>. Upgrade to track domains and get alerted on changes.");
+    return;
+  }
   document.getElementById("watchlistModal").classList.add("open");
   loadWatchlist();
 }
