@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    :root{--bg:#0b0f1a;--surface:#131c2e;--border:#1e2d4a;--border2:#243358;--text:#e8edf5;--muted:#7a8aaa;--faint:#3d4f6e;--blue:#3b82f6;--green:#22c55e}
+    :root{--bg:#0b0f1a;--surface:#131c2e;--border:#1e2d4a;--text:#e8edf5;--muted:#7a8aaa;--faint:#3d4f6e;--blue:#3b82f6}
     body{background:var(--bg);font-family:"DM Sans",sans-serif;color:var(--text);min-height:100vh;line-height:1.75;-webkit-font-smoothing:antialiased}
     .page{max-width:560px;margin:0 auto;padding:0 20px 80px}
     nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border);margin-bottom:48px}
@@ -16,29 +16,27 @@
     .logo-icon svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
     .back{font-size:13px;color:var(--muted);text-decoration:none;border:1px solid var(--border);border-radius:7px;padding:6px 14px;transition:all 0.15s}
     .back:hover{border-color:var(--blue);color:var(--blue)}
-    .label{font-size:10px;font-family:"DM Mono",monospace;font-weight:700;letter-spacing:1px;color:var(--faint);text-transform:uppercase;margin-bottom:12px}
     h1{font-size:clamp(24px,4vw,32px);font-weight:600;letter-spacing:-0.8px;margin-bottom:8px}
-    .sub{font-size:15px;color:var(--muted);margin-bottom:36px}
-    .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px}
-    .field{margin-bottom:16px}
-    .field-label{font-size:11px;font-family:"DM Mono",monospace;font-weight:700;letter-spacing:0.6px;color:var(--faint);text-transform:uppercase;margin-bottom:7px;display:block}
-    input,textarea,select{width:100%;background:#0d1424;border:1.5px solid var(--border2);border-radius:8px;padding:11px 14px;font-size:14px;color:var(--text);font-family:"DM Sans",sans-serif;outline:none;transition:border-color 0.15s}
+    p{font-size:15px;color:var(--muted);margin-bottom:24px;line-height:1.7}
+    .contact-options{display:flex;flex-direction:column;gap:12px;margin-bottom:40px}
+    .contact-card{display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px 20px;text-decoration:none;transition:border-color 0.15s}
+    .contact-card:hover{border-color:var(--blue)}
+    .contact-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+    .contact-info .label{font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px}
+    .contact-info .sub{font-size:12px;color:var(--muted)}
+    .divider{border:none;border-top:1px solid var(--border);margin:32px 0}
+    .form-group{margin-bottom:16px}
+    label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;letter-spacing:0.3px}
+    input,textarea,select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px 14px;font-size:14px;color:var(--text);font-family:inherit;outline:none;transition:border-color 0.15s}
     input:focus,textarea:focus,select:focus{border-color:var(--blue)}
     textarea{resize:vertical;min-height:120px}
-    select option{background:#0d1424}
-    .submit{width:100%;background:var(--blue);border:none;color:#fff;padding:13px;font-size:14px;font-weight:600;font-family:"DM Sans",sans-serif;border-radius:8px;cursor:pointer;transition:opacity 0.15s;box-shadow:0 0 20px rgba(59,130,246,0.25);margin-top:4px}
-    .submit:hover{opacity:0.85}
-    .submit:disabled{opacity:0.4;cursor:not-allowed;box-shadow:none}
-    .msg{padding:12px 16px;border-radius:8px;font-size:13px;font-weight:500;display:none;margin-top:14px}
-    .msg.ok{background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.25);color:var(--green)}
-    .msg.err{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);color:#ef4444}
-    .direct{margin-top:28px;padding-top:24px;border-top:1px solid var(--border)}
-    .direct-row{display:flex;align-items:center;gap:10px;padding:10px 0;font-size:14px;color:var(--muted)}
-    .direct-key{font-family:"DM Mono",monospace;font-size:11px;color:var(--faint);width:80px;flex-shrink:0}
-    .direct a{color:var(--blue);text-decoration:none}
-    .direct a:hover{text-decoration:underline}
-    footer{margin-top:48px;padding-top:24px;border-top:1px solid var(--border);text-align:center;font-size:13px;color:var(--faint)}
-    footer a{color:var(--faint)}
+    .submit-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:9px;padding:13px;font-size:14px;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity 0.15s}
+    .submit-btn:hover{opacity:0.88}
+    .msg{font-size:13px;margin-top:12px;padding:10px 14px;border-radius:8px;display:none}
+    .msg.success{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:#86efac}
+    .msg.error{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#fca5a5}
+    footer{margin-top:56px;padding-top:24px;border-top:1px solid var(--border);text-align:center;font-size:13px;color:var(--faint)}
+    footer a{color:var(--faint);text-decoration:none}
     footer a:hover{color:var(--blue)}
   </style>
 </head>
@@ -48,89 +46,81 @@
     <a href="/" class="back">← Back</a>
   </nav>
 
-  <div class="label">Support</div>
   <h1>Get in touch</h1>
-  <p class="sub">We typically respond within one business day.</p>
+  <p>Questions, feedback, or partnership enquiries — we read everything and respond within 24 hours.</p>
 
-  <div class="card">
-    <div class="field">
-      <label class="field-label" for="cEmail">Your email</label>
-      <input type="email" id="cEmail" placeholder="you@example.com"/>
-    </div>
-    <div class="field">
-      <label class="field-label" for="cSubject">Topic</label>
-      <select id="cSubject">
-        <option value="">Select a topic...</option>
-        <option value="billing">Billing or subscription</option>
-        <option value="scan">Scan result question</option>
-        <option value="bug">Bug or technical issue</option>
-        <option value="api">API / developer question</option>
-        <option value="team">Team plan enquiry</option>
-        <option value="privacy">Privacy or data request</option>
-        <option value="other">Something else</option>
-      </select>
-    </div>
-    <div class="field">
-      <label class="field-label" for="cMsg">Message</label>
-      <textarea id="cMsg" placeholder="Tell us what's on your mind..."></textarea>
-    </div>
-    <button class="submit" id="cSubmit" onclick="sendContact()">Send message →</button>
-    <div class="msg" id="cMsg2"></div>
-
-    <div class="direct">
-      <div class="direct-row"><span class="direct-key">General</span><a href="mailto:hello@signumaiapp.com">hello@signumaiapp.com</a></div>
-      <div class="direct-row"><span class="direct-key">Privacy</span><a href="mailto:privacy@signumaiapp.com">privacy@signumaiapp.com</a></div>
-      <div class="direct-row"><span class="direct-key">Legal</span><a href="mailto:legal@signumaiapp.com">legal@signumaiapp.com</a></div>
-    </div>
+  <div class="contact-options">
+    <a href="mailto:hello@signumaiapp.com" class="contact-card">
+      <div class="contact-icon" style="background:rgba(59,130,246,0.1);">✉️</div>
+      <div class="contact-info">
+        <div class="label">General enquiries</div>
+        <div class="sub">hello@signumaiapp.com</div>
+      </div>
+    </a>
+    <a href="mailto:privacy@signumaiapp.com" class="contact-card">
+      <div class="contact-icon" style="background:rgba(34,197,94,0.1);">🔒</div>
+      <div class="contact-info">
+        <div class="label">Privacy & data requests</div>
+        <div class="sub">privacy@signumaiapp.com</div>
+      </div>
+    </a>
+    <a href="mailto:hello@signumaiapp.com?subject=Business enquiry" class="contact-card">
+      <div class="contact-icon" style="background:rgba(129,140,248,0.1);">🏢</div>
+      <div class="contact-info">
+        <div class="label">Business & partnerships</div>
+        <div class="sub">API integrations, white-label, enterprise</div>
+      </div>
+    </a>
   </div>
+
+  <hr class="divider"/>
+
+  <div class="form-group">
+    <label>YOUR EMAIL</label>
+    <input type="email" id="contactEmail" placeholder="you@example.com"/>
+  </div>
+  <div class="form-group">
+    <label>SUBJECT</label>
+    <select id="contactSubject">
+      <option value="">Select a topic</option>
+      <option>General question</option>
+      <option>Bug report</option>
+      <option>Feature request</option>
+      <option>False positive scan result</option>
+      <option>Business / API enquiry</option>
+      <option>Privacy / data request</option>
+      <option>Other</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label>MESSAGE</label>
+    <textarea id="contactMessage" placeholder="Tell us what's on your mind..."></textarea>
+  </div>
+  <button class="submit-btn" onclick="sendContact()">Send message →</button>
+  <div class="msg" id="contactMsg"></div>
 
   <footer>© 2026 Signum · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a></footer>
 </div>
-
 <script>
-async function sendContact(){
-  var email = document.getElementById("cEmail").value.trim();
-  var subject = document.getElementById("cSubject").value;
-  var msg = document.getElementById("cMsg").value.trim();
-  var msgBox = document.getElementById("cMsg2");
-  var btn = document.getElementById("cSubmit");
-
-  if(!email || !email.includes("@")){ showMsg("err","Please enter a valid email address."); return; }
-  if(!subject){ showMsg("err","Please select a topic."); return; }
-  if(msg.length < 10){ showMsg("err","Please add a bit more detail so we can help you."); return; }
-
-  btn.disabled = true;
-  btn.textContent = "Sending...";
-
-  try {
-    var r = await fetch("https://detective-app-production-7080.up.railway.app/contact", {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({email, subject, message: msg})
-    });
-    if(r.ok){
-      showMsg("ok","Message sent — we'll get back to you within one business day.");
-      document.getElementById("cEmail").value = "";
-      document.getElementById("cSubject").value = "";
-      document.getElementById("cMsg").value = "";
-      btn.textContent = "Sent ✓";
-    } else {
-      throw new Error("Server error");
-    }
-  } catch(e){
-    // Fallback: open mailto
-    var mailto = "mailto:hello@signumaiapp.com?subject="+encodeURIComponent("[Signum] "+subject)+"&body="+encodeURIComponent(msg+"\n\nFrom: "+email);
-    window.location.href = mailto;
-    btn.disabled = false;
-    btn.textContent = "Send message →";
-  }
-}
-
-function showMsg(type, text){
-  var el = document.getElementById("cMsg2");
-  el.className = "msg " + type;
-  el.textContent = text;
-  el.style.display = "block";
+var BACKEND = "https://detective-app-production-7080.up.railway.app";
+function sendContact(){
+  var email = document.getElementById("contactEmail").value.trim();
+  var subject = document.getElementById("contactSubject").value;
+  var message = document.getElementById("contactMessage").value.trim();
+  var msg = document.getElementById("contactMsg");
+  if(!email || !message){ msg.textContent="Please fill in all fields."; msg.className="msg error"; msg.style.display="block"; return; }
+  fetch(BACKEND+"/contact",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email,subject:subject||"Contact form",message:message})})
+  .then(function(r){return r.json();})
+  .then(function(d){
+    msg.textContent="Message sent! We'll get back to you within 24 hours.";
+    msg.className="msg success"; msg.style.display="block";
+    document.getElementById("contactEmail").value="";
+    document.getElementById("contactMessage").value="";
+  })
+  .catch(function(){
+    msg.textContent="Something went wrong. Email us directly at hello@signumaiapp.com";
+    msg.className="msg error"; msg.style.display="block";
+  });
 }
 </script>
 </body></html>

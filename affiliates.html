@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Affiliate Program — Signum</title>
+  <meta name="description" content="Earn 30% recurring commission promoting Signum — AI-powered website trust intelligence.">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%233b82f6'/><polyline points='6,22 12,14 18,18 26,8' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/></svg>"/>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    :root{--bg:#0b0f1a;--surface:#131c2e;--border:#1e2d4a;--text:#e8edf5;--muted:#7a8aaa;--faint:#3d4f6e;--blue:#3b82f6;--green:#22c55e}
+    body{background:var(--bg);font-family:"DM Sans",sans-serif;color:var(--text);min-height:100vh;line-height:1.75;-webkit-font-smoothing:antialiased}
+    .page{max-width:680px;margin:0 auto;padding:0 20px 80px}
+    nav{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border);margin-bottom:48px}
+    .logo{display:flex;align-items:center;gap:9px;font-size:16px;font-weight:600;color:var(--text);text-decoration:none}
+    .logo-icon{width:26px;height:26px;background:var(--blue);border-radius:6px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(59,130,246,0.4)}
+    .logo-icon svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+    .back{font-size:13px;color:var(--muted);text-decoration:none;border:1px solid var(--border);border-radius:7px;padding:6px 14px}
+    .back:hover{border-color:var(--blue);color:var(--blue)}
+    .label{font-size:10px;font-family:"DM Mono",monospace;font-weight:700;letter-spacing:1px;color:var(--faint);text-transform:uppercase;margin-bottom:12px}
+    h1{font-size:clamp(28px,4vw,40px);font-weight:700;letter-spacing:-1px;margin-bottom:10px;line-height:1.15}
+    h1 em{color:var(--blue);font-style:normal}
+    .hero-sub{font-size:17px;color:var(--muted);margin-bottom:40px;line-height:1.7}
+    .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:40px}
+    .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center}
+    .stat-num{font-size:28px;font-weight:700;color:var(--blue);letter-spacing:-0.5px;margin-bottom:4px}
+    .stat-lbl{font-size:12px;color:var(--muted)}
+    h2{font-size:18px;font-weight:700;margin:36px 0 16px;letter-spacing:-0.3px}
+    .steps{display:flex;flex-direction:column;gap:16px;margin-bottom:40px}
+    .step{display:flex;gap:16px;align-items:flex-start}
+    .step-num{width:32px;height:32px;border-radius:50%;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--blue);flex-shrink:0}
+    .step-content h3{font-size:14px;font-weight:600;margin-bottom:4px}
+    .step-content p{font-size:14px;color:var(--muted)}
+    .form-group{margin-bottom:16px}
+    label{display:block;font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px;letter-spacing:0.3px}
+    input,textarea,select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px 14px;font-size:14px;color:var(--text);font-family:inherit;outline:none;transition:border-color 0.15s}
+    input:focus,textarea:focus,select:focus{border-color:var(--blue)}
+    textarea{resize:vertical;min-height:100px}
+    .submit-btn{width:100%;background:var(--blue);color:#fff;border:none;border-radius:9px;padding:14px;font-size:15px;font-weight:600;font-family:inherit;cursor:pointer;transition:opacity 0.15s}
+    .submit-btn:hover{opacity:0.88}
+    .msg{font-size:13px;margin-top:12px;padding:10px 14px;border-radius:8px;display:none}
+    .msg.success{background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2);color:#86efac}
+    .msg.error{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#fca5a5}
+    .faq-item{border-bottom:1px solid var(--border);padding:16px 0}
+    .faq-q{font-size:14px;font-weight:600;color:var(--text);margin-bottom:6px}
+    .faq-a{font-size:14px;color:var(--muted)}
+    footer{margin-top:56px;padding-top:24px;border-top:1px solid var(--border);text-align:center;font-size:13px;color:var(--faint)}
+    footer a{color:var(--faint);text-decoration:none}
+    footer a:hover{color:var(--blue)}
+    @media(max-width:480px){.stats-row{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body><div class="page">
+  <nav>
+    <a href="/" class="logo"><div class="logo-icon"><svg viewBox="0 0 15 15"><polyline points="2,11 5,7 8,9 13,3"/></svg></div>Signum</a>
+    <a href="/" class="back">← Back</a>
+  </nav>
+
+  <div class="label">Affiliate Program</div>
+  <h1>Earn <em>30% recurring</em><br/>commission with Signum</h1>
+  <p class="hero-sub">Promote a tool people actually need — and earn every month they stay subscribed. No cap, no expiry.</p>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-num">30%</div>
+      <div class="stat-lbl">Recurring commission</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">€3.99</div>
+      <div class="stat-lbl">Starting plan price</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">60d</div>
+      <div class="stat-lbl">Cookie window</div>
+    </div>
+  </div>
+
+  <h2>How it works</h2>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-content">
+        <h3>Apply below</h3>
+        <p>Tell us about your audience and how you plan to promote Signum. We review within 48 hours.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-content">
+        <h3>Get your unique link</h3>
+        <p>We'll send you a tracked referral link with a 60-day cookie window.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-content">
+        <h3>Earn every month</h3>
+        <p>30% of every subscription payment — for as long as your referrals stay subscribed. Paid monthly via PayPal or bank transfer.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Apply now</h2>
+  <div class="form-group">
+    <label>YOUR NAME</label>
+    <input type="text" id="affName" placeholder="Your name"/>
+  </div>
+  <div class="form-group">
+    <label>EMAIL</label>
+    <input type="email" id="affEmail" placeholder="you@example.com"/>
+  </div>
+  <div class="form-group">
+    <label>WEBSITE / CHANNEL / AUDIENCE</label>
+    <input type="text" id="affWebsite" placeholder="https://yoursite.com or @yourhandle"/>
+  </div>
+  <div class="form-group">
+    <label>HOW WILL YOU PROMOTE SIGNUM?</label>
+    <textarea id="affHow" placeholder="Blog post, newsletter, YouTube, social media..."></textarea>
+  </div>
+  <button class="submit-btn" onclick="applyAffiliate()">Apply →</button>
+  <div class="msg" id="affMsg"></div>
+
+  <h2>FAQ</h2>
+  <div class="faq-item">
+    <div class="faq-q">Who can apply?</div>
+    <div class="faq-a">Anyone with an audience that overlaps with online shoppers, founders, freelancers, or anyone who transacts online. Bloggers, YouTubers, newsletter writers, and social media creators are welcome.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">When do I get paid?</div>
+    <div class="faq-a">Monthly, after a 30-day holding period. Minimum payout is €20.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Is there a limit on earnings?</div>
+    <div class="faq-a">No cap. The more you refer, the more you earn — every month.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">What about refunds?</div>
+    <div class="faq-a">If a referred user refunds within 30 days, the commission is reversed.</div>
+  </div>
+
+  <footer>© 2026 Signum · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/contact.html">Contact</a></footer>
+</div>
+<script>
+var BACKEND = "https://detective-app-production-7080.up.railway.app";
+function applyAffiliate(){
+  var name = document.getElementById("affName").value.trim();
+  var email = document.getElementById("affEmail").value.trim();
+  var website = document.getElementById("affWebsite").value.trim();
+  var how = document.getElementById("affHow").value.trim();
+  var msg = document.getElementById("affMsg");
+  if(!name || !email || !how){ msg.textContent="Please fill in all required fields."; msg.className="msg error"; msg.style.display="block"; return; }
+  fetch(BACKEND+"/affiliate-apply",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:name,email:email,website:website,how:how})})
+  .then(function(r){return r.json();})
+  .then(function(){
+    msg.textContent="Application received! We'll be in touch within 48 hours.";
+    msg.className="msg success"; msg.style.display="block";
+    ["affName","affEmail","affWebsite","affHow"].forEach(function(id){ document.getElementById(id).value=""; });
+  })
+  .catch(function(){
+    msg.textContent="Something went wrong. Email us at hello@signumaiapp.com";
+    msg.className="msg error"; msg.style.display="block";
+  });
+}
+</script>
+</body></html>

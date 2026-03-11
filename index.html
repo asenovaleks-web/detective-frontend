@@ -825,7 +825,7 @@
         <div style="font-size:10px;color:var(--text-faint);margin-top:3px;font-family:'DM Mono',monospace;letter-spacing:0.3px;">lost to scams in 2024</div>
       </div>
       <div style="text-align:center;padding:14px 22px;border-right:1px solid var(--border);">
-        <div style="font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.8px;">12+</div>
+        <div style="font-size:20px;font-weight:700;color:var(--text);letter-spacing:-0.8px;">15+</div>
         <div style="font-size:10px;color:var(--text-faint);margin-top:3px;font-family:'DM Mono',monospace;letter-spacing:0.3px;">threat sources</div>
       </div>
       <div style="text-align:center;padding:14px 22px;border-right:1px solid var(--border);">
@@ -860,6 +860,8 @@
       <button onclick="quickScan('bybit.com')" class="suggestion-pill">bybit.com</button>
       <button onclick="quickScan('wish.com')" class="suggestion-pill">wish.com</button>
     </div>
+    <!-- Dynamic scam pills from alerts -->
+    <div id="scamPills" style="display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:6px;"></div>
     <div class="status-wrap" id="statusWrap" style="margin-top:12px;margin-bottom:0;">
       <div class="status-inner"><div class="spinner"></div><div class="status-text" id="statusText">Initializing...</div></div>
     </div>
@@ -876,6 +878,17 @@
         </span>
       </div>
       <div id="trendingList" style="display:flex;flex-direction:column;gap:2px;"></div>
+    </div>
+  </div>
+
+  <!-- Local scan history for anon users -->
+  <div id="localHistorySection" style="display:none;margin:12px 0 0;">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px 20px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+        <span style="font-size:11px;font-family:'DM Mono',monospace;font-weight:700;letter-spacing:0.8px;color:var(--text-faint);text-transform:uppercase;">Your Recent Scans</span>
+        <button onclick="clearLocalHistory()" style="font-size:10px;color:var(--text-faint);background:none;border:none;cursor:pointer;font-family:inherit;">Clear</button>
+      </div>
+      <div id="localHistoryList" style="display:flex;flex-direction:column;gap:4px;"></div>
     </div>
   </div>
 
@@ -1117,6 +1130,9 @@
       <button onclick="openModal()" style="background:var(--blue);color:#fff;border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;flex-shrink:0;">Sign in</button>
     </div>
   </div>
+
+  <!-- Contextual Pro upsell for free logged-in users -->
+  <div id="contextualUpsell" style="display:none;"></div>
 
   <!-- New scan CTA — shown after result -->
   <div id="newScanCta" style="display:none;text-align:center;padding:24px 0 8px;">
@@ -1491,7 +1507,7 @@ Subject: Your account needs attention
       <span style="color:var(--border2);">·</span>
       <a href="/terms.html" style="font-size:14px;color:#8a9bc0;text-decoration:none;">Terms of Service</a>
       <span style="color:var(--border2);">·</span>
-      <a href="/affiliate.html" style="font-size:14px;color:#f59e0b;text-decoration:none;font-weight:500;">Affiliates</a>
+      <a href="/affiliates.html" style="font-size:14px;color:#f59e0b;text-decoration:none;font-weight:500;">Affiliates</a>
       <span style="color:var(--border2);">·</span>
       <span style="font-size:14px;color:#8a9bc0;">© 2026 Signum. All rights reserved.</span>
     </div>
@@ -2070,6 +2086,7 @@ function runScan(){
   var sp = document.getElementById("suggestionPills"); if(sp) sp.style.display="none";
   var nsc = document.getElementById("newScanCta"); if(nsc) nsc.style.display="none";
   var nudge = document.getElementById("saveNudge"); if(nudge) nudge.style.display="none";
+  var cu = document.getElementById("contextualUpsell"); if(cu) cu.style.display="none";
   ["beforeAfterSection","realCasesSection","trendingSection"].forEach(function(id){
     var el = document.getElementById(id);
     if(el) el.style.display = "none";
@@ -2485,8 +2502,87 @@ function scanFromTrending(el){
 document.addEventListener("DOMContentLoaded", function(){
   setTimeout(loadTrendingThreats, 800);
   setTimeout(loadRealCases, 600);
+  setTimeout(loadScamPills, 1200);
+  if(!user) renderLocalHistory();
   if(user) maybeShowOnboarding();
+  // Hero title A/B rotation
+  var heroTitles = [
+    'Is this site safe —<br/>or are you about to get <em>scammed?</em>',
+    'About to pay online?<br/><em>Check the site first.</em>',
+    'Don\'t get scammed.<br/><em>Know before you click.</em>',
+    'Is this site legit —<br/>or a <em>fake?</em>'
+  ];
+  var heroEl = document.getElementById("tHeroTitle");
+  if(heroEl){
+    var idx = Math.floor(Math.random() * heroTitles.length);
+    heroEl.innerHTML = heroTitles[idx];
+    if(typeof plausible !== "undefined") plausible("Hero Variant", {props: {variant: String(idx)}});
+  }
 });
+
+// ── Local scan history for anon users ────────────────────────────────────────
+function saveLocalScan(domain, score, verdict) {
+  if(user) return; // logged-in users have server history
+  try {
+    var history = JSON.parse(localStorage.getItem("sg_local_history") || "[]");
+    // Remove duplicate if exists
+    history = history.filter(function(h){ return h.domain !== domain; });
+    history.unshift({domain: domain, score: score, verdict: verdict, ts: Date.now()});
+    history = history.slice(0, 8); // keep last 8
+    localStorage.setItem("sg_local_history", JSON.stringify(history));
+    renderLocalHistory();
+  } catch(e){}
+}
+
+function renderLocalHistory() {
+  if(user) return;
+  try {
+    var history = JSON.parse(localStorage.getItem("sg_local_history") || "[]");
+    var section = document.getElementById("localHistorySection");
+    var list = document.getElementById("localHistoryList");
+    if(!section || !list || history.length === 0) { if(section) section.style.display="none"; return; }
+    section.style.display = "";
+    list.innerHTML = history.map(function(h){
+      var color = h.score >= 70 ? "#f87171" : h.score >= 40 ? "#fbbf24" : "#34d399";
+      var dot = '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:'+color+';flex-shrink:0;"></span>';
+      return '<div style="display:flex;align-items:center;gap:8px;padding:6px 4px;cursor:pointer;border-radius:6px;transition:background 0.1s;" onmouseover="this.style.background=\'rgba(59,130,246,0.05)\'" onmouseout="this.style.background=\'none\'" onclick="quickScan(\''+h.domain+'\')">' +
+        dot +
+        '<span style="font-size:12px;font-family:\'DM Mono\',monospace;color:var(--text-muted);flex:1;">'+h.domain+'</span>' +
+        '<span style="font-size:12px;font-weight:600;color:'+color+';">'+h.score+'</span>' +
+        '</div>';
+    }).join("");
+  } catch(e){}
+}
+
+function clearLocalHistory() {
+  localStorage.removeItem("sg_local_history");
+  var section = document.getElementById("localHistorySection");
+  if(section) section.style.display="none";
+}
+
+function loadScamPills(){
+  fetch(BACKEND + "/scam-alerts?limit=6")
+    .then(function(r){ return r.json(); })
+    .then(function(data){
+      var pills = document.getElementById("scamPills");
+      if(!pills || !data.alerts || data.alerts.length === 0) return;
+      var flagged = data.alerts.filter(function(a){ return a.risk_score >= 55; }).slice(0, 4);
+      if(flagged.length === 0) return;
+      var label = document.createElement("span");
+      label.style.cssText = "font-size:10px;color:#ef4444;font-family:'DM Mono',monospace;align-self:center;margin-right:2px;letter-spacing:0.3px;";
+      label.textContent = "⚠ flagged:";
+      pills.appendChild(label);
+      flagged.forEach(function(a){
+        var btn = document.createElement("button");
+        btn.className = "suggestion-pill";
+        btn.style.cssText = "border-color:rgba(239,68,68,0.3);color:#f87171;";
+        btn.textContent = a.domain;
+        btn.onclick = function(){ quickScan(a.domain); };
+        pills.appendChild(btn);
+      });
+    })
+    .catch(function(){});
+}
 
 function buyOneScan(){
   var domain = document.getElementById("onetimeDomain").value.trim();
@@ -2528,7 +2624,9 @@ function renderReport(r){
     currentDomain = new URL(rawTarget).hostname.replace(/^www\./, "");
   } catch(e){ currentDomain = rawTarget.split("/")[0].split("?")[0]; }
 
-  // ── Update hero state based on verdict ──────────────────────────────
+  // Save to local history for anon users
+  saveLocalScan(currentDomain, r.score || 0, r.verdict || "");
+  renderLocalHistory();  // ── Update hero state based on verdict ──────────────────────────────
   var heroTitle = document.getElementById("tHeroTitle");
   var heroSub = document.getElementById("tHeroSub");
   if(heroTitle && heroSub){
@@ -2767,6 +2865,28 @@ function renderReport(r){
   // Show save nudge for anon users
   var nudge = document.getElementById("saveNudge");
   if(nudge) nudge.style.display = (!token) ? "" : "none";
+
+  // Contextual Pro upsell for logged-in free users after high-risk scan
+  if(token && !isPro){
+    var score = parseInt(document.getElementById("scoreNum").textContent) || 0;
+    var upsellEl = document.getElementById("contextualUpsell");
+    if(upsellEl){
+      if(score >= 55){
+        upsellEl.innerHTML = '<div style="background:linear-gradient(135deg,rgba(239,68,68,0.08),rgba(245,158,11,0.06));border:1px solid rgba(239,68,68,0.2);border-radius:10px;padding:14px 18px;margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">' +
+          '<div><div style="font-size:13px;font-weight:600;color:#fca5a5;margin-bottom:2px;">⚠ High-risk domain detected</div>' +
+          '<div style="font-size:12px;color:var(--text-muted);">Unlock full AI analysis, malicious code scan, and domain tracking.</div></div>' +
+          '<button onclick="upgradeToPro()" style="background:#ef4444;color:#fff;border:none;border-radius:7px;padding:8px 16px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;">Get Pro · €3.99/mo</button>' +
+          '</div>';
+        upsellEl.style.display = "";
+      } else {
+        upsellEl.innerHTML = '<div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 18px;margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">' +
+          '<div style="font-size:12px;color:var(--text-muted);">Want full findings, scan history, and domain alerts?</div>' +
+          '<button onclick="upgradeToPro()" style="background:var(--blue);color:#fff;border:none;border-radius:7px;padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:inherit;">Try Pro · €3.99/mo</button>' +
+          '</div>';
+        upsellEl.style.display = "";
+      }
+    }
+  }
 }
 
 function toggleRaw(){
