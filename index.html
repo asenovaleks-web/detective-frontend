@@ -71,8 +71,7 @@
       .mobile-menu-btn { display: none !important; }
       .nav-right .btn-outline { display: none !important; }
       /* Bottom tab bar */
-      .bottom-tab-bar { display: flex !important; }
-      /* Push page content above bottom bar */
+        /* Push page content above bottom bar */
       body { padding-bottom: 72px; }
       /* Hide email in nav on mobile */
       .nav-email { display: none !important; }
@@ -3453,6 +3452,14 @@ if(typeof Tawk_API !== 'undefined'){
   Tawk_API.onChatMinimized = function(){ document.getElementById('sg-chat-btn').style.display='flex'; };
   Tawk_API.onChatEnded    = function(){ document.getElementById('sg-chat-btn').style.display='flex'; Tawk_API.hideWidget(); };
 }
+
+  // Shorten scan button on small screens
+  function updateScanBtn(){
+    var b=document.getElementById('scanBtn');
+    if(b) b.textContent = window.innerWidth < 400 ? '→' : 'Analyze →';
+  }
+  updateScanBtn();
+  window.addEventListener('resize', updateScanBtn);
 </script>
 
   <!-- Mobile Nav Drawer -->
