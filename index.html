@@ -1534,6 +1534,8 @@ Subject: Your account needs attention
     </div>
     <div style="font-size:13px;color:#8a9bc0;margin-bottom:10px;">The intelligence layer between you and the internet.</div>
     <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
+      <a href="/about.html" style="font-size:14px;color:#8a9bc0;text-decoration:none;">About</a>
+      <span style="color:var(--border2);">·</span>
       <a href="/pricing.html" style="font-size:14px;color:#8a9bc0;text-decoration:none;">Pricing</a>
       <span style="color:var(--border2);">·</span>
       <a href="/faq.html" style="font-size:14px;color:#8a9bc0;text-decoration:none;">FAQ</a>
@@ -1735,6 +1737,27 @@ window.addEventListener("load",function(){
   }
 });
 
+
+function updateHeroSafeState(){
+  if(!user) return; // Only for logged-in users
+  if(currentDomain) return; // Scan already active
+  var ht = document.getElementById("tHeroTitle");
+  var hs = document.getElementById("tHeroSub");
+  if(!ht || !hs) return;
+  var uname = (user.email||"").split("@")[0];
+  var lastDomain = sg_get("sg_last_domain");
+  var lastScore = parseInt(sg_get("sg_last_score")||"0");
+  var lastVerdict = sg_get("sg_last_verdict")||"";
+  if(lastDomain && lastVerdict){
+    var vColor = lastVerdict==="GREEN" ? "var(--green)" : lastVerdict==="RED" ? "var(--red)" : "var(--yellow)";
+    var vLabel = lastVerdict==="GREEN" ? "Safe" : lastVerdict==="RED" ? "Danger" : "Caution";
+    ht.innerHTML = "Welcome back, <em>" + uname + "</em>";
+    hs.innerHTML = "Last scan: <span style=\"color:"+vColor+";font-weight:600;\">"+lastDomain+" — "+vLabel+" ("+lastScore+"/100)</span> &nbsp;·&nbsp; <span style=\"cursor:pointer;text-decoration:underline;color:var(--blue);\" onclick=\"document.getElementById('urlInput').value='"+lastDomain+"';runScan()\">Re-scan</span>";
+  } else {
+    ht.innerHTML = "Welcome back, <em>" + uname + "</em>";
+    hs.textContent = "Paste any domain above to run your first scan.";
+  }
+}
 function updateUI(){
   var navAuth=document.getElementById("navAuth");
   if(user){
@@ -1765,6 +1788,8 @@ function updateUI(){
   } else {
     navAuth.innerHTML='<button class="btn-sm btn-blue" onclick="openModal()">'+"Sign in"+'</button>';
   }
+  // Safe state — personalise hero when logged in and no scan active
+  updateHeroSafeState();
   // Update API CTA label based on plan
   var apiCta = document.getElementById("apiCtaLabel");
   if(apiCta){
@@ -2665,6 +2690,10 @@ function renderReport(r){
 
   // Save to local history for anon users
   saveLocalScan(currentDomain, r.score || 0, r.verdict || "");
+  // Save last scan for safe state
+  sg_set("sg_last_domain", currentDomain);
+  sg_set("sg_last_score", r.score || 0);
+  sg_set("sg_last_verdict", r.verdict || "");
   renderLocalHistory();  // ── Update hero state based on verdict ──────────────────────────────
   var heroTitle = document.getElementById("tHeroTitle");
   var heroSub = document.getElementById("tHeroSub");
