@@ -181,6 +181,19 @@
       </div>
     </div>
 
+
+    <hr class="divider"/>
+    <div class="section" style="text-align:center;">
+      <div class="label" style="text-align:center;">Stay ahead of scams</div>
+      <h2 style="margin-bottom:8px;">Weekly scam alerts, free</h2>
+      <p style="margin-bottom:20px;">The most dangerous domains of the week delivered to your inbox. No spam, unsubscribe anytime.</p>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+        <input type="email" id="faqEmail" placeholder="your@email.com" style="background:#111827;border:1px solid #1e293b;border-radius:8px;padding:10px 14px;font-size:14px;color:#e2e8f0;outline:none;width:220px;"/>
+        <button onclick="subscribeFaq()" style="background:#3b82f6;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:14px;font-weight:600;cursor:pointer;">Subscribe free →</button>
+      </div>
+      <div id="faqSubMsg" style="margin-top:10px;font-size:13px;color:#22c55e;display:none;">✓ Subscribed! First digest lands Monday.</div>
+    </div>
+
     <div class="section">
       <div class="section-title">Still have questions?</div>
       <div class="faq-item" style="border:none">
@@ -193,5 +206,25 @@
     <a href="/">Home</a> · <a href="/pricing.html">Pricing</a> · <a href="/faq.html">FAQ</a> · <a href="/affiliates.html">Affiliates</a> · <a href="/contact.html">Contact</a> · <a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a>
     <br/><br/>© 2026 Signum AI · The intelligence layer between you and the internet.
   </footer>
+
+  <script>
+  var BACKEND = "https://detective-app-production-7080.up.railway.app";
+  function subscribeFaq(){
+    var email = document.getElementById("faqEmail").value.trim();
+    if(!email) return;
+    var btn = document.querySelector("button[onclick='subscribeFaq()']");
+    if(btn) btn.textContent = "...";
+    fetch(BACKEND+"/newsletter-subscribe",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:email})})
+      .then(function(r){ return r.json(); })
+      .then(function(){
+        document.getElementById("faqSubMsg").style.display = "block";
+        document.getElementById("faqEmail").style.display = "none";
+        if(btn) btn.style.display = "none";
+      }).catch(function(){
+        if(btn) btn.textContent = "Subscribe free →";
+      });
+  }
+  </script>
+
 </body>
 </html>
