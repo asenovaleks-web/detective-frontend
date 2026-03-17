@@ -1,8 +1,5 @@
 User-agent: *
-Allow: /
-Disallow: /api/
-Disallow: /webhook/
-Disallow: /unsubscribe
+Disallow: /*?domain=
+Disallow: /*?domain=*
 
-Sitemap: https://www.signumaiapp.com/sitemap.xml
-Sitemap: https://www.signumaiapp.com/sitemap-domains.xml
+Sitemap: https://signumaiapp.com/sitemap.xml
