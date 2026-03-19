@@ -2124,7 +2124,8 @@ function maybeShowOnboarding(){
 function upgradeToApi(){
   if(typeof plausible !== "undefined") plausible("Upgrade Click", {props: {plan: "api"}});
   if(!user||!token||token==="null"){ openModal(); return; }
-  fetch(BACKEND+"/create-checkout-session",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_token:token,user_email:user.email,plan:"api"})})
+  var ref=sg_get("sg_ref")||undefined;
+  fetch(BACKEND+"/create-checkout-session",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_token:token,user_email:user.email,plan:"api",referral_code:ref})})
   .then(function(r){return r.json();}).then(function(d){
     if(d.checkout_url){ window.location.href=d.checkout_url; }
     else{ showMsg("errorMsg","Checkout could not be started. Please try again."); }
@@ -2133,7 +2134,8 @@ function upgradeToApi(){
 function upgradeToTeam(){
   if(typeof plausible !== "undefined") plausible("Upgrade Click", {props: {plan: "team"}});
   if(!user||!token||token==="null"){ openModal(); return; }
-  fetch(BACKEND+"/create-checkout-session",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_token:token,user_email:user.email,plan:"team"})})
+  var ref=sg_get("sg_ref")||undefined;
+  fetch(BACKEND+"/create-checkout-session",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_token:token,user_email:user.email,plan:"team",referral_code:ref})})
   .then(function(r){return r.json();}).then(function(d){
     if(d.checkout_url){ window.location.href=d.checkout_url; }
     else{ showMsg("errorMsg","Checkout could not be started. Please try again."); }
@@ -2145,7 +2147,8 @@ function upgradeToPro(){
   if(!user||!token||token==="null"){ openModal(); return; }
   var btn=document.getElementById("upgBtn");
   if(btn){ btn.textContent="..."; btn.disabled=true; }
-  fetch(BACKEND+"/create-checkout-session",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_token:token,user_email:user.email,plan:"pro"})})
+  var ref=sg_get("sg_ref")||undefined;
+  fetch(BACKEND+"/create-checkout-session",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({user_token:token,user_email:user.email,plan:"pro",referral_code:ref})})
   .then(function(r){return r.json();}).then(function(d){
     if(d.checkout_url){ window.location.href=d.checkout_url; }
     else{ showMsg("errorMsg","Checkout could not be started. Please try again."); if(btn){btn.textContent="Upgrade to Pro";btn.disabled=false;} }
