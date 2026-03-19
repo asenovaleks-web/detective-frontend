@@ -837,6 +837,7 @@
       <button class="nav-tab" onclick="if(window.showTab)showTab('alerts')" id="tab-alerts">Scam Alerts</button>
       <button class="nav-tab" onclick="if(window.showTab)showTab('email')" id="tab-email">Email Check</button>
       <button class="nav-tab" onclick="if(window.showTab)showTab('api')" id="tab-api">API</button>
+      <button class="nav-tab" onclick="if(window.showTab)showTab('bulk')" id="tab-bulk" style="display:none;">Bulk Scan</button>
     </div>
     <button class="mobile-menu-btn" onclick="toggleMobileNav()">☰ Menu</button>
     <div class="nav-right">
@@ -1196,6 +1197,15 @@
   <!-- Contextual Pro upsell for free logged-in users -->
   <div id="contextualUpsell" style="display:none;"></div>
 
+  <!-- Persistent report link — shown after result -->
+  <div id="persistentReportCta" style="display:none;margin:8px 0 4px;">
+    <div style="display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:10px 14px;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#8a9bc0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      <span style="font-size:12px;color:var(--text-muted);flex:1;font-family:'DM Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" id="persistentReportUrl"></span>
+      <button onclick="copyPersistentLink()" id="persistentCopyBtn" style="background:none;border:1px solid var(--border2);border-radius:6px;padding:4px 10px;font-size:11px;font-weight:600;color:var(--text-muted);cursor:pointer;white-space:nowrap;font-family:inherit;flex-shrink:0;">Copy link</button>
+    </div>
+  </div>
+
   <!-- New scan CTA — shown after result -->
   <div id="newScanCta" style="display:none;text-align:center;padding:24px 0 8px;">
     <button onclick="resetToNewScan()" style="background:none;border:1px solid var(--border2);border-radius:8px;padding:10px 24px;font-size:13px;font-family:'DM Sans',sans-serif;color:var(--text-muted);cursor:pointer;transition:all 0.15s;" onmouseover="this.style.borderColor='var(--blue)';this.style.color='var(--blue)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text-muted)'">← Scan another domain</button>
@@ -1452,6 +1462,45 @@ Subject: Your account needs attention
       </div>
     </div>
 
+  </div>
+
+  <!-- Bulk Scan Section — Team / API only -->
+  <div id="bulkScanSection" style="display:none;max-width:640px;margin:0 auto;padding:32px 16px 80px;">
+    <div style="display:inline-flex;align-items:center;gap:6px;font-size:11px;font-family:'DM Mono',monospace;font-weight:600;letter-spacing:0.8px;color:#818cf8;background:rgba(129,140,248,0.1);border:1px solid rgba(129,140,248,0.2);padding:4px 12px;border-radius:100px;margin-bottom:20px;">TEAM &amp; API</div>
+    <h2 style="font-size:clamp(22px,4vw,32px);font-weight:700;letter-spacing:-0.8px;margin-bottom:10px;">Bulk Domain Scan</h2>
+    <p style="font-size:15px;color:var(--text-muted);line-height:1.7;margin-bottom:28px;">Upload a CSV with up to 100 domains. Signum scans each one and returns a downloadable CSV with risk score, verdict, and AI summary.</p>
+
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:28px;">
+      <!-- Format hint -->
+      <div style="font-size:12px;font-family:'DM Mono',monospace;color:var(--text-muted);background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:20px;line-height:1.8;">
+        domain<br/>amazon.com<br/>suspicious-shop.net<br/>example.co.uk
+      </div>
+
+      <!-- Upload area -->
+      <label for="bulkCsvInput" id="bulkDropZone" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;border:2px dashed var(--border2);border-radius:10px;padding:32px 16px;cursor:pointer;transition:border-color 0.15s;margin-bottom:16px;" onmouseover="this.style.borderColor='var(--blue)'" onmouseout="this.style.borderColor='var(--border2)'">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8a9bc0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <span style="font-size:13px;color:var(--text-muted);">Click to select CSV file</span>
+        <span id="bulkFileName" style="font-size:12px;font-family:'DM Mono',monospace;color:var(--blue);display:none;"></span>
+      </label>
+      <input type="file" id="bulkCsvInput" accept=".csv" style="display:none;" onchange="onBulkFileSelect(this)"/>
+
+      <div id="bulkMsg" style="font-size:13px;margin-bottom:12px;display:none;padding:10px 14px;border-radius:8px;"></div>
+
+      <!-- Progress -->
+      <div id="bulkProgress" style="display:none;margin-bottom:16px;">
+        <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--text-muted);margin-bottom:6px;">
+          <span>Scanning domains…</span>
+          <span id="bulkProgressText">0 / 0</span>
+        </div>
+        <div style="background:var(--surface2);border-radius:100px;height:4px;overflow:hidden;">
+          <div id="bulkProgressBar" style="height:100%;background:linear-gradient(90deg,#3b82f6,#6366f1);border-radius:100px;width:0%;transition:width 0.4s ease;"></div>
+        </div>
+      </div>
+
+      <button id="bulkScanBtn" onclick="runBulkScan()" style="width:100%;padding:12px;background:linear-gradient(135deg,#6366f1,#818cf8);border:none;border-radius:9px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">Scan domains →</button>
+    </div>
+
+    <p style="font-size:12px;color:var(--text-faint);margin-top:12px;text-align:center;">Max 100 domains per upload · ~2s per domain · Results auto-download as CSV</p>
   </div>
 
   <!-- B2B Section -->
@@ -1726,6 +1775,9 @@ window.applyLocking = function applyLocking(){
   // Hide one-time scan banner for Pro users
   var ot = document.getElementById("onetimeScanSection");
   if(ot) ot.style.display = isPro ? "none" : "";
+  // Bulk scan nav tab — only show for Team / API
+  var bulkTab = document.getElementById("tab-bulk");
+  if(bulkTab) bulkTab.style.display = (plan==="team"||plan==="api") ? "" : "none";
 }
 
 window.addEventListener("load",function(){
@@ -2169,6 +2221,69 @@ function upgradeToPro(){
   }).catch(function(){ showMsg("errorMsg","Checkout could not be started. Please try again."); if(btn){btn.textContent="Upgrade to Pro";btn.disabled=false;} });
 }
 
+// -- Persistent report link ---------------------------------------------------
+function copyPersistentLink(){
+  var url = document.getElementById("persistentReportUrl").textContent;
+  var btn = document.getElementById("persistentCopyBtn");
+  navigator.clipboard.writeText(url).then(function(){
+    btn.textContent="Copied!"; setTimeout(function(){ btn.textContent="Copy link"; },2000);
+  }).catch(function(){ btn.textContent="Copied!"; setTimeout(function(){ btn.textContent="Copy link"; },2000); });
+}
+
+// -- Bulk Scan -----------------------------------------------------------------
+function onBulkFileSelect(input){
+  var f = input.files[0];
+  if(!f) return;
+  var label = document.getElementById("bulkFileName");
+  label.textContent = f.name;
+  label.style.display = "";
+}
+
+async function runBulkScan(){
+  if(!user||!token||token==="null"){ openModal(); return; }
+  var input = document.getElementById("bulkCsvInput");
+  var msg = document.getElementById("bulkMsg");
+  var btn = document.getElementById("bulkScanBtn");
+  var progress = document.getElementById("bulkProgress");
+
+  if(!input.files||!input.files[0]){
+    msg.style.display="block"; msg.style.background="rgba(239,68,68,0.1)"; msg.style.color="#fca5a5"; msg.textContent="Please select a CSV file first."; return;
+  }
+
+  btn.disabled=true; btn.textContent="Scanning…";
+  msg.style.display="none";
+  progress.style.display="block";
+  document.getElementById("bulkProgressBar").style.width="5%";
+  document.getElementById("bulkProgressText").textContent="Processing…";
+
+  var formData = new FormData();
+  formData.append("file", input.files[0]);
+  formData.append("user_token", token);
+
+  try{
+    var r = await fetch(BACKEND+"/bulk-scan", {method:"POST", body: formData});
+    if(!r.ok){
+      var err = await r.json().catch(function(){return {detail:"Scan failed"};});
+      msg.style.display="block"; msg.style.background="rgba(239,68,68,0.1)"; msg.style.color="#fca5a5"; msg.textContent=err.detail||"Scan failed. Please try again.";
+      progress.style.display="none"; btn.disabled=false; btn.textContent="Scan domains →"; return;
+    }
+    document.getElementById("bulkProgressBar").style.width="100%";
+    document.getElementById("bulkProgressText").textContent="Done!";
+    // Trigger download
+    var blob = await r.blob();
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    var cd = r.headers.get("content-disposition")||"";
+    var match = cd.match(/filename="([^"]+)"/);
+    a.download = match ? match[1] : "signum-bulk.csv";
+    a.href = url; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+    msg.style.display="block"; msg.style.background="rgba(34,197,94,0.1)"; msg.style.color="#86efac"; msg.textContent="Done! Your results are downloading.";
+  }catch(e){
+    msg.style.display="block"; msg.style.background="rgba(239,68,68,0.1)"; msg.style.color="#fca5a5"; msg.textContent="Something went wrong. Please try again.";
+  }
+  progress.style.display="none"; btn.disabled=false; btn.textContent="Scan domains →";
+}
+
 // -- Scan ----------------------------------------------------------------------
 function runScan(){
   var url=document.getElementById("urlInput").value.trim();
@@ -2201,6 +2316,7 @@ function runScan(){
   var nsc = document.getElementById("newScanCta"); if(nsc) nsc.style.display="none";
   var nudge = document.getElementById("saveNudge"); if(nudge) nudge.style.display="none";
   var cu = document.getElementById("contextualUpsell"); if(cu) cu.style.display="none";
+  var prc = document.getElementById("persistentReportCta"); if(prc) prc.style.display="none";
   ["beforeAfterSection","realCasesSection","trendingSection"].forEach(function(id){
     var el = document.getElementById(id);
     if(el) el.style.display = "none";
@@ -2262,11 +2378,12 @@ function showTab(tab){
     "business": ["b2bSection"],
     "alerts":   ["scamAlertsSection"],
     "email":    ["emailSection"],
-    "api":     ["apiSection"]
+    "api":     ["apiSection"],
+    "bulk":    ["bulkScanSection"]
   };
 
   // All toggleable sections
-  var all = ["scanHeroSection","beforeAfterSection","realCasesSection","onetimeScanSection","pricingSection","b2bSection","trustStrip","scamAlertsSection","emailSection","apiSection"];
+  var all = ["scanHeroSection","beforeAfterSection","realCasesSection","onetimeScanSection","pricingSection","b2bSection","trustStrip","scamAlertsSection","emailSection","apiSection","bulkScanSection"];
 
   if(tab === "scan"){
     var hasResult = document.getElementById("reportSection").classList.contains("visible");
@@ -2980,6 +3097,15 @@ function renderReport(r){
   });
   window.scrollTo({top: 0, behavior: "smooth"});
   var nsc = document.getElementById("newScanCta"); if(nsc) nsc.style.display = "";
+  // Persistent report link
+  var domain = document.getElementById("urlInput").value.trim().replace(/^https?:\/\//,"").split("/")[0].toLowerCase();
+  var prc = document.getElementById("persistentReportCta");
+  var pru = document.getElementById("persistentReportUrl");
+  if(prc && pru && domain){
+    var reportUrl = "https://www.signumaiapp.com/report/"+domain;
+    pru.textContent = reportUrl;
+    prc.style.display = "";
+  }
   // Show save nudge for anon users
   var nudge = document.getElementById("saveNudge");
   if(nudge) nudge.style.display = (!token) ? "" : "none";
