@@ -158,7 +158,7 @@ function applyAffiliate(){
   var how = document.getElementById("affHow").value.trim();
   var msg = document.getElementById("affMsg");
   if(!name || !email || !how){ msg.textContent="Please fill in all required fields."; msg.className="msg error"; msg.style.display="block"; return; }
-  fetch(BACKEND+"/affiliate-apply",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:name,email:email,website:website,how:how})})
+  fetch(BACKEND+"/affiliate-apply",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:name,email:email,url:website,note:how})})
   .then(function(r){return r.json();})
   .then(function(){
     msg.textContent="Application received! We'll be in touch within 48 hours.";
@@ -166,7 +166,7 @@ function applyAffiliate(){
     ["affName","affEmail","affWebsite","affHow"].forEach(function(id){ document.getElementById(id).value=""; });
   })
   .catch(function(){
-    msg.textContent="Something went wrong. Email us at <a href="mailto:hello@signumaiapp.com" style="color:var(--blue, #3b82f6);text-decoration:none;">hello@signumaiapp.com</a>";
+    msg.innerHTML="Something went wrong. Email us at <a href='mailto:hello@signumaiapp.com' style='color:#3b82f6;'>hello@signumaiapp.com</a>";
     msg.className="msg error"; msg.style.display="block";
   });
 }
